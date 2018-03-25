@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BERN DSGN</title>
+    <link>https://berndsgn.ch/</link>
+    <description>Recent content on BERN DSGN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Dec 2017 16:16:21 +0200</lastBuildDate>
+    
+	<atom:link href="https://berndsgn.ch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Run a Crypto Trading Bot on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-a-crypto-trading-bot-on-cloud-foundry/</link>
+      <pubDate>Mon, 11 Dec 2017 16:16:21 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-a-crypto-trading-bot-on-cloud-foundry/</guid>
+      <description>Everybody is talking about Bitcoin and its peer currencies. The hype is so great that even small investors, who have no idea about financial constructs, like myself want to get aboard the investing and trading train. That&amp;rsquo;s why I recently decided to create my own account on GDAX and try my luck.
+Trading, at first, was fun but I realized pretty quickly that I&amp;rsquo;m not the kind of person who wants to watch their dashboard every five minutes.</description>
+    </item>
+    
+    <item>
+      <title>Run WordPress on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-wordpress-on-cloud-foundry/</link>
+      <pubDate>Fri, 25 Aug 2017 16:19:58 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-wordpress-on-cloud-foundry/</guid>
+      <description>WordPress runs a huge portion of all websites on the internet. It therefore seems obvious, to run this software on Cloud Foundry. There&amp;rsquo;s just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container based systems, that doesn&amp;rsquo;t work because the container can be restarted at any time which would remove all stored files. For that reason, we need to externalize all file storage to a separate service.</description>
+    </item>
+    
+    <item>
+      <title>Run Docker Registry on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-docker-registry-on-cloud-foundry/</link>
+      <pubDate>Thu, 24 Aug 2017 16:20:42 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-docker-registry-on-cloud-foundry/</guid>
+      <description>If you work a lot with Docker, you are probably used to the concept of having a Docker Registry which allows you to store your images in a safe place. There&amp;rsquo;s a public registry that you can use for free at Docker Store. But what if you don&amp;rsquo;t want your images to be publicly available? What if you want to have your images in a safe place that you control?</description>
+    </item>
+    
+    <item>
+      <title>Run Ghost on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-ghost-on-cloud-foundry/</link>
+      <pubDate>Thu, 27 Jul 2017 16:21:31 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-ghost-on-cloud-foundry/</guid>
+      <description>This blog runs on Ghost. It&amp;rsquo;s a pretty light weight blogging platform based on Node.js. Let&amp;rsquo;s look into how it can be run on Cloud Foundry.
+Create Services To run Ghost, we&amp;rsquo;ll need two services: a database and an email server. First, let&amp;rsquo;s create the database. I&amp;rsquo;m using the Swisscom Application Cloud here but you can use any Cloud Foundry provider. We&amp;rsquo;ll create a small MariaDB service which works like MySQL and therefore can be used by Ghost.</description>
+    </item>
+    
+    <item>
+      <title>Docker for Local Development</title>
+      <link>https://berndsgn.ch/posts/docker-for-local-development/</link>
+      <pubDate>Thu, 08 Jun 2017 16:22:44 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/docker-for-local-development/</guid>
+      <description>I&amp;rsquo;m using Docker. Daily. It has become a very valuable part of my toolchain because it allows me to quickly set up any backend my applications might need to run and tear it down the second I don&amp;rsquo;t need it anymore. Gone are the days when you had to have all kinds of databases and other services installed just to be able to run your apps locally. With Docker you can do all of that and isolate it from your machine.</description>
+    </item>
+    
+    <item>
+      <title>Manage Buckets on Cloud Foundry S3 Services</title>
+      <link>https://berndsgn.ch/posts/manage-buckets-on-cloud-foundry-s3-services/</link>
+      <pubDate>Fri, 17 Mar 2017 16:23:32 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/manage-buckets-on-cloud-foundry-s3-services/</guid>
+      <description>S3 is a great concept to store static files and larger BLOBs. Let&amp;rsquo;s look into how we can use it in Cloud Foundry.
+S3 was originally created by Amazon Web Services but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don&amp;rsquo;t, you can create your own by creating a user-provided service and adding the respective S3 credentials (e.</description>
+    </item>
+    
+    <item>
+      <title>Blue Green Deployment on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/blue-green-deployment-on-cloud-foundry/</link>
+      <pubDate>Mon, 12 Dec 2016 16:24:44 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/blue-green-deployment-on-cloud-foundry/</guid>
+      <description>Imagine you have one of your apps in production and want to cf push an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving 404s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&amp;rsquo;t even start on Cloud Foundry?</description>
+    </item>
+    
+    <item>
+      <title>Run Piwik on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-piwik-on-cloud-foundry/</link>
+      <pubDate>Wed, 30 Nov 2016 16:25:26 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-piwik-on-cloud-foundry/</guid>
+      <description>Piwik is an open source analytics platform based on PHP and MySQL. That makes it a perfect application to be run on Cloud Foundry based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.</description>
+    </item>
+    
+    <item>
+      <title>Configure Front End Apps With Environment Variables on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/configure-front-end-apps-with-environment-variables-on-cloud-foundry/</link>
+      <pubDate>Sun, 20 Nov 2016 16:26:06 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/configure-front-end-apps-with-environment-variables-on-cloud-foundry/</guid>
+      <description>The 12 factor manifest tells us in point III that apps should retrieve their config from environment variables to strictly separate config from code. &amp;ldquo;Config&amp;rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the manifest.yml file or the cf set-env command. However, this only works for apps which have a dynamic back end.</description>
+    </item>
+    
+    <item>
+      <title>Cloud Foundry Route Services</title>
+      <link>https://berndsgn.ch/posts/cloud-foundry-route-services/</link>
+      <pubDate>Mon, 03 Oct 2016 16:26:38 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/cloud-foundry-route-services/</guid>
+      <description>In Cloud Foundry, we use services to provide additional functionality as reserved resources to our apps. They get bound to the app(s) directly and are accessible from these bound apps only. The image below shows how they get provisioned through the service broker and are then accessible to the client through the app. This is obviously a great setup for services like databases, messaging brokers, app data loggers or other handy additions for our apps to consume.</description>
+    </item>
+    
+    <item>
+      <title>Observables With Angular and Feathersjs</title>
+      <link>https://berndsgn.ch/posts/observables-with-angular-and-feathersjs/</link>
+      <pubDate>Mon, 14 Mar 2016 16:27:24 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/observables-with-angular-and-feathersjs/</guid>
+      <description>FeathersJS is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the Angular CLI for your app.</description>
+    </item>
+    
+    <item>
+      <title>Run a CI/CD Server on Cloud Foundry</title>
+      <link>https://berndsgn.ch/posts/run-a-cicd-server-on-cloud-foundry/</link>
+      <pubDate>Tue, 16 Feb 2016 16:27:55 +0200</pubDate>
+      
+      <guid>https://berndsgn.ch/posts/run-a-cicd-server-on-cloud-foundry/</guid>
+      <description>Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the cf push command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That&amp;rsquo;s where a CI/CD server comes in handy. It tests, builds and deploys your code every time you git push to any git repo.
+Strider is an open source CI/CD server based on Node.</description>
+    </item>
+    
+  </channel>
+</rss>

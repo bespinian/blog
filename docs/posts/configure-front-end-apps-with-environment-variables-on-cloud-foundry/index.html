@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configure Front End Apps With Environment Variables on Cloud Foundry | BERN DSGN</title>
+<link rel="stylesheet" href="https://berndsgn.ch//css/style.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://berndsgn.ch/"><h1 class="title is-4">BERN DSGN</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="subtitle is-6">November 20, 2016</h2>
+    <h1 class="title">Configure Front End Apps With Environment Variables on Cloud Foundry</h1>
+    <div class="content">
+      
+
+<p>The <a href="https://12factor.net/">12 factor manifest</a> tells us in point III that apps should retrieve their config from environment variables to <strong>strictly separate config from code</strong>. &ldquo;Config&rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the <code>manifest.yml</code> file or the <code>cf set-env</code> command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the <a href="https://github.com/cloudfoundry/staticfile-buildpack">staticfile buildpack</a>? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an <a href="https://angular.io/">Angular</a> or <a href="https://facebook.github.io/react/">React</a> app, we cannot use these variables.</p>
+
+<p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it&rsquo;s being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
+
+<h2 id="how-to">How To</h2>
+
+<p>To get our custom configuration endpoint, we&rsquo;ll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
+
+<pre><code class="language-nginx">&lt;% if ENV[&quot;APP_CONFIG&quot;] %&gt;
+location /app-config {
+  default_type application/json;
+  return 200 '&lt;%= ENV[&quot;APP_CONFIG&quot;] %&gt;';
+}
+&lt;% end %&gt;
+</code></pre>
+
+<p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn&rsquo;t exist, the endpoint won&rsquo;t be exposed at all.</p>
+
+<p>If you don&rsquo;t have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
+
+<pre><code class="language-nginx">worker_processes 1;
+daemon off;
+
+error_log &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/nginx/logs/error.log;
+events { worker_connections 1024; }
+
+http {
+  charset utf-8;
+  log_format cloudfoundry '$http_x_forwarded_for - $http_referer - [$time_local] &quot;$request&quot; $status $body_bytes_sent';
+  access_log &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/nginx/logs/access.log cloudfoundry;
+  default_type application/octet-stream;
+  include mime.types;
+  sendfile on;
+
+  gzip on;
+  gzip_disable &quot;msie6&quot;;
+  gzip_comp_level 6;
+  gzip_min_length 1100;
+  gzip_buffers 16 8k;
+  gzip_proxied any;
+  gunzip on;
+  gzip_static always;
+  gzip_types text/plain text/css text/js text/xml text/javascript application/javascript application/x-javascript application/json application/xml application/xml+rss;
+  gzip_vary on;
+
+  tcp_nopush on;
+  keepalive_timeout 30;
+  port_in_redirect off; # Ensure that redirects don't include the internal container PORT - &lt;%= ENV[&quot;PORT&quot;] %&gt;
+  server_tokens off;
+
+  server {
+    listen &lt;%= ENV[&quot;PORT&quot;] %&gt;;
+    server_name localhost;
+
+    location / {
+      root &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/public;
+
+      index index.html index.htm Default.htm;
+
+      &lt;% if ENV[&quot;FORCE_HTTPS&quot;] %&gt;
+        if ($http_x_forwarded_proto != &quot;https&quot;) {
+          return 301 https://$host$request_uri;
+        }
+      &lt;% end %&gt;
+
+      &lt;% if ENV[&quot;APP_CONFIG&quot;] %&gt;
+      location /app-config {
+        default_type application/json;
+        return 200 '&lt;%= ENV[&quot;APP_CONFIG&quot;] %&gt;';
+      }
+      &lt;% end %&gt;
+    }
+
+  }
+}
+</code></pre>
+
+<p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you&rsquo;ll have to adjust the above code accordingly.</p>
+
+<p>Now push your app with <code>cf push</code> and set the <code>APP_CONFIG</code> environment variable to some JSON string with the following command:</p>
+
+<pre><code class="language-bash">$ cf push &lt;app-name&gt;
+$ cf set-env &lt;app-name&gt; APP_CONFIG '{&quot;apiUrl&quot;:&quot;https://jsonplaceholder.typicode.com&quot;}'
+</code></pre>
+
+<p>Now restage your app, as suggested, with:</p>
+
+<pre><code class="language-bash">$ cf restage &lt;app-name&gt;
+</code></pre>
+
+<p>If you visit the <code>/app-config</code> endpoint of your app, it should return the specified JSON. Your front end app can now retrieve its config dynamically from that endpoint. You might have a fallback for all of these config items for local development if you use something like the <a href="https://webpack.github.io/docs/webpack-dev-server.html">webpack-dev-serer</a>. Of course, you can also configure your dev server to expose the same endpoint and create a development config for that.</p>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<p>You can use this method to configure different environments your app might be running in. E.g. you might use a different API server for your integration environment than for your production environment.</p>
+
+<p>Alternatively, you could use it to toggle feature flags dynamically to do <a href="https://en.wikipedia.org/wiki/A/B_testing">A/B testing</a> or a <a href="https://martinfowler.com/bliki/CanaryRelease.html">canary release</a>.</p>
+
+<p>I&rsquo;m sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.</p>
+
+<p>Many thanks to <a href="https://github.com/mkretz">@mkretz</a> for the inspiration for this post!</p>
+
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'berndsgnch';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-22629901-2', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

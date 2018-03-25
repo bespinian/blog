@@ -1,0 +1,25 @@
+baseURL = "https://berndsgn.ch/"
+languageCode = "en-us"
+title = "BERN DSGN"
+theme = "hemingway"
+publishDir = "docs"
+disqusShortname = "berndsgnch"
+googleAnalytics = "UA-22629901-2"
+
+[params]
+
+[params.highlight]
+style = "androidstudio"
+languages = ["go", "typescript", "yaml"]
+
+[[params.social]]
+url = "https://github.com/mastertinner"
+fa_icon = "fa-github"
+
+[[params.social]]
+url = "https://twitter.com/mastertinner"
+fa_icon = "fa-twitter"
+
+[[params.social]]
+url = "/index.xml"
+fa_icon = "fa-rss"

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run Docker Registry on Cloud Foundry | BERN DSGN</title>
+<link rel="stylesheet" href="https://berndsgn.ch//css/style.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://berndsgn.ch/"><h1 class="title is-4">BERN DSGN</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="subtitle is-6">August 24, 2017</h2>
+    <h1 class="title">Run Docker Registry on Cloud Foundry</h1>
+    <div class="content">
+      
+
+<p>If you work a lot with <a href="https://www.docker.com/">Docker</a>, you are probably used to the concept of having a <a href="https://docs.docker.com/registry/">Docker Registry</a> which allows you to store your images in a safe place. There&rsquo;s a public registry that you can use for free at <a href="https://store.docker.com/">Docker Store</a>. But what if you don&rsquo;t want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.</p>
+
+<h2 id="create-registry-binary">Create Registry Binary</h2>
+
+<p>First we need to create the registry&rsquo;s binary to upload it to Cloud Foundry using the <a href="https://github.com/cloudfoundry/binary-buildpack">Binary Buildpack</a>. For that, you need to have <a href="https://docs.docker.com/engine/installation/">Docker</a> installed. Run a <code>git clone</code> on the <a href="https://github.com/docker/distribution">Docker Distribution repo on GitHub</a>:</p>
+
+<pre><code class="language-bash">$ git clone https://github.com/docker/distribution.git
+</code></pre>
+
+<p>It is advisable to check out the latest tag of the repo to build. This will ensure that you have a supported version of Docker Distribution and therefore the registry.</p>
+
+<p>Then <code>cd</code> into it and compile it using Docker:</p>
+
+<pre><code class="language-bash">$ docker run --rm -v &quot;${PWD}:/go/src/github.com/docker/distribution&quot; -w /go/src/github.com/docker/distribution golang make binaries
+</code></pre>
+
+<p>After the compilation, create a new folder anywhere on your computer and copy the file <code>bin/registry</code> into it. This is the binary file that contains the whole registry application:</p>
+
+<pre><code class="language-bash">$ mkdir ~/registry &amp;&amp; cp bin/registry ~/registry
+</code></pre>
+
+<p>This will be your working directory for this tutorial.</p>
+
+<h2 id="create-s3-service">Create S3 Service</h2>
+
+<p>By default, the registry stores the pushed Docker images on the local filesystem. Since apps should be stateless according to the <a href="https://12factor.net/processes">twelve-factor app manifest</a>, we will change this behavior to use an S3 backend instead. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on my blog to create an S3 service with bucket and name the service &ldquo;registry-storage&rdquo;.</p>
+
+<h2 id="create-redis-cache">Create Redis Cache</h2>
+
+<p>This step is optional. If you omit it though, you&rsquo;ll have to remove all the Redis related stuff from the files described in the steps afterwards.</p>
+
+<p>To improve the performance of our registry, we can add a <a href="https://redis.io/">Redis</a> cache. First create one in Cloud Foundry:</p>
+
+<pre><code class="language-bash">$ cf create-service redis small registry-cache
+</code></pre>
+
+<p>Again, this example is using the Swisscom Application Cloud. If you&rsquo;re using a different CF provider, the command might be different.</p>
+
+<h2 id="create-manifest-file">Create Manifest File</h2>
+
+<p>Now <code>cd</code> into your registry folder and create a <code>manifest.yml</code> file. Cloud Foundry uses it to specify how your app should be pushed and started. Then paste the following lines into it:</p>
+
+<pre><code class="language-yaml">---
+applications:
+- name: registry
+  host: my-hostname
+  memory: 256M
+  buildpack: https://github.com/cloudfoundry/binary-buildpack.git
+  command: ./entrypoint-cf.sh
+
+  services:
+  - registry-storage
+  - registry-cache
+
+  env:
+    REGISTRY_STORAGE_S3_BUCKET: my-bucket
+    REGISTRY_HTTP_SECRET: xxx
+</code></pre>
+
+<p>Don&rsquo;t forget to change <code>my-bucket</code> to your own bucket name and the <code>host</code> to some hostname that isn&rsquo;t taken yet. Furthermore, you&rsquo;ll need to generate some random string and use it as the <code>REGISTRY_HTTP_SECRET</code>.</p>
+
+<h2 id="create-entrypoint-script">Create Entrypoint Script</h2>
+
+<p>As you can see above, the manifest states an entrypoint script to be run as the command. This script generates the registry&rsquo;s <code>config.yml</code> out of our service configuration (which is in the <code>VCAP_SERVICES</code> environment variable) and then starts the app. Create the script under the name <code>entrypoint-cf.sh</code> and fill it with the following content:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+
+set -e -u
+
+if [ -z &quot;${PORT}&quot; ]; then
+  echo &quot;Error: No PORT found&quot; &gt;&amp;2
+  exit 1
+fi
+if [ -z &quot;${VCAP_SERVICES}&quot; ]; then
+  echo &quot;Error: No VCAP_SERVICES found&quot; &gt;&amp;2
+  exit 1
+fi
+
+s3_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;dynstrg&quot;][0].credentials // &quot;&quot;')&quot;
+if [ -z &quot;${s3_credentials}&quot; ]; then
+  echo &quot;Error: Please bind an S3 service&quot; &gt;&amp;2
+  exit 1
+fi
+
+s3_regionendpoint=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessHost // &quot;&quot;')&quot;
+s3_access_key=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessKey // &quot;&quot;')&quot;
+s3_secret_key=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.sharedSecret // &quot;&quot;')&quot;
+
+redis_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;redis&quot;][0].credentials // &quot;&quot;')&quot;
+if [ -z &quot;${redis_credentials}&quot; ]; then
+  echo &quot;Error: Please bind a Redis service&quot; &gt;&amp;2
+  exit 1
+fi
+
+redis_host=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.host // &quot;&quot;')&quot;
+redis_port=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.port // &quot;&quot;')&quot;
+redis_password=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.password // &quot;&quot;')&quot;
+
+# Fill in template and write it to config.yml
+echo &quot;
+version: 0.1
+
+storage:
+  s3:
+    regionendpoint: https://${s3_regionendpoint}
+    region: nil
+    accesskey: ${s3_access_key}
+    secretkey: ${s3_secret_key}
+  redirect:
+    disable: true
+
+http:
+  addr: :${PORT}
+  headers:
+    X-Content-Type-Options: [nosniff]
+
+redis:
+  addr: ${redis_host}:${redis_port}
+  password: ${redis_password}
+
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+  tcp:
+  - addr: ${redis_host}:${redis_port}
+    timeout: 3s
+    interval: 10s
+    threshold: 3
+&quot; &gt; config.yml
+
+# Start the app
+./registry serve config.yml
+</code></pre>
+
+<p>Then make the script executable by running the following command:</p>
+
+<pre><code class="language-bash">$ chmod +x entrypoint-cf.sh
+</code></pre>
+
+<h2 id="push-the-registry">Push the Registry</h2>
+
+<p>Your registry is ready to be pushed. Simply run the following command:</p>
+
+<pre><code class="language-bash">$ cf push
+</code></pre>
+
+<p>Your registry is ready to go!</p>
+
+<h2 id="try-it-out">Try It Out</h2>
+
+<p>Now you should be able to push a local docker image to your registry. Pull an example one from the Docker Store:</p>
+
+<pre><code class="language-bash">$ docker pull nginx
+</code></pre>
+
+<p>Then rename it to be pushed to your registry:</p>
+
+<pre><code class="language-bash">$ docker tag nginx my-hostname.scapp.io/my-nginx
+</code></pre>
+
+<p>Don&rsquo;t forget to adjust the hostname &ldquo;my-hostname&rdquo; to the one you chose for your registry app in Cloud Foundry.</p>
+
+<p>Then push it to your private registry:</p>
+
+<pre><code class="language-bash">$ docker push my-hostname.scapp.io/my-nginx
+</code></pre>
+
+<p>Now you can pull it using</p>
+
+<pre><code class="language-bash">$ docker pull my-hostname.scapp.io/my-nginx
+</code></pre>
+
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'berndsgnch';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-22629901-2', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
