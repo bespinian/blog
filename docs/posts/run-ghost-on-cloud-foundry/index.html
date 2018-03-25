@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run Ghost on Cloud Foundry | BERN DSGN</title>
+<link rel="stylesheet" href="https://berndsgn.ch//css/style.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://berndsgn.ch/"><h1 class="title is-4">BERN DSGN</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="subtitle is-6">July 27, 2017</h2>
+    <h1 class="title">Run Ghost on Cloud Foundry</h1>
+    <div class="content">
+      
+
+<p>This blog runs on <a href="https://github.com/TryGhost/Ghost">Ghost</a>. It&rsquo;s a pretty light weight blogging platform based on <a href="https://nodejs.org/">Node.js</a>. Let&rsquo;s look into how it can be run on Cloud Foundry.</p>
+
+<h2 id="create-services">Create Services</h2>
+
+<p>To run Ghost, we&rsquo;ll need two services: a database and an email server. First, let&rsquo;s create the database. I&rsquo;m using the <a href="https://developer.swisscom.com/">Swisscom Application Cloud</a> here but you can use any Cloud Foundry provider. We&rsquo;ll create a small MariaDB service which works like MySQL and therefore can be used by Ghost. Execute the following command to create it:</p>
+
+<pre><code class="language-bash">$ cf create-service mariadbent usage blog-db
+</code></pre>
+
+<p>Now, we can create our email service. The easiest way is to use <a href="https://www.mailgun.com/">Mailgun</a>. Just create an account on their site for free and put the credentials into a user provided service in Cloud Foundry to link the two:</p>
+
+<pre><code class="language-bash">$ cf create-user-provided-service mailgun -p '{ &quot;username&quot;: &quot;&lt;your-mailgun-smtp-login&gt;&quot;, &quot;password&quot;: &quot;&lt;your-mailgun-password&gt;&quot; }'
+</code></pre>
+
+<p>Replace the values in <code>&lt;&gt;</code> with your respective credentials.</p>
+
+<h2 id="get-the-source-code">Get the Source Code</h2>
+
+<p>Getting the Ghost source code is quite easy. Just visit their <a href="https://github.com/TryGhost/Ghost/releases">releases</a> page and download the latest one as a ZIP archive. Then unzip it and <code>cd</code> into the respective folder from your terminal.</p>
+
+<h2 id="create-entrypoint-script">Create Entrypoint Script</h2>
+
+<p>Ghost needs to be configured through a configuration file. We&rsquo;ll call ours <code>config.producton.json</code> since it&rsquo;s supposed to be suitable for a production blog. This file tells Ghost where to look for its database, which email server to use and how it&rsquo;s supposed to run the blog in general.</p>
+
+<p>In Cloud Foundry, services are configured dynamically, which isn&rsquo;t possible in a simple JSON file. We&rsquo;ll work around this by creating a Bash script to read out the environment and create the config file on the fly. Create a new file called <code>entrypoint-cf.sh</code> in the root folder of your app and paste the following content into it:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+
+set -e -u
+
+# App URL
+app_uri=&quot;$(echo &quot;${VCAP_APPLICATION}&quot; | jq -r '.application_uris[0] // &quot;&quot;')&quot;
+app_url=&quot;https://${app_uri}&quot;
+
+# Database
+db_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;mariadbent&quot;][0].credentials // &quot;&quot;')&quot;
+if [ -z &quot;${db_credentials}&quot; ]; then
+  echo &quot;Error: Please bind a MariaDB service&quot; &gt;&amp;2
+  exit 1
+fi
+db_host=&quot;$(echo &quot;${db_credentials}&quot; | jq -r '.host // &quot;&quot;')&quot;
+db_username=&quot;$(echo &quot;${db_credentials}&quot; | jq -r '.username // &quot;&quot;')&quot;
+db_password=&quot;$(echo &quot;${db_credentials}&quot; | jq -r '.password // &quot;&quot;')&quot;
+db_database=&quot;$(echo &quot;${db_credentials}&quot; | jq -r '.database // &quot;&quot;')&quot;
+
+# Email service
+email_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;user-provided&quot;][0].credentials // &quot;&quot;')&quot;
+if [ -z &quot;${db_credentials}&quot; ]; then
+  echo &quot;Error: Please bind an Email service&quot; &gt;&amp;2
+  exit 1
+fi
+email_username=&quot;$(echo &quot;${email_credentials}&quot; | jq -r '.username // &quot;&quot;')&quot;
+email_password=&quot;$(echo &quot;${email_credentials}&quot; | jq -r '.password // &quot;&quot;')&quot;
+
+# Create config file
+jq -n &quot;{
+    url: \&quot;${app_url}\&quot;,
+    mail: {
+        transport: \&quot;SMTP\&quot;,
+        options: {
+            service: \&quot;Mailgun\&quot;,
+            auth: {
+                user: \&quot;${email_username}\&quot;,
+                pass: \&quot;${email_password}\&quot;
+            }
+        }
+    },
+    database: {
+        client: \&quot;mysql\&quot;,
+        connection: {
+            host: \&quot;${db_host}\&quot;,
+            user: \&quot;${db_username}\&quot;,
+            password: \&quot;${db_password}\&quot;,
+            database: \&quot;${db_database}\&quot;
+        }
+    },
+    server: {
+        host: \&quot;0.0.0.0\&quot;,
+        port: ${PORT}
+    }
+}&quot; &gt; config.production.json
+
+# Initialize and Migrate DB
+./node_modules/.bin/knex-migrator init
+./node_modules/.bin/knex-migrator migrate
+
+# Start the app
+npm start
+</code></pre>
+
+<p>Then, make the script executable by running the following command:</p>
+
+<pre><code class="language-bash">$ chmod +x entrypoint-cf.sh
+</code></pre>
+
+<p>This script gets all the necessary environment variables and uses <code>jq</code> (which comes pre-installed in the Node.js Buildpack) to create a config JSON string which is then written into a <code>config.production.json</code> file. The script then executes a database migration (if necessary) and starts the app itself.</p>
+
+<p>Now, all we&rsquo;ll need to do is tell Cloud Foundry to run this script to start the app instead of calling <code>npm start</code> directly (which is the default for Node.js apps). We can do this in the <code>manifest.yml</code> file, which is where Cloud Foundry gets its instructions of how to run an app. Create a new file called <code>manifest.yml</code> in the root directory of the app and paste the following content in there:</p>
+
+<pre><code class="language-yaml">---
+applications:
+- name: my-blog
+  memory: 256MB
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git
+  command: ./entrypoint-cf.sh
+
+  services:
+  - blog-db
+  - mailgun
+
+  env:
+    NODE_ENV: production
+</code></pre>
+
+<p>This tells CF to use the correct buildpack and to initiate the app with our entrypoint script. It also sets the <code>NODE_ENV</code> environment variable to <code>production</code> which optimizes Node.js and Ghost to run with better performance. Furthermore, it tells Cloud Foundry to bind the two services we&rsquo;ve created above to our blog app.</p>
+
+<p>The configuration for our app is done. All that&rsquo;s left to do is run the following command to get our blog running in the cloud:</p>
+
+<pre><code class="language-bash">$ cf push
+</code></pre>
+
+<p>Welcome to the fabulous world of Ghost blogging!</p>
+
+<h2 id="add-disqus-optional">Add Disqus (Optional)</h2>
+
+<p>Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding <a href="https://disqus.com/">Disqus</a> is a very easy way to do so.</p>
+
+<p>Simply visit their website, create an account and register your blog as a new site. Then, open <code>content/themes/casper/post.hbs</code> and look for a comment about Disqus in the file. There is a section that you&rsquo;ll need to uncomment and replace the sample URL with the one of your blog. Follow the steps described in the comment there.</p>
+
+<p>After that, run <code>cf push</code> and that&rsquo;s it. Your blog is now interactive.</p>
+
+<h2 id="add-object-storage-optional">Add Object Storage (Optional)</h2>
+
+<p>At some point, you&rsquo;ll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So we&rsquo;ll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.</p>
+
+<p>To do so, follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> to create an S3 service with bucket and name the service instance &ldquo;blog-storage&rdquo;.</p>
+
+<p>Next, we&rsquo;ll need to bind the app to our newly created service. Add the following line to the <code>services</code> part of our <code>manifest.yml</code>:</p>
+
+<pre><code class="language-yaml">- blog-storage
+</code></pre>
+
+<p>Now we need to install the <a href="https://github.com/colinmeinke/ghost-storage-adapter-s3">ghost-storage-adapter-s3</a> so that Ghost will know how to talk to our S3 service. To do so, run the installation commands from the link above in the folder where you have the Ghost repo. Cloud Foundry will try to install the dependencies for Ghost using <code>yarn</code>. Since the installation commands install the S3 storage adapter with <code>npm</code>, we&rsquo;ll need to change that. This can simply be achieved by removing the <code>yarn.lock</code> file:</p>
+
+<pre><code class="language-bash">$ rm yarn.lock
+</code></pre>
+
+<p>Next, we&rsquo;ll need to adjust our <code>entrypoint-cf.sh</code> script to include the S3 service. Add the following lines where the services variables are read:</p>
+
+<pre><code class="language-bash"># Storage service
+s3_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;dynstrg&quot;][0].credentials // &quot;&quot;')&quot;
+if [ -z &quot;${s3_credentials}&quot; ]; then
+  echo &quot;Error: Please bind an S3 service&quot; &gt;&amp;2
+  exit 1
+fi
+s3_endpoint=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessHost // &quot;&quot;')&quot;
+s3_namespace=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.namespace // &quot;&quot;')&quot;
+s3_access_key_id=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessKey // &quot;&quot;')&quot;
+s3_secret_access_key=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.sharedSecret // &quot;&quot;')&quot;
+</code></pre>
+
+<p>Then add the following part to the JSON config template at the bottom of the file:</p>
+
+<pre><code class="language-bash">    storage: {
+      active: \&quot;s3\&quot;,
+      s3: {
+        endpoint: \&quot;${s3_endpoint}\&quot;,
+        assetHost: \&quot;https://${s3_namespace}.ds11s3ns.swisscom.com/${S3_BUCKET_NAME}\&quot;,
+        accessKeyId: \&quot;${s3_access_key_id}\&quot;,
+        secretAccessKey: \&quot;${s3_secret_access_key}\&quot;,
+        bucket: \&quot;${S3_BUCKET_NAME}\&quot;
+      }
+    },
+</code></pre>
+
+<p>This tells Ghost to use the S3 storage adapter.</p>
+
+<p>All that&rsquo;s left to do is to push our app again:</p>
+
+<pre><code class="language-bash">$ cf push
+</code></pre>
+
+<p>And that&rsquo;s it! All the images you upload now through the Ghost admin console will be stored in your S3 service.</p>
+
+<h2 id="add-syntax-highlighting-optional">Add Syntax Highlighting (Optional)</h2>
+
+<p>highlight.js allows you to get neat syntax highlighting for the code snippets you include in your blog posts (see example above). It supports many programming languages and different themes.</p>
+
+<p>To get it into your blog, simply add the following snippets to the &ldquo;Code injection&rdquo; section of your Ghost settings:</p>
+
+<p>Blog Header:</p>
+
+<pre><code class="language-html">&lt;style&gt;
+  .hljs{color:#a9b7c6;background:#282b2e;display:block;overflow-x:auto;padding:0.5em}.hljs-number,.hljs-literal,.hljs-symbol,.hljs-bullet{color:#6897BB!important}.hljs-keyword,.hljs-selector-tag,.hljs-deletion{color:#cc7832!important}.hljs-variable,.hljs-template-variable,.hljs-link{color:#629755!important}.hljs-comment,.hljs-quote{color:#808080!important}.hljs-meta{color:#bbb529!important}.hljs-string,.hljs-attribute,.hljs-addition{color:#6A8759!important}.hljs-section,.hljs-title,.hljs-type{color:#ffc66d!important}.hljs-name,.hljs-selector-id,.hljs-selector-class{color:#e8bf6a!important}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:bold}
+&lt;/style&gt;
+</code></pre>
+
+<p>Blog Footer:</p>
+
+<pre><code class="language-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
+</code></pre>
+
+<p>If want to use a different theme (the one above is called &ldquo;androidstudio&rdquo;), you&rsquo;ll have to copy the minified CSS from your theme into the <code>&lt;style&gt;</code> tags of the header and then add <code>!important</code> to all the colors so they don&rsquo;t get overwritten by Ghost&rsquo;s theme.</p>
+
+<p>This will load and initialize highlight.js. Hit &ldquo;Save&rdquo; to update your blog and enjoy colorful syntax highlighting!</p>
+
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'berndsgnch';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-22629901-2', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

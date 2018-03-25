@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blue Green Deployment on Cloud Foundry | BERN DSGN</title>
+<link rel="stylesheet" href="https://berndsgn.ch//css/style.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://berndsgn.ch/"><h1 class="title is-4">BERN DSGN</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/mastertinner">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="subtitle is-6">December 12, 2016</h2>
+    <h1 class="title">Blue Green Deployment on Cloud Foundry</h1>
+    <div class="content">
+      
+
+<p>Imagine you have one of your apps in production and want to <code>cf push</code> an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving <code>404</code>s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&rsquo;t even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.</p>
+
+<p>To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called &ldquo;Blue-Green Deployment&rdquo;. I won&rsquo;t go into the depths of this concept because you can read all about it in the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">Cloud Foundry documentation</a>. Generally, it allows you to have two instances of your application running at the same time while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.</p>
+
+<p>Cloud Foundry doesn&rsquo;t provide this functionality out of the box. That&rsquo;s why I wrote a simple shell script to do this blue-green deployment for you.</p>
+
+<pre><code class="language-bash">#!/usr/bin/env bash
+
+# Your ENV variables (Should be set externally, e.g. export CF_USERNAME=&quot;myUsername123&quot;)
+# CF_API=
+# CF_SHARED_DOMAIN=
+# CF_USERNAME=
+# CF_PASSWORD=
+# CF_ORG=
+# CF_SPACE=
+
+max_health_checks=20
+expected_response=&quot;200&quot;
+temp_suffix=&quot;-temp&quot;
+
+# Read from manifest.yml
+app_name=$(grep &quot; name:&quot; manifest.yml | sed 's/.*://;s/ //g')
+domain=$(grep &quot; domain: &quot; manifest.yml | sed 's/.*://;s/ //g')
+hostname=$(grep &quot; host: &quot; manifest.yml | sed 's/.*://;s/ //g')
+
+# Set default values
+: &quot;${domain:=&quot;${CF_SHARED_DOMAIN}&quot;}&quot;
+: &quot;${hostname:=&quot;${app_name}&quot;}&quot;
+
+# Set up temporary app
+temp_app_name=&quot;${app_name}${temp_suffix}&quot;
+temp_domain=&quot;${CF_SHARED_DOMAIN}&quot;
+temp_hostname=&quot;${app_name}${temp_suffix}&quot;
+
+# CF Login
+cf api &quot;${CF_API}&quot;
+cf login &quot;${CF_USERNAME}&quot; &quot;${CF_PASSWORD}&quot;
+cf target -o &quot;${CF_ORG}&quot; -s &quot;${CF_SPACE}&quot;
+
+# Push Green
+cf push &quot;${temp_app_name}&quot; --no-route
+
+# Map temporary route to Green
+cf map-route &quot;${temp_app_name}&quot; &quot;${temp_domain}&quot; -n &quot;${temp_hostname}&quot;
+
+# Wait for Green to be ready to serve
+iterations=0
+while [[ &quot;${iterations}&quot; -lt &quot;${max_health_checks}&quot; ]]
+do
+  response=$(curl -sIL -w &quot;%{http_code}&quot; -o /dev/null &quot;${temp_hostname}.${temp_domain}&quot;)
+  if [[ &quot;${response}&quot; == &quot;${expected_response}&quot; ]]; then
+    printf &quot;\n%s&quot; &quot;Got expected ${response} response&quot;
+    break
+  else
+    iterations=$(( iterations + 1 ))
+    sleep 3 &amp;&amp; printf &quot;\n%s&quot; &quot;Waiting for ${expected_response} response... Got ${response} (${iterations}/${max_health_checks})&quot;
+  fi
+done
+
+if [[ &quot;${iterations}&quot; == &quot;${max_health_checks}&quot; ]]; then
+  printf &quot;\n%s\n\n&quot; &quot;Couldn't get ${expected_response} response. Reverting...&quot;
+
+  # Delete temporary route
+  cf delete-route &quot;${temp_domain}&quot; -n &quot;${temp_hostname}&quot; -f
+
+  # Stop temporary app
+  cf stop &quot;${temp_app_name}&quot;
+
+  exit 1
+fi
+
+# Load balance route between Blue and Green
+cf map-route &quot;${temp_app_name}&quot; &quot;${domain}&quot; -n &quot;${hostname}&quot;
+
+# Remove Blue from load balancing
+cf unmap-route &quot;${app_name}&quot; &quot;${domain}&quot; -n &quot;${hostname}&quot;
+
+# Delete temporary route
+cf delete-route -f &quot;${temp_domain}&quot; -n &quot;${temp_hostname}&quot;
+
+# Delete old app
+cf delete -f -r &quot;${app_name}&quot;
+
+# Rename Green to old app name
+cf rename &quot;${temp_app_name}&quot; &quot;${app_name}&quot;
+</code></pre>
+
+<p>The script tries to guess some variables from your <code>manifest.yml</code> file but you&rsquo;ll still need to set some environment variables for a successful deployment:</p>
+
+<ul>
+<li><code>CF_API</code>: The API endpoint of the CF instance you want to use (e.g. <code>https://api.lyra-836.appcloud.swisscom.com</code>)</li>
+<li><code>CF_SHARED_DOMAIN</code>: The shared domain you want to use for temporary routes used to smoke test your app</li>
+<li><code>CF_USERNAME</code>: Your Cloud Foundry username</li>
+<li><code>CF_PASSWORD</code>: Your Cloud Foundry password</li>
+<li><code>CF_ORG</code>: The Cloud Foundry org you want to deploy to</li>
+<li><code>CF_SPACE</code>: The Cloud Foundry space you want to deploy to</li>
+</ul>
+
+<p>As soon as you&rsquo;ve set all of these variables, you can simply execute the script and it will do a verbose blue-green deployment for you. The script will deploy the new version of your app and check for it to get healthy. You can change the <code>expected_response</code> parameter to something else like <code>401</code> if your app doesn&rsquo;t return a <code>200</code> status code without authentication.</p>
+
+<h2 id="caveats">Caveats</h2>
+
+<ul>
+<li>The script currently doesn&rsquo;t work if your app does not use a route.</li>
+<li>The script currently doesn&rsquo;t work if your app uses more than one routes.</li>
+</ul>
+
+<h2 id="further-reading">Further reading</h2>
+
+<p>There are two plugins for the Cloud Foundry CLI that also automate certain steps of blue-green deployment:</p>
+
+<ul>
+<li><a href="https://github.com/contraband/autopilot">Autopilot</a></li>
+<li><a href="https://github.com/bluemixgaragelondon/cf-blue-green-deploy">BlueGreenDeploy</a></li>
+</ul>
+
+<p>My script is there to show you what happens behind the curtains and to be used by CI/CD systems or if you need more fine-grained control over what is happening during the deployment. Personally, I really like the BlueGreenDeploy plugin. It&rsquo;s easy to use and does the job.</p>
+
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'berndsgnch';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-22629901-2', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
