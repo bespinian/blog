@@ -166,15 +166,14 @@ The PHP buildpack allows us to configure any PHP app using a dedicated file. Cre
 To specify how the app should behave in Cloud Foundry, let's add a `manifest.yml` file to the root of our project. Then insert the following content:
 
 ```yaml
----
 applications:
-- name: piwik
-  host: my-piwik
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/php-buildpack.git
-
-  services:
-  - piwik-db
+  - name: piwik
+    host: my-piwik
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/php-buildpack.git
+    services:
+      - piwik-db
 ```
 
 Be creative with the `host` because the default one is probably already taken.

@@ -185,16 +185,15 @@ function s3_uploads_add_endpoint_param($params)
 
 <p>Last but not least, we&rsquo;ll create a <code>manifest.yml</code> file to push our app to the cloud more easily. Create the file at the root of your <code>wordpress</code> directory and fill it with the following content:</p>
 
-<pre><code class="language-yaml">---
-applications:
-- name: wordpress
-  host: my-wordpress
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/php-buildpack.git
-
-  services:
-  - wp-db
-  - wp-storage
+<pre><code class="language-yaml">applications:
+  - name: wordpress
+    host: my-wordpress
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/php-buildpack.git
+    services:
+      - wp-db
+      - wp-storage
 </code></pre>
 
 <p>If the hostname is already taken, choose another one. You can use whatever you want.</p>

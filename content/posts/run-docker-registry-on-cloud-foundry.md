@@ -50,21 +50,19 @@ Again, this example is using the Swisscom Application Cloud. If you're using a d
 Now `cd` into your registry folder and create a `manifest.yml` file. Cloud Foundry uses it to specify how your app should be pushed and started. Then paste the following lines into it:
 
 ```yaml
----
 applications:
-- name: registry
-  host: my-hostname
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/binary-buildpack.git
-  command: ./entrypoint-cf.sh
-
-  services:
-  - registry-storage
-  - registry-cache
-
-  env:
-    REGISTRY_STORAGE_S3_BUCKET: my-bucket
-    REGISTRY_HTTP_SECRET: xxx
+  - name: registry
+    host: my-hostname
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/binary-buildpack.git
+    command: ./entrypoint-cf.sh
+    services:
+      - registry-storage
+      - registry-cache
+    env:
+      REGISTRY_STORAGE_S3_BUCKET: my-bucket
+      REGISTRY_HTTP_SECRET: xxx
 ```
 
 Don't forget to change `my-bucket` to your own bucket name and the `host` to some hostname that isn't taken yet. Furthermore, you'll need to generate some random string and use it as the `REGISTRY_HTTP_SECRET`.

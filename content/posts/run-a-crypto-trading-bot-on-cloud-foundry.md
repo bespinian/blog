@@ -92,20 +92,18 @@ $ ./zenbot.sh list-strategies
 The last step before pushing your bot is to create a `manifest.yml` file to automate the setup of your deployment. It should look as follows:
 
 ```yaml
----
 applications:
-- name: zenbot
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git
-  no-route: true
-  health-check-type: process
-
-  services:
-  - zenbot-db
-  - zenbot-gdax
-
-  env:
-    ZENBOT_SELECTOR: 'gdax.BTC-EUR'
+  - name: zenbot
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/nodejs-buildpack.git
+    no-route: true
+    health-check-type: process
+    services:
+      - zenbot-db
+      - zenbot-gdax
+    env:
+      ZENBOT_SELECTOR: "gdax.BTC-EUR"
 ```
 
 Replace the selector with the respective product you want to trade and add another line if you don't want to use the default trading strategy.

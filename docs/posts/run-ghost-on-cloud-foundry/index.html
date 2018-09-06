@@ -148,19 +148,17 @@ npm start
 
 <p>Now, all we&rsquo;ll need to do is tell Cloud Foundry to run this script to start the app instead of calling <code>npm start</code> directly (which is the default for Node.js apps). We can do this in the <code>manifest.yml</code> file, which is where Cloud Foundry gets its instructions of how to run an app. Create a new file called <code>manifest.yml</code> in the root directory of the app and paste the following content in there:</p>
 
-<pre><code class="language-yaml">---
-applications:
-- name: my-blog
-  memory: 256MB
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git
-  command: ./entrypoint-cf.sh
-
-  services:
-  - blog-db
-  - mailgun
-
-  env:
-    NODE_ENV: production
+<pre><code class="language-yaml">applications:
+  - name: my-blog
+    memory: 256MB
+    buildpacks:
+      - https://github.com/cloudfoundry/nodejs-buildpack.git
+    command: ./entrypoint-cf.sh
+    services:
+      - blog-db
+      - mailgun
+    env:
+      NODE_ENV: production
 </code></pre>
 
 <p>This tells CF to use the correct buildpack and to initiate the app with our entrypoint script. It also sets the <code>NODE_ENV</code> environment variable to <code>production</code> which optimizes Node.js and Ghost to run with better performance. Furthermore, it tells Cloud Foundry to bind the two services we&rsquo;ve created above to our blog app.</p>

@@ -146,16 +146,15 @@ This simple one-file plugin checks if the constant `S3_UPLOADS_ENDPOINT_URL` is 
 Last but not least, we'll create a `manifest.yml` file to push our app to the cloud more easily. Create the file at the root of your `wordpress` directory and fill it with the following content:
 
 ```yaml
----
 applications:
-- name: wordpress
-  host: my-wordpress
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/php-buildpack.git
-
-  services:
-  - wp-db
-  - wp-storage
+  - name: wordpress
+    host: my-wordpress
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/php-buildpack.git
+    services:
+      - wp-db
+      - wp-storage
 ```
 
 If the hostname is already taken, choose another one. You can use whatever you want.
