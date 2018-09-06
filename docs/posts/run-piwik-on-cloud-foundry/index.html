@@ -199,15 +199,14 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 
 <p>To specify how the app should behave in Cloud Foundry, let&rsquo;s add a <code>manifest.yml</code> file to the root of our project. Then insert the following content:</p>
 
-<pre><code class="language-yaml">---
-applications:
-- name: piwik
-  host: my-piwik
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/php-buildpack.git
-
-  services:
-  - piwik-db
+<pre><code class="language-yaml">applications:
+  - name: piwik
+    host: my-piwik
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/php-buildpack.git
+    services:
+      - piwik-db
 </code></pre>
 
 <p>Be creative with the <code>host</code> because the default one is probably already taken.</p>

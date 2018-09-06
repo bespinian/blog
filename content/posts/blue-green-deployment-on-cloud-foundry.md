@@ -93,25 +93,25 @@ cf rename "${temp_app_name}" "${app_name}"
 
 The script tries to guess some variables from your `manifest.yml` file but you'll still need to set some environment variables for a successful deployment:
 
-* `CF_API`: The API endpoint of the CF instance you want to use (e.g. `https://api.lyra-836.appcloud.swisscom.com`)
-* `CF_SHARED_DOMAIN`: The shared domain you want to use for temporary routes used to smoke test your app
-* `CF_USERNAME`: Your Cloud Foundry username
-* `CF_PASSWORD`: Your Cloud Foundry password
-* `CF_ORG`: The Cloud Foundry org you want to deploy to
-* `CF_SPACE`: The Cloud Foundry space you want to deploy to
+- `CF_API`: The API endpoint of the CF instance you want to use (e.g. `https://api.lyra-836.appcloud.swisscom.com`)
+- `CF_SHARED_DOMAIN`: The shared domain you want to use for temporary routes used to smoke test your app
+- `CF_USERNAME`: Your Cloud Foundry username
+- `CF_PASSWORD`: Your Cloud Foundry password
+- `CF_ORG`: The Cloud Foundry org you want to deploy to
+- `CF_SPACE`: The Cloud Foundry space you want to deploy to
 
 As soon as you've set all of these variables, you can simply execute the script and it will do a verbose blue-green deployment for you. The script will deploy the new version of your app and check for it to get healthy. You can change the `expected_response` parameter to something else like `401` if your app doesn't return a `200` status code without authentication.
 
 ## Caveats
 
-* The script currently doesn't work if your app does not use a route.
-* The script currently doesn't work if your app uses more than one routes.
+- The script currently doesn't work if your app does not use a route.
+- The script currently doesn't work if your app uses more than one routes.
 
 ## Further reading
 
 There are two plugins for the Cloud Foundry CLI that also automate certain steps of blue-green deployment:
 
-* [Autopilot](https://github.com/contraband/autopilot)
-* [BlueGreenDeploy](https://github.com/bluemixgaragelondon/cf-blue-green-deploy)
+- [Autopilot](https://github.com/contraband/autopilot)
+- [BlueGreenDeploy](https://github.com/bluemixgaragelondon/cf-blue-green-deploy)
 
 My script is there to show you what happens behind the curtains and to be used by CI/CD systems or if you need more fine-grained control over what is happening during the deployment. Personally, I really like the BlueGreenDeploy plugin. It's easy to use and does the job.

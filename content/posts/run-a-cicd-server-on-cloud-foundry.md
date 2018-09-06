@@ -7,10 +7,10 @@ Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the `cf push` com
 
 [Strider](https://github.com/strider-cd/strider) is an open source CI/CD server based on [Node.js](https://nodejs.org) and [MongoDB](https://mongodb.org). It integrates well with git and its hosted solutions (e.g. [Github](https://github.com), [Bitbucket](https://bitbucket.org) or [Gitlab](https://gitlab.com)) and features a number of plugins to suit almost all your needs. The idea is, to have Strider "watch" your git repos and, on change, go through the following stages:
 
-1.  Setup an environment to test your code
-2.  Run your tests
-3.  Build/compile your code upon successful tests
-4.  Deploy your code upon successful build/compilation
+1. Setup an environment to test your code
+2. Run your tests
+3. Build/compile your code upon successful tests
+4. Deploy your code upon successful build/compilation
 
 This is ideal to be used with Cloud Foundry since it can ensure a continuous integration and deployment process in a modern and cloud-ready way. Upon pushing new code, you can always be sure that it will be tested and (if on the right branch) deployed to the respective environment. And the best part: It all runs on Cloud Foundry. So you will be deploying from Cloud Foundry to Cloud Foundry.
 
@@ -79,20 +79,18 @@ This will create a service in our space which exposes your Mailgun credentials v
 Your app is now ready to run locally (using `npm start`). To push it to the cloud, create a `manifest.yml` file in the root folder of Strider and insert the following content:
 
 ```yaml
----
 applications:
-- name: strider
-  host: strider
-  memory: 2048MB
-  instances: 1
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
-
-  services:
-  - strider-db
-  - mailgun
-
-  env:
-    NODE_ENV: production
+  - name: strider
+    host: strider
+    memory: 2048MB
+    instances: 1
+    buildpacks:
+      - https://github.com/cloudfoundry/buildpack-nodejs.git
+    services:
+      - strider-db
+      - mailgun
+    env:
+      NODE_ENV: production
 ```
 
 This will provide the setup instructions for Cloud Foundry to properly run your application. It creates an app with 2048MB of memory, so charges may apply (depending on your provider).
@@ -170,11 +168,11 @@ This script will simply push our app using the credentials we provide it with th
 
 To provide these variables, add them to the settings of the "Environment" plugin. We'll need the following ones:
 
-* `CF_API` - The API endpoint of your Cloud Foundry installation (e.g. `https://api.lyra-836.appcloud.swisscom.com` for the Swisscom App Cloud)
-* `CF_USERNAME` - Your Cloud Foundry username
-* `CF_PASSWORD` - Your Cloud Foundry password
-* `CF_ORG` - The Cloud Foundry organization you want to deploy your app to
-* `CF_SPACE` - The Cloud Foundry space you want to deploy your app to
+- `CF_API` - The API endpoint of your Cloud Foundry installation (e.g. `https://api.lyra-836.appcloud.swisscom.com` for the Swisscom App Cloud)
+- `CF_USERNAME` - Your Cloud Foundry username
+- `CF_PASSWORD` - Your Cloud Foundry password
+- `CF_ORG` - The Cloud Foundry organization you want to deploy your app to
+- `CF_SPACE` - The Cloud Foundry space you want to deploy your app to
 
 ## Git Push
 

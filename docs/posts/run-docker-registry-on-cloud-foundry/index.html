@@ -91,21 +91,19 @@
 
 <p>Now <code>cd</code> into your registry folder and create a <code>manifest.yml</code> file. Cloud Foundry uses it to specify how your app should be pushed and started. Then paste the following lines into it:</p>
 
-<pre><code class="language-yaml">---
-applications:
-- name: registry
-  host: my-hostname
-  memory: 256M
-  buildpack: https://github.com/cloudfoundry/binary-buildpack.git
-  command: ./entrypoint-cf.sh
-
-  services:
-  - registry-storage
-  - registry-cache
-
-  env:
-    REGISTRY_STORAGE_S3_BUCKET: my-bucket
-    REGISTRY_HTTP_SECRET: xxx
+<pre><code class="language-yaml">applications:
+  - name: registry
+    host: my-hostname
+    memory: 256M
+    buildpacks:
+      - https://github.com/cloudfoundry/binary-buildpack.git
+    command: ./entrypoint-cf.sh
+    services:
+      - registry-storage
+      - registry-cache
+    env:
+      REGISTRY_STORAGE_S3_BUCKET: my-bucket
+      REGISTRY_HTTP_SECRET: xxx
 </code></pre>
 
 <p>Don&rsquo;t forget to change <code>my-bucket</code> to your own bucket name and the <code>host</code> to some hostname that isn&rsquo;t taken yet. Furthermore, you&rsquo;ll need to generate some random string and use it as the <code>REGISTRY_HTTP_SECRET</code>.</p>
