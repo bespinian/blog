@@ -1,3 +1,3 @@
-# BERN DSGN
+# be|spinian Blog
 
-My personal blog at <https://berndsgn.ch>. Created with [Hugo](https://gohugo.io/).
+The be|spinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://gohugo.io).
