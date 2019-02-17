@@ -1,6 +1,6 @@
-baseURL = "https://berndsgn.ch/"
+baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
-title = "BERN DSGN"
+title = "be|spinian Blog"
 theme = "hemingway"
 publishDir = "docs"
 disqusShortname = "berndsgnch"
@@ -13,11 +13,11 @@ style = "androidstudio"
 languages = ["go", "typescript", "yaml"]
 
 [[params.social]]
-url = "https://github.com/mastertinner"
+url = "https://github.com/bespinian"
 fa_icon = "fa-github"
 
 [[params.social]]
-url = "https://twitter.com/mastertinner"
+url = "https://twitter.com/bespinian"
 fa_icon = "fa-twitter"
 
 [[params.social]]
