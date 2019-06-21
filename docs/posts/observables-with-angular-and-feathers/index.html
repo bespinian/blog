@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observables With Angular and Feathersjs | bespinian Blog</title>
+<title>Observables With Angular and Feathers | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -45,11 +45,11 @@
 <section class="section">
   <div class="container">
     <h2 class="subtitle is-6">March 14, 2016</h2>
-    <h1 class="title">Observables With Angular and Feathersjs</h1>
+    <h1 class="title">Observables With Angular and Feathers</h1>
     <div class="content">
       
 
-<p><a href="http://feathersjs.com">FeathersJS</a> is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the <a href="https://github.com/angular/angular-cli">Angular CLI</a> for your app.</p>
+<p><a href="http://feathersjs.com">Feathers</a> is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the <a href="https://github.com/angular/angular-cli">Angular CLI</a> for your app.</p>
 
 <p>In my example, I&rsquo;ll use a simple todo service and a component that lists those todos.</p>
 
@@ -93,7 +93,7 @@ export class Todo {
 
 <h2 id="create-actual-service">Create actual service</h2>
 
-<p>Then we create the actual service which connects to the FeathersJS backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The FeathersJS service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
+<p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
 
 <pre><code class="language-typescript">// src/app/todos/todo.service.ts
 
@@ -228,7 +228,7 @@ export class TodosComponent implements OnDestroy, OnInit {
 }
 </code></pre>
 
-<p>Our component <code>TodosComponent</code> now has a property <code>todos</code> which contains the todos it gets from the respective FeathersJS service and which can be used in the app. It live-updates the UI every time a todo in the FeathersJS API is removed or added.</p>
+<p>Our component <code>TodosComponent</code> now has a property <code>todos</code> which contains the todos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a todo in the Feathers API is removed or added.</p>
 
     </div>
   </div>
@@ -252,7 +252,7 @@ export class TodosComponent implements OnDestroy, OnInit {
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2018</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>

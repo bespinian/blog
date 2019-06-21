@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run a CI/CD Server on Cloud Foundry | be|spinian Blog</title>
+<title>Run a CI/CD Server on Cloud Foundry | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -72,7 +72,7 @@
 
 <p>Install the <code>cfenv</code> npm package using</p>
 
-<pre><code class="language-bash">$ npm install cfenv --save
+<pre><code class="language-shell">$ npm install cfenv --save
 </code></pre>
 
 <p>This package allows you to conveniently access the Cloud Foundry services you bind to your application.</p>
@@ -100,7 +100,7 @@ if (process.env.VCAP_SERVICES) {
 
 <p>Create a MongoDB service in Cloud Foundry with the command</p>
 
-<pre><code class="language-bash">$ cf create-service mongodb small strider-db
+<pre><code class="language-shell">$ cf create-service mongodb small strider-db
 </code></pre>
 
 <p>(may differ depending on your Cloud Foundry provider) in the space where you want to deploy your Strider instance to.</p>
@@ -113,7 +113,7 @@ if (process.env.VCAP_SERVICES) {
 
 <p>Now we&rsquo;ll have to insert these credentials into Cloud Foundry using a User Provided Service. You can do so by running the command</p>
 
-<pre><code class="language-bash">$ cf create-user-provided-service mailgun -p '{ &quot;hostname&quot;: &quot;smtp.mailgun.org&quot;, &quot;username&quot;: &quot;&lt;your-mailgun-smtp-login&gt;&quot;, &quot;password&quot;: &quot;&lt;your-mailgun-password&gt;&quot; }'
+<pre><code class="language-shell">$ cf create-user-provided-service mailgun -p '{ &quot;hostname&quot;: &quot;smtp.mailgun.org&quot;, &quot;username&quot;: &quot;&lt;your-mailgun-smtp-login&gt;&quot;, &quot;password&quot;: &quot;&lt;your-mailgun-password&gt;&quot; }'
 </code></pre>
 
 <p>This will create a service in our space which exposes your Mailgun credentials via environment variables to any app bound to it.</p>
@@ -150,27 +150,27 @@ if (process.env.VCAP_SERVICES) {
 
 <p>To connect to your MongoDB and insert the admin user, we&rsquo;ll need to create a set of credentials to manually connect to the database first. To do so, type</p>
 
-<pre><code class="language-bash">$ cf create-service-key strider-db mykey
+<pre><code class="language-shell">$ cf create-service-key strider-db mykey
 </code></pre>
 
 <p>Then retrieve the credentials using</p>
 
-<pre><code class="language-bash">$ cf service-key strider-db mykey
+<pre><code class="language-shell">$ cf service-key strider-db mykey
 </code></pre>
 
 <p>We can now use these to connect to the MongoDB and insert our users. To do so, run</p>
 
-<pre><code class="language-bash">$ cf service-connector 13000 &lt;your-mongodb-host&gt;:&lt;your-mongodb-port&gt;
+<pre><code class="language-shell">$ cf service-connector 13000 &lt;your-mongodb-host&gt;:&lt;your-mongodb-port&gt;
 </code></pre>
 
 <p>to open the connection. Then open a new console window and connect your MongoDB shell (you need to have it <a href="https://docs.mongodb.org/manual/installation">installed</a>) to that opened connection using the following command:</p>
 
-<pre><code class="language-bash">$ mongo localhost:13000/&lt;your-mongodb-database&gt; --username &lt;your-mongodb-username&gt; --password &lt;your-mongodb-password&gt;`
+<pre><code class="language-shell">$ mongo localhost:13000/&lt;your-mongodb-database&gt; --username &lt;your-mongodb-username&gt; --password &lt;your-mongodb-password&gt;`
 </code></pre>
 
 <p>Now we have an authenticated and authorized connection into our DB. In the MongoDB shell, type</p>
 
-<pre><code class="language-bash">&gt; db.users.insert({ &quot;account_level&quot; : 1, &quot;hash&quot; : &quot;$2a$10$llY8X.g9GPW/tygE0UQfZ.yN.YSccIIuAyxO41Si4odoVEhLBlxcy&quot;, &quot;salt&quot; : &quot;$2a$10$llY8X.g9GPW/tygE0UQfZ.&quot;, &quot;email&quot; : &quot;&lt;your-email-address&gt;&quot;, &quot;jobs&quot; : [ ], &quot;projects&quot; : [ ], &quot;accounts&quot; : [ ] })
+<pre><code class="language-shell">&gt; db.users.insert({ &quot;account_level&quot; : 1, &quot;hash&quot; : &quot;$2a$10$llY8X.g9GPW/tygE0UQfZ.yN.YSccIIuAyxO41Si4odoVEhLBlxcy&quot;, &quot;salt&quot; : &quot;$2a$10$llY8X.g9GPW/tygE0UQfZ.&quot;, &quot;email&quot; : &quot;&lt;your-email-address&gt;&quot;, &quot;jobs&quot; : [ ], &quot;projects&quot; : [ ], &quot;accounts&quot; : [ ] })
 </code></pre>
 
 <p>Then you can close the two terminal windows.</p>
@@ -239,12 +239,24 @@ cf push
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

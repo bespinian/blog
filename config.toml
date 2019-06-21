@@ -1,8 +1,9 @@
 baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
-title = "be|spinian Blog"
+title = "bespinian Blog"
 theme = "hemingway"
 publishDir = "docs"
+copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2019"
 disqusShortname = "berndsgnch"
 googleAnalytics = "UA-22629901-2"
 
@@ -10,7 +11,17 @@ googleAnalytics = "UA-22629901-2"
 
 [params.highlight]
 style = "androidstudio"
-languages = ["go", "typescript", "yaml"]
+languages = [
+  "bash",
+  "go",
+  "html",
+  "javascript",
+  "json",
+  "nginx",
+  "php",
+  "typescript",
+  "yaml",
+]
 
 [[params.social]]
 url = "https://github.com/bespinian"

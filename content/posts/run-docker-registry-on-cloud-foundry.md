@@ -9,7 +9,7 @@ If you work a lot with [Docker](https://www.docker.com/), you are probably used 
 
 First we need to create the registry's binary to upload it to Cloud Foundry using the [Binary Buildpack](https://github.com/cloudfoundry/binary-buildpack). For that, you need to have [Docker](https://docs.docker.com/engine/installation/) installed. Run a `git clone` on the [Docker Distribution repo on GitHub](https://github.com/docker/distribution):
 
-```bash
+```shell
 $ git clone https://github.com/docker/distribution.git
 ```
 
@@ -17,13 +17,13 @@ It is advisable to check out the latest tag of the repo to build. This will ensu
 
 Then `cd` into it and compile it using Docker:
 
-```bash
+```shell
 $ docker run --rm -v "${PWD}:/go/src/github.com/docker/distribution" -w /go/src/github.com/docker/distribution golang make binaries
 ```
 
 After the compilation, create a new folder anywhere on your computer and copy the file `bin/registry` into it. This is the binary file that contains the whole registry application:
 
-```bash
+```shell
 $ mkdir ~/registry && cp bin/registry ~/registry
 ```
 
@@ -39,7 +39,7 @@ This step is optional. If you omit it though, you'll have to remove all the Redi
 
 To improve the performance of our registry, we can add a [Redis](https://redis.io/) cache. First create one in Cloud Foundry:
 
-```bash
+```shell
 $ cf create-service redis small registry-cache
 ```
 
@@ -145,7 +145,7 @@ health:
 
 Then make the script executable by running the following command:
 
-```bash
+```shell
 $ chmod +x entrypoint-cf.sh
 ```
 
@@ -153,7 +153,7 @@ $ chmod +x entrypoint-cf.sh
 
 Your registry is ready to be pushed. Simply run the following command:
 
-```bash
+```shell
 $ cf push
 ```
 
@@ -163,13 +163,13 @@ Your registry is ready to go!
 
 Now you should be able to push a local docker image to your registry. Pull an example one from the Docker Store:
 
-```bash
+```shell
 $ docker pull nginx
 ```
 
 Then rename it to be pushed to your registry:
 
-```bash
+```shell
 $ docker tag nginx my-hostname.scapp.io/my-nginx
 ```
 
@@ -177,12 +177,12 @@ Don't forget to adjust the hostname "my-hostname" to the one you chose for your 
 
 Then push it to your private registry:
 
-```bash
+```shell
 $ docker push my-hostname.scapp.io/my-nginx
 ```
 
 Now you can pull it using
 
-```bash
+```shell
 $ docker pull my-hostname.scapp.io/my-nginx
 ```

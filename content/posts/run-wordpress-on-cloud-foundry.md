@@ -9,7 +9,7 @@ date: 2017-08-25T16:19:58+02:00
 
 To get WordPress, simply download the latest version from their [website](https://wordpress.org/download/) and extract it to any directory. Then `cd` into that directory from your terminal and copy the file `wp-config-sample.php` to `wp-config.php`.
 
-```bash
+```shell
 $ cp wp-config-sample.php wp-config.php
 ```
 
@@ -19,7 +19,7 @@ We'll use this file to configure WordPress.
 
 Next, we'll need to create our database and S3 storage as services in Cloud Foundry. To create the database, run the following command:
 
-```bash
+```shell
 $ cf create-service mariadbent usage wp-db
 ```
 
@@ -108,7 +108,7 @@ This config allows us to get the credentials to the database and the configurati
 
 Luckily for us, there is a neat plugin for WordPress that allows uploads to be stored in S3 instead of the local file system. You can find the plugin on [GitHub](https://github.com/humanmade/S3-Uploads). We will directly clone it into the plugins directory of our WordPress so that we can push it to Cloud Foundry with WordPress itself:
 
-```bash
+```shell
 $ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
 ```
 
@@ -163,7 +163,7 @@ If the hostname is already taken, choose another one. You can use whatever you w
 
 Now it's time to push our app to the cloud. Run the following command:
 
-```bash
+```shell
 $ cf push
 ```
 

@@ -17,7 +17,7 @@ First, we need to clone the repo from [GitHub](https://github.com/carlos8f/zenbo
 
 Zenbot has two dependencies it needs to work. The first one is [MongoDB](https://www.mongodb.com/). In most Cloud Foundry installations, you can get that with a simple command like:
 
-```bash
+```shell
 $ cf create-service mongodb small zenbot-db
 ```
 
@@ -25,7 +25,7 @@ The next dependency is a GDAX API client. Any of the big trading platforms will 
 
 After that's done, go to the API settings and create a new set of API keys with the "Trade" permission. Note down the credentials and create a user provided service for them (be aware that this will allow anybody with the respective permissions in Cloud Foundry to see your API credentials):
 
-```bash
+```shell
 $ cf create-user-provided-service zenbot-gdax -p '{"key":"YOUR-API-KEY","b64secret":"YOUR-API-SECRET","passphrase":"YOUR-API-PASSPHRASE"}'
 ```
 
@@ -82,7 +82,7 @@ c.strategy = process.env.ZENBOT_STRATEGY || "trend_ema";
 
 This allows us to set the selector (i.e. the product) and the trading strategy the bot should use through environment variables. To get a list of possible values, you can run the following commands in the root folder of the repo:
 
-```bash
+```shell
 $ ./zenbot.sh list-selectors
 $ ./zenbot.sh list-strategies
 ```
@@ -112,7 +112,7 @@ Replace the selector with the respective product you want to trade and add anoth
 
 Now, all that's left is to run `cf push` to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:
 
-```bash
+```shell
 $ cf logs zenbot --recent
 ```
 

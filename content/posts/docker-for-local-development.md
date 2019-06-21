@@ -11,7 +11,7 @@ Most backend systems are accessible through HTTP and through a specific port. Yo
 
 If you don't have Docker installed yet, I suggest you do so now and come back afterwards. I for one, have really come to like [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) which you can also install through [Homebrew](https://brew.sh/) by running the following command:
 
-```bash
+```shell
 $ brew cask install docker
 ```
 
@@ -21,27 +21,27 @@ Installing Docker on Windows can be done with [Docker for Windows](https://www.d
 
 Now let's get to actually running the services. The magic formula here is the following command:
 
-```bash
+```shell
 $ docker run -d -p <port>:<port> <service>
 ```
 
 Replace `<port>` with the default port of your service and `<service>` with its name and you got yourself a running instance. The `-d` flag specifies, that you want to run the Docker container in [detached mode](https://docs.docker.com/engine/reference/run/#detached--d) which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:
 
-```bash
+```shell
 # MongoDB
 $ docker run -d -p 27017:27017 mongo
 ```
 
 Easy!
 
-```bash
+```shell
 # Redis
 $ docker run -d -p 6379:6379 redis:3
 ```
 
 Here, we also specified the Redis version we want to use. You can find the available versions by searching for the respective image on [Docker Store](https://store.docker.com).
 
-```bash
+```shell
 # MySQL
 $ docker run -d -p 3306:3306 -e 'MYSQL_ALLOW_EMPTY_PASSWORD=yes' mysql
 ```
@@ -60,7 +60,7 @@ A first important shortcut is that you can always abbreviate any container ID to
 
 Some other useful commands are:
 
-```bash
+```shell
 # Stop all running containers
 $ docker stop $(docker ps -a -q)
 
@@ -75,4 +75,7 @@ $ docker volume rm $(docker volume ls -q)
 
 # Remove all unused networks
 $ docker network rm $(docker network ls -q)
+
+# Remove everything
+$ docker system prune --all
 ```

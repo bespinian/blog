@@ -11,7 +11,7 @@ In this tutorial, I will use the [Swisscom Application Cloud](https://developer.
 
 Download the latest version of Piwik from <https://piwik.org/download>. Then unzip it and `cd` into its root folder. The folder contains another subfolder called "piwik" and an instructions link. We don't need this nested structure. Execute the following command to normalize it:
 
-```bash
+```shell
 $  cp -rf piwik .. && rm -rf piwik
 ```
 
@@ -19,7 +19,7 @@ $  cp -rf piwik .. && rm -rf piwik
 
 As a first step, we need to create the service in Cloud Foundry:
 
-```bash
+```shell
 $ cf create-service mariadbent usage piwik-db
 ```
 
@@ -134,7 +134,7 @@ $this->addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 
 Since Piwik already comes with its dependencies installed, we don't want [Composer](https://getcomposer.org/) to run again in Cloud Foundry. The PHP buildpack won't run Composer if it doesn't find any files that would indicate that. So let's ignore the Composer files when pushing. Add a `.cfignore` file to the root of your project and paste the following line into it:
 
-```bash
+```txt
 /composer.*
 ```
 
@@ -182,7 +182,7 @@ Be creative with the `host` because the default one is probably already taken.
 
 Now it's time to deploy our app to Cloud Foundry. Since we have already configured everything in our manifest file, all we need to do is
 
-```bash
+```shell
 $ cf push
 ```
 
