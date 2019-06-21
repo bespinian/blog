@@ -86,14 +86,14 @@ This config will work with the staticfile buildpack but disables some optional c
 
 Now push your app with `cf push` and set the `APP_CONFIG` environment variable to some JSON string with the following command:
 
-```bash
+```shell
 $ cf push <app-name>
 $ cf set-env <app-name> APP_CONFIG '{"apiUrl":"https://jsonplaceholder.typicode.com"}'
 ```
 
 Now restage your app, as suggested, with:
 
-```bash
+```shell
 $ cf restage <app-name>
 ```
 

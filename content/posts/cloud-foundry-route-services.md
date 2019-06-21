@@ -31,7 +31,7 @@ This tutorial assumes that you have a running app on Cloud Foundry which you can
 
 As a first step, let's create the actual rate limiter. Simply clone [this repo](https://github.com/cloudfoundry-samples/ratelimit-service) which contains a small Go rate limiting app. Then push the app to your space with the following command:
 
-```bash
+```shell
 $ cf push rate-limiter -m 64M
 ```
 
@@ -41,7 +41,7 @@ You may have to specify an alternate hostname using the `--hostname` flag or use
 
 Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as `-r` (don't forget to adjust the hostname of the URL to the one you have chosen for your "rate-limiter" app):
 
-```bash
+```shell
 $ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
 ```
 
@@ -51,7 +51,7 @@ You should aways use `https` for this URL to make the link between the CF router
 
 As a last step, we bind the newly created service to the route bound to the app we want to apply the rate limiter to (don't forget to replace the hostname with your own):
 
-```bash
+```shell
 $ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
 ```
 
@@ -59,14 +59,14 @@ $ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
 
 To test our rate limiter, we decrease the limit to 1 request per second (the default is 10). To do so, set the environment variable `RATE_LIMIT` to `1` and restage the app:
 
-```bash
+```shell
 $ cf set-env rate-limiter RATE_LIMIT 1
 $ cf restage rate-limiter
 ```
 
 The next step is to put some load onto the app. I'm using [loadtest](https://www.npmjs.com/package/loadtest) but you can use any tool like [ab](https://en.wikipedia.org/wiki/ApacheBench) or [Goad](https://goad.io/#demo). Again, don't forget to replace the hostname with the one you have chosen for your app.
 
-```bash
+```shell
 $ loadtest --rps 1000 https://myapp.scapp.io
 ```
 
@@ -74,7 +74,7 @@ You can open the logs of your rate limiter in a separate window with `cf logs ra
 
 The app should remain functional, even with the load of 1000 requests per second. If you turn off the rate limiter by unbinding "rate-limiter-service" from the route
 
-```bash
+```shell
 $ cf unbind-route-service scapp.io rate-limiter-service --hostname myapp
 ```
 

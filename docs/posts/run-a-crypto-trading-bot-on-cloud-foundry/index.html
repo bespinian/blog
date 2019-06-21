@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run a Crypto Trading Bot on Cloud Foundry | be|spinian Blog</title>
+<title>Run a Crypto Trading Bot on Cloud Foundry | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -63,14 +63,14 @@
 
 <p>Zenbot has two dependencies it needs to work. The first one is <a href="https://www.mongodb.com/">MongoDB</a>. In most Cloud Foundry installations, you can get that with a simple command like:</p>
 
-<pre><code class="language-bash">$ cf create-service mongodb small zenbot-db
+<pre><code class="language-shell">$ cf create-service mongodb small zenbot-db
 </code></pre>
 
 <p>The next dependency is a GDAX API client. Any of the big trading platforms will do but I&rsquo;m using GDAX to keep things simple. <a href="https://github.com/carlos8f/zenbot#description">Here</a> you can find a list of the supported platforms. To use GDAX, visit their <a href="https://www.gdax.com/">website</a> and create an account. The process is a little tedious because you&rsquo;ll have to provide a photo ID and go through a couple of more verification steps. But, believe me, eventually it&rsquo;s worth it. After you are signed up, choose the product you&rsquo;ll want to trade (e.g. BTC/EUR) in the top left corner and transfer some money to your account (either from a credit card, from a bank account or from an existing <a href="https://www.coinbase.com">Coinbase</a> account.</p>
 
 <p>After that&rsquo;s done, go to the API settings and create a new set of API keys with the &ldquo;Trade&rdquo; permission. Note down the credentials and create a user provided service for them (be aware that this will allow anybody with the respective permissions in Cloud Foundry to see your API credentials):</p>
 
-<pre><code class="language-bash">$ cf create-user-provided-service zenbot-gdax -p '{&quot;key&quot;:&quot;YOUR-API-KEY&quot;,&quot;b64secret&quot;:&quot;YOUR-API-SECRET&quot;,&quot;passphrase&quot;:&quot;YOUR-API-PASSPHRASE&quot;}'
+<pre><code class="language-shell">$ cf create-user-provided-service zenbot-gdax -p '{&quot;key&quot;:&quot;YOUR-API-KEY&quot;,&quot;b64secret&quot;:&quot;YOUR-API-SECRET&quot;,&quot;passphrase&quot;:&quot;YOUR-API-PASSPHRASE&quot;}'
 </code></pre>
 
 <p>In case you are using a different trading platform, create a similar user provided service with their API credentials.</p>
@@ -122,7 +122,7 @@ c.strategy = process.env.ZENBOT_STRATEGY || &quot;trend_ema&quot;;
 
 <p>This allows us to set the selector (i.e. the product) and the trading strategy the bot should use through environment variables. To get a list of possible values, you can run the following commands in the root folder of the repo:</p>
 
-<pre><code class="language-bash">$ ./zenbot.sh list-selectors
+<pre><code class="language-shell">$ ./zenbot.sh list-selectors
 $ ./zenbot.sh list-strategies
 </code></pre>
 
@@ -150,7 +150,7 @@ $ ./zenbot.sh list-strategies
 
 <p>Now, all that&rsquo;s left is to run <code>cf push</code> to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:</p>
 
-<pre><code class="language-bash">$ cf logs zenbot --recent
+<pre><code class="language-shell">$ cf logs zenbot --recent
 </code></pre>
 
 <p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Esentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
@@ -177,12 +177,24 @@ $ ./zenbot.sh list-strategies
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Docker for Local Development | be|spinian Blog</title>
+<title>Docker for Local Development | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -57,7 +57,7 @@
 
 <p>If you don&rsquo;t have Docker installed yet, I suggest you do so now and come back afterwards. I for one, have really come to like <a href="https://docs.docker.com/docker-for-mac/install/">Docker for Mac</a> which you can also install through <a href="https://brew.sh/">Homebrew</a> by running the following command:</p>
 
-<pre><code class="language-bash">$ brew cask install docker
+<pre><code class="language-shell">$ brew cask install docker
 </code></pre>
 
 <p>Installing Docker on Windows can be done with <a href="https://www.docker.com/docker-windows">Docker for Windows</a> and installing it on Linux is as easy as it gets: Just use your local package manager.</p>
@@ -66,24 +66,24 @@
 
 <p>Now let&rsquo;s get to actually running the services. The magic formula here is the following command:</p>
 
-<pre><code class="language-bash">$ docker run -d -p &lt;port&gt;:&lt;port&gt; &lt;service&gt;
+<pre><code class="language-shell">$ docker run -d -p &lt;port&gt;:&lt;port&gt; &lt;service&gt;
 </code></pre>
 
 <p>Replace <code>&lt;port&gt;</code> with the default port of your service and <code>&lt;service&gt;</code> with its name and you got yourself a running instance. The <code>-d</code> flag specifies, that you want to run the Docker container in <a href="https://docs.docker.com/engine/reference/run/#detached--d">detached mode</a> which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:</p>
 
-<pre><code class="language-bash"># MongoDB
+<pre><code class="language-shell"># MongoDB
 $ docker run -d -p 27017:27017 mongo
 </code></pre>
 
 <p>Easy!</p>
 
-<pre><code class="language-bash"># Redis
+<pre><code class="language-shell"># Redis
 $ docker run -d -p 6379:6379 redis:3
 </code></pre>
 
 <p>Here, we also specified the Redis version we want to use. You can find the available versions by searching for the respective image on <a href="https://store.docker.com">Docker Store</a>.</p>
 
-<pre><code class="language-bash"># MySQL
+<pre><code class="language-shell"># MySQL
 $ docker run -d -p 3306:3306 -e 'MYSQL_ALLOW_EMPTY_PASSWORD=yes' mysql
 </code></pre>
 
@@ -101,7 +101,7 @@ $ docker run -d -p 3306:3306 -e 'MYSQL_ALLOW_EMPTY_PASSWORD=yes' mysql
 
 <p>Some other useful commands are:</p>
 
-<pre><code class="language-bash"># Stop all running containers
+<pre><code class="language-shell"># Stop all running containers
 $ docker stop $(docker ps -a -q)
 
 # Remove all stopped containers
@@ -115,6 +115,9 @@ $ docker volume rm $(docker volume ls -q)
 
 # Remove all unused networks
 $ docker network rm $(docker network ls -q)
+
+# Remove everything
+$ docker system prune --all
 </code></pre>
 
     </div>
@@ -139,12 +142,24 @@ $ docker network rm $(docker network ls -q)
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

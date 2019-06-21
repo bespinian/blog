@@ -1,3 +1,3 @@
-# be|spinian Blog
+# bespinian Blog
 
-The be|spinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://gohugo.io).
+The bespinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://gohugo.io).

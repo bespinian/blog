@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run Docker Registry on Cloud Foundry | be|spinian Blog</title>
+<title>Run Docker Registry on Cloud Foundry | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -55,19 +55,19 @@
 
 <p>First we need to create the registry&rsquo;s binary to upload it to Cloud Foundry using the <a href="https://github.com/cloudfoundry/binary-buildpack">Binary Buildpack</a>. For that, you need to have <a href="https://docs.docker.com/engine/installation/">Docker</a> installed. Run a <code>git clone</code> on the <a href="https://github.com/docker/distribution">Docker Distribution repo on GitHub</a>:</p>
 
-<pre><code class="language-bash">$ git clone https://github.com/docker/distribution.git
+<pre><code class="language-shell">$ git clone https://github.com/docker/distribution.git
 </code></pre>
 
 <p>It is advisable to check out the latest tag of the repo to build. This will ensure that you have a supported version of Docker Distribution and therefore the registry.</p>
 
 <p>Then <code>cd</code> into it and compile it using Docker:</p>
 
-<pre><code class="language-bash">$ docker run --rm -v &quot;${PWD}:/go/src/github.com/docker/distribution&quot; -w /go/src/github.com/docker/distribution golang make binaries
+<pre><code class="language-shell">$ docker run --rm -v &quot;${PWD}:/go/src/github.com/docker/distribution&quot; -w /go/src/github.com/docker/distribution golang make binaries
 </code></pre>
 
 <p>After the compilation, create a new folder anywhere on your computer and copy the file <code>bin/registry</code> into it. This is the binary file that contains the whole registry application:</p>
 
-<pre><code class="language-bash">$ mkdir ~/registry &amp;&amp; cp bin/registry ~/registry
+<pre><code class="language-shell">$ mkdir ~/registry &amp;&amp; cp bin/registry ~/registry
 </code></pre>
 
 <p>This will be your working directory for this tutorial.</p>
@@ -82,7 +82,7 @@
 
 <p>To improve the performance of our registry, we can add a <a href="https://redis.io/">Redis</a> cache. First create one in Cloud Foundry:</p>
 
-<pre><code class="language-bash">$ cf create-service redis small registry-cache
+<pre><code class="language-shell">$ cf create-service redis small registry-cache
 </code></pre>
 
 <p>Again, this example is using the Swisscom Application Cloud. If you&rsquo;re using a different CF provider, the command might be different.</p>
@@ -185,14 +185,14 @@ health:
 
 <p>Then make the script executable by running the following command:</p>
 
-<pre><code class="language-bash">$ chmod +x entrypoint-cf.sh
+<pre><code class="language-shell">$ chmod +x entrypoint-cf.sh
 </code></pre>
 
 <h2 id="push-the-registry">Push the Registry</h2>
 
 <p>Your registry is ready to be pushed. Simply run the following command:</p>
 
-<pre><code class="language-bash">$ cf push
+<pre><code class="language-shell">$ cf push
 </code></pre>
 
 <p>Your registry is ready to go!</p>
@@ -201,24 +201,24 @@ health:
 
 <p>Now you should be able to push a local docker image to your registry. Pull an example one from the Docker Store:</p>
 
-<pre><code class="language-bash">$ docker pull nginx
+<pre><code class="language-shell">$ docker pull nginx
 </code></pre>
 
 <p>Then rename it to be pushed to your registry:</p>
 
-<pre><code class="language-bash">$ docker tag nginx my-hostname.scapp.io/my-nginx
+<pre><code class="language-shell">$ docker tag nginx my-hostname.scapp.io/my-nginx
 </code></pre>
 
 <p>Don&rsquo;t forget to adjust the hostname &ldquo;my-hostname&rdquo; to the one you chose for your registry app in Cloud Foundry.</p>
 
 <p>Then push it to your private registry:</p>
 
-<pre><code class="language-bash">$ docker push my-hostname.scapp.io/my-nginx
+<pre><code class="language-shell">$ docker push my-hostname.scapp.io/my-nginx
 </code></pre>
 
 <p>Now you can pull it using</p>
 
-<pre><code class="language-bash">$ docker pull my-hostname.scapp.io/my-nginx
+<pre><code class="language-shell">$ docker pull my-hostname.scapp.io/my-nginx
 </code></pre>
 
     </div>
@@ -243,12 +243,24 @@ health:
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

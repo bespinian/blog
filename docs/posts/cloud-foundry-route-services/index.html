@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cloud Foundry Route Services | be|spinian Blog</title>
+<title>Cloud Foundry Route Services | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -77,7 +77,7 @@
 
 <p>As a first step, let&rsquo;s create the actual rate limiter. Simply clone <a href="https://github.com/cloudfoundry-samples/ratelimit-service">this repo</a> which contains a small Go rate limiting app. Then push the app to your space with the following command:</p>
 
-<pre><code class="language-bash">$ cf push rate-limiter -m 64M
+<pre><code class="language-shell">$ cf push rate-limiter -m 64M
 </code></pre>
 
 <p>You may have to specify an alternate hostname using the <code>--hostname</code> flag or use a random one using the <code>--random-route</code> flag because the default one is taken.</p>
@@ -86,7 +86,7 @@
 
 <p>Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as <code>-r</code> (don&rsquo;t forget to adjust the hostname of the URL to the one you have chosen for your &ldquo;rate-limiter&rdquo; app):</p>
 
-<pre><code class="language-bash">$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
+<pre><code class="language-shell">$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
 </code></pre>
 
 <p>You should aways use <code>https</code> for this URL to make the link between the CF router and your route service more secure.</p>
@@ -95,27 +95,27 @@
 
 <p>As a last step, we bind the newly created service to the route bound to the app we want to apply the rate limiter to (don&rsquo;t forget to replace the hostname with your own):</p>
 
-<pre><code class="language-bash">$ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
+<pre><code class="language-shell">$ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
 </code></pre>
 
 <h3 id="test-our-rate-limiter">Test Our Rate Limiter</h3>
 
 <p>To test our rate limiter, we decrease the limit to 1 request per second (the default is 10). To do so, set the environment variable <code>RATE_LIMIT</code> to <code>1</code> and restage the app:</p>
 
-<pre><code class="language-bash">$ cf set-env rate-limiter RATE_LIMIT 1
+<pre><code class="language-shell">$ cf set-env rate-limiter RATE_LIMIT 1
 $ cf restage rate-limiter
 </code></pre>
 
 <p>The next step is to put some load onto the app. I&rsquo;m using <a href="https://www.npmjs.com/package/loadtest">loadtest</a> but you can use any tool like <a href="https://en.wikipedia.org/wiki/ApacheBench">ab</a> or <a href="https://goad.io/#demo">Goad</a>. Again, don&rsquo;t forget to replace the hostname with the one you have chosen for your app.</p>
 
-<pre><code class="language-bash">$ loadtest --rps 1000 https://myapp.scapp.io
+<pre><code class="language-shell">$ loadtest --rps 1000 https://myapp.scapp.io
 </code></pre>
 
 <p>You can open the logs of your rate limiter in a separate window with <code>cf logs rate-limiter</code> to directly tail the requests it gets.</p>
 
 <p>The app should remain functional, even with the load of 1000 requests per second. If you turn off the rate limiter by unbinding &ldquo;rate-limiter-service&rdquo; from the route</p>
 
-<pre><code class="language-bash">$ cf unbind-route-service scapp.io rate-limiter-service --hostname myapp
+<pre><code class="language-shell">$ cf unbind-route-service scapp.io rate-limiter-service --hostname myapp
 </code></pre>
 
 <p>and then run the test again, the app will most likely not be able to serve all request in a timely manner because it&rsquo;s not protected by the rate limiter anymore.</p>
@@ -146,12 +146,24 @@ $ cf restage rate-limiter
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

@@ -24,7 +24,7 @@ However, we need to make a few adjustments to the code of Strider for it to be r
 
 Install the `cfenv` npm package using
 
-```bash
+```shell
 $ npm install cfenv --save
 ```
 
@@ -54,7 +54,7 @@ This will ensure that Strider connects to a Cloud Foundry service called `stride
 
 Create a MongoDB service in Cloud Foundry with the command
 
-```bash
+```shell
 $ cf create-service mongodb small strider-db
 ```
 
@@ -68,7 +68,7 @@ Now it's time to create an email server so Strider can send out invitations or n
 
 Now we'll have to insert these credentials into Cloud Foundry using a User Provided Service. You can do so by running the command
 
-```bash
+```shell
 $ cf create-user-provided-service mailgun -p '{ "hostname": "smtp.mailgun.org", "username": "<your-mailgun-smtp-login>", "password": "<your-mailgun-password>" }'
 ```
 
@@ -107,31 +107,31 @@ Now that our app is running in the cloud, we just have one problem left: We cann
 
 To connect to your MongoDB and insert the admin user, we'll need to create a set of credentials to manually connect to the database first. To do so, type
 
-```bash
+```shell
 $ cf create-service-key strider-db mykey
 ```
 
 Then retrieve the credentials using
 
-```bash
+```shell
 $ cf service-key strider-db mykey
 ```
 
 We can now use these to connect to the MongoDB and insert our users. To do so, run
 
-```bash
+```shell
 $ cf service-connector 13000 <your-mongodb-host>:<your-mongodb-port>
 ```
 
 to open the connection. Then open a new console window and connect your MongoDB shell (you need to have it [installed](https://docs.mongodb.org/manual/installation)) to that opened connection using the following command:
 
-```bash
+```shell
 $ mongo localhost:13000/<your-mongodb-database> --username <your-mongodb-username> --password <your-mongodb-password>`
 ```
 
 Now we have an authenticated and authorized connection into our DB. In the MongoDB shell, type
 
-```bash
+```shell
 > db.users.insert({ "account_level" : 1, "hash" : "$2a$10$llY8X.g9GPW/tygE0UQfZ.yN.YSccIIuAyxO41Si4odoVEhLBlxcy", "salt" : "$2a$10$llY8X.g9GPW/tygE0UQfZ.", "email" : "<your-email-address>", "jobs" : [ ], "projects" : [ ], "accounts" : [ ] })
 ```
 

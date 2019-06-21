@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run WordPress on Cloud Foundry | be|spinian Blog</title>
+<title>Run WordPress on Cloud Foundry | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -55,7 +55,7 @@
 
 <p>To get WordPress, simply download the latest version from their <a href="https://wordpress.org/download/">website</a> and extract it to any directory. Then <code>cd</code> into that directory from your terminal and copy the file <code>wp-config-sample.php</code> to <code>wp-config.php</code>.</p>
 
-<pre><code class="language-bash">$ cp wp-config-sample.php wp-config.php
+<pre><code class="language-shell">$ cp wp-config-sample.php wp-config.php
 </code></pre>
 
 <p>We&rsquo;ll use this file to configure WordPress.</p>
@@ -64,7 +64,7 @@
 
 <p>Next, we&rsquo;ll need to create our database and S3 storage as services in Cloud Foundry. To create the database, run the following command:</p>
 
-<pre><code class="language-bash">$ cf create-service mariadbent usage wp-db
+<pre><code class="language-shell">$ cf create-service mariadbent usage wp-db
 </code></pre>
 
 <p>I&rsquo;m using the <a href="https://developer.swisscom.com/">Swisscom Application Cloud</a>. If you use another Cloud Foundy provider, this command may differ. Just make sure, you create an SQL service called &ldquo;wp-db&rdquo;.</p>
@@ -150,7 +150,7 @@ define('S3_UPLOADS_BUCKET_URL', 'https://' . $s3_conf['namespace'] . '.ds11s3ns.
 
 <p>Luckily for us, there is a neat plugin for WordPress that allows uploads to be stored in S3 instead of the local file system. You can find the plugin on <a href="https://github.com/humanmade/S3-Uploads">GitHub</a>. We will directly clone it into the plugins directory of our WordPress so that we can push it to Cloud Foundry with WordPress itself:</p>
 
-<pre><code class="language-bash">$ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
+<pre><code class="language-shell">$ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
 </code></pre>
 
 <p>This will make the plugin available for activation in WordPress&rsquo; admin GUI.</p>
@@ -202,7 +202,7 @@ function s3_uploads_add_endpoint_param($params)
 
 <p>Now it&rsquo;s time to push our app to the cloud. Run the following command:</p>
 
-<pre><code class="language-bash">$ cf push
+<pre><code class="language-shell">$ cf push
 </code></pre>
 
 <p>Then visit your site and the respective URL and follow the WordPress installation wizard. Once you are on your WordPress Admin page, go to the &ldquo;Plugins&rdquo; section and activate the &ldquo;S3 Uploads&rdquo; plugin. From now on, all the uploads you make should go directly to S3. You now have a cloud native WordPress installation!</p>
@@ -229,12 +229,24 @@ function s3_uploads_add_endpoint_param($params)
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

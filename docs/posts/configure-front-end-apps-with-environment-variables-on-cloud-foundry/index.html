@@ -2,7 +2,7 @@
 <html lang="en-us">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Configure Front End Apps With Environment Variables on Cloud Foundry | be|spinian Blog</title>
+<title>Configure Front End Apps With Environment Variables on Cloud Foundry | bespinian Blog</title>
 <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">be|spinian Blog</h1></a>
+        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile">
@@ -130,13 +130,13 @@ http {
 
 <p>Now push your app with <code>cf push</code> and set the <code>APP_CONFIG</code> environment variable to some JSON string with the following command:</p>
 
-<pre><code class="language-bash">$ cf push &lt;app-name&gt;
+<pre><code class="language-shell">$ cf push &lt;app-name&gt;
 $ cf set-env &lt;app-name&gt; APP_CONFIG '{&quot;apiUrl&quot;:&quot;https://jsonplaceholder.typicode.com&quot;}'
 </code></pre>
 
 <p>Now restage your app, as suggested, with:</p>
 
-<pre><code class="language-bash">$ cf restage &lt;app-name&gt;
+<pre><code class="language-shell">$ cf restage &lt;app-name&gt;
 </code></pre>
 
 <p>If you visit the <code>/app-config</code> endpoint of your app, it should return the specified JSON. Your front end app can now retrieve its config dynamically from that endpoint. You might have a fallback for all of these config items for local development if you use something like the <a href="https://webpack.github.io/docs/webpack-dev-server.html">webpack-dev-serer</a>. Of course, you can also configure your dev server to expose the same endpoint and create a development config for that.</p>
@@ -173,12 +173,24 @@ $ cf set-env &lt;app-name&gt; APP_CONFIG '{&quot;apiUrl&quot;:&quot;https://json
 
 <section class="section">
   <div class="container has-text-centered">
-    <p></p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
 

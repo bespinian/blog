@@ -11,7 +11,7 @@ This tutorial uses the [Swisscom Application Cloud S3 Dynamic Storage](https://d
 
 To create an S3 service, run the following command:
 
-```bash
+```shell
 $ cf create-service dynstrg usage my-storage
 ```
 
@@ -19,13 +19,13 @@ where `my-storage` is the name of your service instance.
 
 Then we create a service key so that we can access our service:
 
-```bash
+```shell
 $ cf create-service-key my-storage my-key
 ```
 
 Now you can retrieve the credentials to your S3 service at any time using the command
 
-```bash
+```shell
 $ cf service-key my-storage my-key
 ```
 
@@ -35,7 +35,7 @@ The credentials from this key will be used in the next steps.
 
 Now that we have our S3 service, we need to create a bucket to hold our data. I suggest to use the [s3cmd](https://github.com/s3tools/s3cmd) CLI tool for that. You can either download it from the [releases](https://github.com/s3tools/s3cmd/releases) page or by using [Homebrew](http://brew.sh/) if you're on macOS. As soon as you have it installed, configure it using the following command:
 
-```bash
+```shell
 $ s3cmd --configure
 ```
 
@@ -45,13 +45,13 @@ If you are using the Swisscom Dynamic Storage, set the region to `nil` and note 
 
 Now you should be able to run
 
-```bash
+```shell
 $ s3cmd ls
 ```
 
 which should return empty if you don't have any buckets or list your existing ones. Now, we can finally create our bucket called "my-bucket" with the following command:
 
-```bash
+```shell
 $ s3cmd mb s3://my-bucket
 ```
 
