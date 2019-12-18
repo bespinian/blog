@@ -47,51 +47,26 @@
     <h2 class="subtitle is-6">August 24, 2017</h2>
     <h1 class="title">Run Docker Registry on Cloud Foundry</h1>
     <div class="content">
-      
-
-<p>If you work a lot with <a href="https://www.docker.com/">Docker</a>, you are probably used to the concept of having a <a href="https://docs.docker.com/registry/">Docker Registry</a> which allows you to store your images in a safe place. There&rsquo;s a public registry that you can use for free at <a href="https://store.docker.com/">Docker Store</a>. But what if you don&rsquo;t want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.</p>
-
+      <p>If you work a lot with <a href="https://www.docker.com/">Docker</a>, you are probably used to the concept of having a <a href="https://docs.docker.com/registry/">Docker Registry</a> which allows you to store your images in a safe place. There's a public registry that you can use for free at <a href="https://store.docker.com/">Docker Store</a>. But what if you don't want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.</p>
 <h2 id="create-registry-binary">Create Registry Binary</h2>
-
-<p>First we need to create the registry&rsquo;s binary to upload it to Cloud Foundry using the <a href="https://github.com/cloudfoundry/binary-buildpack">Binary Buildpack</a>. For that, you need to have <a href="https://docs.docker.com/engine/installation/">Docker</a> installed. Run a <code>git clone</code> on the <a href="https://github.com/docker/distribution">Docker Distribution repo on GitHub</a>:</p>
-
-<pre><code class="language-shell">$ git clone https://github.com/docker/distribution.git
-</code></pre>
-
-<p>It is advisable to check out the latest tag of the repo to build. This will ensure that you have a supported version of Docker Distribution and therefore the registry.</p>
-
+<p>First we need to create the registry's binary to upload it to Cloud Foundry using the <a href="https://github.com/cloudfoundry/binary-buildpack">Binary Buildpack</a>. For that, you need to have <a href="https://docs.docker.com/engine/installation/">Docker</a> installed. Run a <code>git clone</code> on the <a href="https://github.com/docker/distribution">Docker Distribution repo on GitHub</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ git clone https://github.com/docker/distribution.git
+</code></pre></div><p>It is advisable to check out the latest tag of the repo to build. This will ensure that you have a supported version of Docker Distribution and therefore the registry.</p>
 <p>Then <code>cd</code> into it and compile it using Docker:</p>
-
-<pre><code class="language-shell">$ docker run --rm -v &quot;${PWD}:/go/src/github.com/docker/distribution&quot; -w /go/src/github.com/docker/distribution golang make binaries
-</code></pre>
-
-<p>After the compilation, create a new folder anywhere on your computer and copy the file <code>bin/registry</code> into it. This is the binary file that contains the whole registry application:</p>
-
-<pre><code class="language-shell">$ mkdir ~/registry &amp;&amp; cp bin/registry ~/registry
-</code></pre>
-
-<p>This will be your working directory for this tutorial.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker run --rm -v <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>PWD<span style="color:#e6db74">}</span><span style="color:#e6db74">:/go/src/github.com/docker/distribution</span><span style="color:#e6db74">&#34;</span> -w /go/src/github.com/docker/distribution golang make binaries
+</code></pre></div><p>After the compilation, create a new folder anywhere on your computer and copy the file <code>bin/registry</code> into it. This is the binary file that contains the whole registry application:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ mkdir ~/registry <span style="color:#f92672">&amp;&amp;</span> cp bin/registry ~/registry
+</code></pre></div><p>This will be your working directory for this tutorial.</p>
 <h2 id="create-s3-service">Create S3 Service</h2>
-
 <p>By default, the registry stores the pushed Docker images on the local filesystem. Since apps should be stateless according to the <a href="https://12factor.net/processes">twelve-factor app manifest</a>, we will change this behavior to use an S3 backend instead. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on my blog to create an S3 service with bucket and name the service &ldquo;registry-storage&rdquo;.</p>
-
 <h2 id="create-redis-cache">Create Redis Cache</h2>
-
-<p>This step is optional. If you omit it though, you&rsquo;ll have to remove all the Redis related stuff from the files described in the steps afterwards.</p>
-
+<p>This step is optional. If you omit it though, you'll have to remove all the Redis related stuff from the files described in the steps afterwards.</p>
 <p>To improve the performance of our registry, we can add a <a href="https://redis.io/">Redis</a> cache. First create one in Cloud Foundry:</p>
-
-<pre><code class="language-shell">$ cf create-service redis small registry-cache
-</code></pre>
-
-<p>Again, this example is using the Swisscom Application Cloud. If you&rsquo;re using a different CF provider, the command might be different.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service redis small registry-cache
+</code></pre></div><p>Again, this example is using the Swisscom Application Cloud. If you're using a different CF provider, the command might be different.</p>
 <h2 id="create-manifest-file">Create Manifest File</h2>
-
 <p>Now <code>cd</code> into your registry folder and create a <code>manifest.yml</code> file. Cloud Foundry uses it to specify how your app should be pushed and started. Then paste the following lines into it:</p>
-
-<pre><code class="language-yaml">applications:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">applications:
   - name: registry
     host: my-hostname
     memory: 256M
@@ -104,123 +79,95 @@
     env:
       REGISTRY_STORAGE_S3_BUCKET: my-bucket
       REGISTRY_HTTP_SECRET: xxx
-</code></pre>
-
-<p>Don&rsquo;t forget to change <code>my-bucket</code> to your own bucket name and the <code>host</code> to some hostname that isn&rsquo;t taken yet. Furthermore, you&rsquo;ll need to generate some random string and use it as the <code>REGISTRY_HTTP_SECRET</code>.</p>
-
+</code></pre></div><p>Don't forget to change <code>my-bucket</code> to your own bucket name and the <code>host</code> to some hostname that isn't taken yet. Furthermore, you'll need to generate some random string and use it as the <code>REGISTRY_HTTP_SECRET</code>.</p>
 <h2 id="create-entrypoint-script">Create Entrypoint Script</h2>
-
-<p>As you can see above, the manifest states an entrypoint script to be run as the command. This script generates the registry&rsquo;s <code>config.yml</code> out of our service configuration (which is in the <code>VCAP_SERVICES</code> environment variable) and then starts the app. Create the script under the name <code>entrypoint-cf.sh</code> and fill it with the following content:</p>
-
-<pre><code class="language-bash">#!/bin/bash
-
+<p>As you can see above, the manifest states an entrypoint script to be run as the command. This script generates the registry's <code>config.yml</code> out of our service configuration (which is in the <code>VCAP_SERVICES</code> environment variable) and then starts the app. Create the script under the name <code>entrypoint-cf.sh</code> and fill it with the following content:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
 set -e -u
 
-if [ -z &quot;${PORT}&quot; ]; then
-  echo &quot;Error: No PORT found&quot; &gt;&amp;2
-  exit 1
-fi
-if [ -z &quot;${VCAP_SERVICES}&quot; ]; then
-  echo &quot;Error: No VCAP_SERVICES found&quot; &gt;&amp;2
-  exit 1
-fi
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>PORT<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  echo <span style="color:#e6db74">&#34;Error: No PORT found&#34;</span> &gt;&amp;<span style="color:#ae81ff">2</span>
+  exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">fi</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>VCAP_SERVICES<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  echo <span style="color:#e6db74">&#34;Error: No VCAP_SERVICES found&#34;</span> &gt;&amp;<span style="color:#ae81ff">2</span>
+  exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">fi</span>
 
-s3_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;dynstrg&quot;][0].credentials // &quot;&quot;')&quot;
-if [ -z &quot;${s3_credentials}&quot; ]; then
-  echo &quot;Error: Please bind an S3 service&quot; &gt;&amp;2
-  exit 1
-fi
+s3_credentials<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>VCAP_SERVICES<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.[&#34;dynstrg&#34;][0].credentials // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>s3_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  echo <span style="color:#e6db74">&#34;Error: Please bind an S3 service&#34;</span> &gt;&amp;<span style="color:#ae81ff">2</span>
+  exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">fi</span>
 
-s3_regionendpoint=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessHost // &quot;&quot;')&quot;
-s3_access_key=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.accessKey // &quot;&quot;')&quot;
-s3_secret_key=&quot;$(echo &quot;${s3_credentials}&quot; | jq -r '.sharedSecret // &quot;&quot;')&quot;
+s3_regionendpoint<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>s3_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.accessHost // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+s3_access_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>s3_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.accessKey // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+s3_secret_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>s3_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.sharedSecret // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
 
-redis_credentials=&quot;$(echo &quot;${VCAP_SERVICES}&quot; | jq -r '.[&quot;redis&quot;][0].credentials // &quot;&quot;')&quot;
-if [ -z &quot;${redis_credentials}&quot; ]; then
-  echo &quot;Error: Please bind a Redis service&quot; &gt;&amp;2
-  exit 1
-fi
+redis_credentials<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>VCAP_SERVICES<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.[&#34;redis&#34;][0].credentials // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>redis_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  echo <span style="color:#e6db74">&#34;Error: Please bind a Redis service&#34;</span> &gt;&amp;<span style="color:#ae81ff">2</span>
+  exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">fi</span>
 
-redis_host=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.host // &quot;&quot;')&quot;
-redis_port=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.port // &quot;&quot;')&quot;
-redis_password=&quot;$(echo &quot;${redis_credentials}&quot; | jq -r '.password // &quot;&quot;')&quot;
+redis_host<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>redis_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.host // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+redis_port<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>redis_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.port // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+redis_password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>redis_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.password // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
 
-# Fill in template and write it to config.yml
-echo &quot;
-version: 0.1
+<span style="color:#75715e"># Fill in template and write it to config.yml</span>
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">version: 0.1
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">storage:
+</span><span style="color:#e6db74">  s3:
+</span><span style="color:#e6db74">    regionendpoint: https://</span><span style="color:#e6db74">${</span>s3_regionendpoint<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    region: nil
+</span><span style="color:#e6db74">    accesskey: </span><span style="color:#e6db74">${</span>s3_access_key<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    secretkey: </span><span style="color:#e6db74">${</span>s3_secret_key<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  redirect:
+</span><span style="color:#e6db74">    disable: true
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">http:
+</span><span style="color:#e6db74">  addr: :</span><span style="color:#e6db74">${</span>PORT<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  headers:
+</span><span style="color:#e6db74">    X-Content-Type-Options: [nosniff]
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">redis:
+</span><span style="color:#e6db74">  addr: </span><span style="color:#e6db74">${</span>redis_host<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>redis_port<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  password: </span><span style="color:#e6db74">${</span>redis_password<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">health:
+</span><span style="color:#e6db74">  storagedriver:
+</span><span style="color:#e6db74">    enabled: true
+</span><span style="color:#e6db74">    interval: 10s
+</span><span style="color:#e6db74">    threshold: 3
+</span><span style="color:#e6db74">  tcp:
+</span><span style="color:#e6db74">  - addr: </span><span style="color:#e6db74">${</span>redis_host<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>redis_port<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    timeout: 3s
+</span><span style="color:#e6db74">    interval: 10s
+</span><span style="color:#e6db74">    threshold: 3
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span> &gt; config.yml
 
-storage:
-  s3:
-    regionendpoint: https://${s3_regionendpoint}
-    region: nil
-    accesskey: ${s3_access_key}
-    secretkey: ${s3_secret_key}
-  redirect:
-    disable: true
-
-http:
-  addr: :${PORT}
-  headers:
-    X-Content-Type-Options: [nosniff]
-
-redis:
-  addr: ${redis_host}:${redis_port}
-  password: ${redis_password}
-
-health:
-  storagedriver:
-    enabled: true
-    interval: 10s
-    threshold: 3
-  tcp:
-  - addr: ${redis_host}:${redis_port}
-    timeout: 3s
-    interval: 10s
-    threshold: 3
-&quot; &gt; config.yml
-
-# Start the app
+<span style="color:#75715e"># Start the app</span>
 ./registry serve config.yml
-</code></pre>
-
-<p>Then make the script executable by running the following command:</p>
-
-<pre><code class="language-shell">$ chmod +x entrypoint-cf.sh
-</code></pre>
-
-<h2 id="push-the-registry">Push the Registry</h2>
-
+</code></pre></div><p>Then make the script executable by running the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ chmod +x entrypoint-cf.sh
+</code></pre></div><h2 id="push-the-registry">Push the Registry</h2>
 <p>Your registry is ready to be pushed. Simply run the following command:</p>
-
-<pre><code class="language-shell">$ cf push
-</code></pre>
-
-<p>Your registry is ready to go!</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push
+</code></pre></div><p>Your registry is ready to go!</p>
 <h2 id="try-it-out">Try It Out</h2>
-
 <p>Now you should be able to push a local docker image to your registry. Pull an example one from the Docker Store:</p>
-
-<pre><code class="language-shell">$ docker pull nginx
-</code></pre>
-
-<p>Then rename it to be pushed to your registry:</p>
-
-<pre><code class="language-shell">$ docker tag nginx my-hostname.scapp.io/my-nginx
-</code></pre>
-
-<p>Don&rsquo;t forget to adjust the hostname &ldquo;my-hostname&rdquo; to the one you chose for your registry app in Cloud Foundry.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker pull nginx
+</code></pre></div><p>Then rename it to be pushed to your registry:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker tag nginx my-hostname.scapp.io/my-nginx
+</code></pre></div><p>Don't forget to adjust the hostname &ldquo;my-hostname&rdquo; to the one you chose for your registry app in Cloud Foundry.</p>
 <p>Then push it to your private registry:</p>
-
-<pre><code class="language-shell">$ docker push my-hostname.scapp.io/my-nginx
-</code></pre>
-
-<p>Now you can pull it using</p>
-
-<pre><code class="language-shell">$ docker pull my-hostname.scapp.io/my-nginx
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker push my-hostname.scapp.io/my-nginx
+</code></pre></div><p>Now you can pull it using</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker pull my-hostname.scapp.io/my-nginx
+</code></pre></div>
     </div>
   </div>
 </section>

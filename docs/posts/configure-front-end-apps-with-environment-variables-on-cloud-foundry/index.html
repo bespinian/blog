@@ -47,108 +47,84 @@
     <h2 class="subtitle is-6">November 20, 2016</h2>
     <h1 class="title">Configure Front End Apps With Environment Variables on Cloud Foundry</h1>
     <div class="content">
-      
-
-<p>The <a href="https://12factor.net/">12 factor manifest</a> tells us in point III that apps should retrieve their config from environment variables to <strong>strictly separate config from code</strong>. &ldquo;Config&rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the <code>manifest.yml</code> file or the <code>cf set-env</code> command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the <a href="https://github.com/cloudfoundry/staticfile-buildpack">staticfile buildpack</a>? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an <a href="https://angular.io/">Angular</a> or <a href="https://facebook.github.io/react/">React</a> app, we cannot use these variables.</p>
-
-<p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it&rsquo;s being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
-
+      <p>The <a href="https://12factor.net/">12 factor manifest</a> tells us in point III that apps should retrieve their config from environment variables to <strong>strictly separate config from code</strong>. &ldquo;Config&rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the <code>manifest.yml</code> file or the <code>cf set-env</code> command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the <a href="https://github.com/cloudfoundry/staticfile-buildpack">staticfile buildpack</a>? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an <a href="https://angular.io/">Angular</a> or <a href="https://facebook.github.io/react/">React</a> app, we cannot use these variables.</p>
+<p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it's being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
 <h2 id="how-to">How To</h2>
-
-<p>To get our custom configuration endpoint, we&rsquo;ll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
-
-<pre><code class="language-nginx">&lt;% if ENV[&quot;APP_CONFIG&quot;] %&gt;
-location /app-config {
-  default_type application/json;
-  return 200 '&lt;%= ENV[&quot;APP_CONFIG&quot;] %&gt;';
+<p>To get our custom configuration endpoint, we'll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;</span>
+<span style="color:#e6db74">location</span> <span style="color:#e6db74">/app-config</span> {
+  <span style="color:#f92672">default_type</span> <span style="color:#e6db74">application/json</span>;
+  <span style="color:#f92672">return</span> <span style="color:#ae81ff">200</span> <span style="color:#e6db74">&#39;&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;&#39;</span>;
 }
-&lt;% end %&gt;
-</code></pre>
+<span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">end</span> <span style="color:#e6db74">%&gt;</span>
+</code></pre></div><p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn't exist, the endpoint won't be exposed at all.</p>
+<p>If you don't have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">worker_processes</span> <span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">daemon</span> <span style="color:#66d9ef">off</span>;
 
-<p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn&rsquo;t exist, the endpoint won&rsquo;t be exposed at all.</p>
+<span style="color:#66d9ef">error_log</span> <span style="color:#e6db74">&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_ROOT&#34;]</span> <span style="color:#e6db74">%&gt;/nginx/logs/error.log</span>;
+<span style="color:#66d9ef">events</span> { <span style="color:#f92672">worker_connections</span> <span style="color:#ae81ff">1024</span>; }
 
-<p>If you don&rsquo;t have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
+<span style="color:#66d9ef">http</span> {
+  <span style="color:#f92672">charset</span> <span style="color:#e6db74">utf-8</span>;
+  <span style="color:#f92672">log_format</span> <span style="color:#e6db74">cloudfoundry</span> <span style="color:#e6db74">&#39;</span>$http_x_forwarded_for <span style="color:#e6db74">-</span> $http_referer <span style="color:#e6db74">-</span> <span style="color:#e6db74">[</span>$time_local] <span style="color:#e6db74">&#34;</span>$request&#34; $status $body_bytes_sent&#39;;
+  <span style="color:#f92672">access_log</span> <span style="color:#e6db74">&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_ROOT&#34;]</span> <span style="color:#e6db74">%&gt;/nginx/logs/access.log</span> <span style="color:#e6db74">cloudfoundry</span>;
+  <span style="color:#f92672">default_type</span> <span style="color:#e6db74">application/octet-stream</span>;
+  <span style="color:#f92672">include</span> <span style="color:#e6db74">mime.types</span>;
+  <span style="color:#f92672">sendfile</span> <span style="color:#66d9ef">on</span>;
 
-<pre><code class="language-nginx">worker_processes 1;
-daemon off;
+  <span style="color:#f92672">gzip</span> <span style="color:#66d9ef">on</span>;
+  <span style="color:#f92672">gzip_disable</span> <span style="color:#e6db74">&#34;msie6&#34;</span>;
+  <span style="color:#f92672">gzip_comp_level</span> <span style="color:#ae81ff">6</span>;
+  <span style="color:#f92672">gzip_min_length</span> <span style="color:#ae81ff">1100</span>;
+  <span style="color:#f92672">gzip_buffers</span> <span style="color:#ae81ff">16</span> <span style="color:#ae81ff">8k</span>;
+  <span style="color:#f92672">gzip_proxied</span> <span style="color:#e6db74">any</span>;
+  <span style="color:#f92672">gunzip</span> <span style="color:#66d9ef">on</span>;
+  <span style="color:#f92672">gzip_static</span> <span style="color:#e6db74">always</span>;
+  <span style="color:#f92672">gzip_types</span> <span style="color:#e6db74">text/plain</span> <span style="color:#e6db74">text/css</span> <span style="color:#e6db74">text/js</span> <span style="color:#e6db74">text/xml</span> <span style="color:#e6db74">text/javascript</span> <span style="color:#e6db74">application/javascript</span> <span style="color:#e6db74">application/x-javascript</span> <span style="color:#e6db74">application/json</span> <span style="color:#e6db74">application/xml</span> <span style="color:#e6db74">application/xml+rss</span>;
+  <span style="color:#f92672">gzip_vary</span> <span style="color:#66d9ef">on</span>;
 
-error_log &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/nginx/logs/error.log;
-events { worker_connections 1024; }
+  <span style="color:#f92672">tcp_nopush</span> <span style="color:#66d9ef">on</span>;
+  <span style="color:#f92672">keepalive_timeout</span> <span style="color:#ae81ff">30</span>;
+  <span style="color:#f92672">port_in_redirect</span> <span style="color:#66d9ef">off</span>; <span style="color:#75715e"># Ensure that redirects don&#39;t include the internal container PORT - &lt;%= ENV[&#34;PORT&#34;] %&gt;
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">server_tokens</span> <span style="color:#66d9ef">off</span>;
 
-http {
-  charset utf-8;
-  log_format cloudfoundry '$http_x_forwarded_for - $http_referer - [$time_local] &quot;$request&quot; $status $body_bytes_sent';
-  access_log &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/nginx/logs/access.log cloudfoundry;
-  default_type application/octet-stream;
-  include mime.types;
-  sendfile on;
+  <span style="color:#f92672">server</span> {
+    <span style="color:#f92672">listen</span> <span style="color:#e6db74">&lt;%=</span> <span style="color:#e6db74">ENV[&#34;PORT&#34;]</span> <span style="color:#e6db74">%&gt;</span>;
+    <span style="color:#f92672">server_name</span> <span style="color:#e6db74">localhost</span>;
 
-  gzip on;
-  gzip_disable &quot;msie6&quot;;
-  gzip_comp_level 6;
-  gzip_min_length 1100;
-  gzip_buffers 16 8k;
-  gzip_proxied any;
-  gunzip on;
-  gzip_static always;
-  gzip_types text/plain text/css text/js text/xml text/javascript application/javascript application/x-javascript application/json application/xml application/xml+rss;
-  gzip_vary on;
+    <span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
+      <span style="color:#f92672">root</span> <span style="color:#e6db74">&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_ROOT&#34;]</span> <span style="color:#e6db74">%&gt;/public</span>;
 
-  tcp_nopush on;
-  keepalive_timeout 30;
-  port_in_redirect off; # Ensure that redirects don't include the internal container PORT - &lt;%= ENV[&quot;PORT&quot;] %&gt;
-  server_tokens off;
+      <span style="color:#f92672">index</span> <span style="color:#e6db74">index.html</span> <span style="color:#e6db74">index.htm</span> <span style="color:#e6db74">Default.htm</span>;
 
-  server {
-    listen &lt;%= ENV[&quot;PORT&quot;] %&gt;;
-    server_name localhost;
-
-    location / {
-      root &lt;%= ENV[&quot;APP_ROOT&quot;] %&gt;/public;
-
-      index index.html index.htm Default.htm;
-
-      &lt;% if ENV[&quot;FORCE_HTTPS&quot;] %&gt;
-        if ($http_x_forwarded_proto != &quot;https&quot;) {
-          return 301 https://$host$request_uri;
+      <span style="color:#f92672">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;FORCE_HTTPS&#34;]</span> <span style="color:#e6db74">%&gt;</span>
+        <span style="color:#e6db74">if</span> <span style="color:#e6db74">(</span>$http_x_forwarded_proto <span style="color:#e6db74">!=</span> <span style="color:#e6db74">&#34;https&#34;)</span> {
+          <span style="color:#f92672">return</span> <span style="color:#ae81ff">301</span> <span style="color:#e6db74">https://</span>$host$request_uri;
         }
-      &lt;% end %&gt;
+      <span style="color:#f92672">&lt;%</span> <span style="color:#e6db74">end</span> <span style="color:#e6db74">%&gt;</span>
 
-      &lt;% if ENV[&quot;APP_CONFIG&quot;] %&gt;
-      location /app-config {
-        default_type application/json;
-        return 200 '&lt;%= ENV[&quot;APP_CONFIG&quot;] %&gt;';
+      <span style="color:#e6db74">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;</span>
+      <span style="color:#e6db74">location</span> <span style="color:#e6db74">/app-config</span> {
+        <span style="color:#f92672">default_type</span> <span style="color:#e6db74">application/json</span>;
+        <span style="color:#f92672">return</span> <span style="color:#ae81ff">200</span> <span style="color:#e6db74">&#39;&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;&#39;</span>;
       }
-      &lt;% end %&gt;
-    }
+      <span style="color:#f92672">&lt;%</span> <span style="color:#e6db74">end</span> <span style="color:#e6db74">%&gt;</span>
+    <span style="color:#960050;background-color:#1e0010">}</span>
 
-  }
-}
-</code></pre>
-
-<p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you&rsquo;ll have to adjust the above code accordingly.</p>
-
+  <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you'll have to adjust the above code accordingly.</p>
 <p>Now push your app with <code>cf push</code> and set the <code>APP_CONFIG</code> environment variable to some JSON string with the following command:</p>
-
-<pre><code class="language-shell">$ cf push &lt;app-name&gt;
-$ cf set-env &lt;app-name&gt; APP_CONFIG '{&quot;apiUrl&quot;:&quot;https://jsonplaceholder.typicode.com&quot;}'
-</code></pre>
-
-<p>Now restage your app, as suggested, with:</p>
-
-<pre><code class="language-shell">$ cf restage &lt;app-name&gt;
-</code></pre>
-
-<p>If you visit the <code>/app-config</code> endpoint of your app, it should return the specified JSON. Your front end app can now retrieve its config dynamically from that endpoint. You might have a fallback for all of these config items for local development if you use something like the <a href="https://webpack.github.io/docs/webpack-dev-server.html">webpack-dev-serer</a>. Of course, you can also configure your dev server to expose the same endpoint and create a development config for that.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push &lt;app-name&gt;
+$ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;apiUrl&#34;:&#34;https://jsonplaceholder.typicode.com&#34;}&#39;</span>
+</code></pre></div><p>Now restage your app, as suggested, with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf restage &lt;app-name&gt;
+</code></pre></div><p>If you visit the <code>/app-config</code> endpoint of your app, it should return the specified JSON. Your front end app can now retrieve its config dynamically from that endpoint. You might have a fallback for all of these config items for local development if you use something like the <a href="https://webpack.github.io/docs/webpack-dev-server.html">webpack-dev-serer</a>. Of course, you can also configure your dev server to expose the same endpoint and create a development config for that.</p>
 <h2 id="use-cases">Use Cases</h2>
-
 <p>You can use this method to configure different environments your app might be running in. E.g. you might use a different API server for your integration environment than for your production environment.</p>
-
 <p>Alternatively, you could use it to toggle feature flags dynamically to do <a href="https://en.wikipedia.org/wiki/A/B_testing">A/B testing</a> or a <a href="https://martinfowler.com/bliki/CanaryRelease.html">canary release</a>.</p>
-
-<p>I&rsquo;m sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.</p>
-
+<p>I'm sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.</p>
 <p>Many thanks to <a href="https://github.com/mkretz">@mkretz</a> for the inspiration for this post!</p>
 
     </div>
