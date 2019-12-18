@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.bespinian.io/</loc>
+    <lastmod>2017-12-11T16:16:21+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.bespinian.io/posts/</loc>
     <lastmod>2017-12-11T16:16:21+02:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.bespinian.io/posts/run-a-crypto-trading-bot-on-cloud-foundry/</loc>
     <lastmod>2017-12-11T16:16:21+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.bespinian.io/</loc>
-    <lastmod>2017-12-11T16:16:21+02:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -76,12 +74,10 @@
   
   <url>
     <loc>https://blog.bespinian.io/categories/</loc>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.bespinian.io/tags/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>

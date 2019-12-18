@@ -47,145 +47,109 @@
     <h2 class="subtitle is-6">August 25, 2017</h2>
     <h1 class="title">Run WordPress on Cloud Foundry</h1>
     <div class="content">
-      
-
-<p><a href="https://wordpress.org/">WordPress</a> runs a huge portion of all websites on the internet. It therefore seems obvious, to run this software on Cloud Foundry. There&rsquo;s just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container based systems, that doesn&rsquo;t work because the container can be restarted at any time which would remove all stored files. For that reason, we need to externalize all file storage to a separate service. In our case, this will be an S3 compatible storage.</p>
-
+      <p><a href="https://wordpress.org/">WordPress</a> runs a huge portion of all websites on the internet. It therefore seems obvious, to run this software on Cloud Foundry. There's just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container based systems, that doesn't work because the container can be restarted at any time which would remove all stored files. For that reason, we need to externalize all file storage to a separate service. In our case, this will be an S3 compatible storage.</p>
 <h2 id="download-wordpress">Download WordPress</h2>
-
 <p>To get WordPress, simply download the latest version from their <a href="https://wordpress.org/download/">website</a> and extract it to any directory. Then <code>cd</code> into that directory from your terminal and copy the file <code>wp-config-sample.php</code> to <code>wp-config.php</code>.</p>
-
-<pre><code class="language-shell">$ cp wp-config-sample.php wp-config.php
-</code></pre>
-
-<p>We&rsquo;ll use this file to configure WordPress.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cp wp-config-sample.php wp-config.php
+</code></pre></div><p>We'll use this file to configure WordPress.</p>
 <h2 id="create-services">Create Services</h2>
-
-<p>Next, we&rsquo;ll need to create our database and S3 storage as services in Cloud Foundry. To create the database, run the following command:</p>
-
-<pre><code class="language-shell">$ cf create-service mariadbent usage wp-db
-</code></pre>
-
-<p>I&rsquo;m using the <a href="https://developer.swisscom.com/">Swisscom Application Cloud</a>. If you use another Cloud Foundy provider, this command may differ. Just make sure, you create an SQL service called &ldquo;wp-db&rdquo;.</p>
-
-<p>Next, we&rsquo;ll need an S3 compatible storage that contains a bucket that is publicly accessible. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on how to create one and call the service &ldquo;wp-storage&rdquo;.</p>
-
+<p>Next, we'll need to create our database and S3 storage as services in Cloud Foundry. To create the database, run the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service mariadbent usage wp-db
+</code></pre></div><p>I'm using the <a href="https://developer.swisscom.com/">Swisscom Application Cloud</a>. If you use another Cloud Foundy provider, this command may differ. Just make sure, you create an SQL service called &ldquo;wp-db&rdquo;.</p>
+<p>Next, we'll need an S3 compatible storage that contains a bucket that is publicly accessible. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on how to create one and call the service &ldquo;wp-storage&rdquo;.</p>
 <h2 id="configure-wordpress">Configure WordPress</h2>
-
-<p>Wordpress itself doesn&rsquo;t run on Cloud Foundry out of the box. We&rsquo;ll need to make some adjustments to the <code>wp-config.php</code> file. Open it and replace these lines:</p>
-
-<pre><code class="language-php">// ** MySQL settings - You can get this info from your web host ** //
+<p>Wordpress itself doesn't run on Cloud Foundry out of the box. We'll need to make some adjustments to the <code>wp-config.php</code> file. Open it and replace these lines:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'database_name_here');
+define(&#39;DB_NAME&#39;, &#39;database_name_here&#39;);
 
 /** MySQL database username */
-define('DB_USER', 'username_here');
+define(&#39;DB_USER&#39;, &#39;username_here&#39;);
 
 /** MySQL database password */
-define('DB_PASSWORD', 'password_here');
+define(&#39;DB_PASSWORD&#39;, &#39;password_here&#39;);
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define(&#39;DB_HOST&#39;, &#39;localhost&#39;);
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8');
+define(&#39;DB_CHARSET&#39;, &#39;utf8&#39;);
 
-/** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
-</code></pre>
-
-<p>with the following ones:</p>
-
-<pre><code class="language-php">// ** Read service properties from _ENV['VCAP_SERVICES'] ** //
-$services = json_decode(getenv('VCAP_SERVICES'), true);
-$db_service = $services['mariadbent'][0];
-$db_conf = $db_service['credentials'];
-$s3_service = $services['dynstrg'][0];
-$s3_conf = $s3_service['credentials'];
+/** The Database Collate type. Don&#39;t change this if in doubt. */
+define(&#39;DB_COLLATE&#39;, &#39;&#39;);
+</code></pre></div><p>with the following ones:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// ** Read service properties from _ENV[&#39;VCAP_SERVICES&#39;] ** //
+$services = json_decode(getenv(&#39;VCAP_SERVICES&#39;), true);
+$db_service = $services[&#39;mariadbent&#39;][0];
+$db_conf = $db_service[&#39;credentials&#39;];
+$s3_service = $services[&#39;dynstrg&#39;][0];
+$s3_conf = $s3_service[&#39;credentials&#39;];
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', $db_conf['database']);
+define(&#39;DB_NAME&#39;, $db_conf[&#39;database&#39;]);
 
 /** MySQL database username */
-define('DB_USER', $db_conf['username']);
+define(&#39;DB_USER&#39;, $db_conf[&#39;username&#39;]);
 
 /** MySQL database password */
-define('DB_PASSWORD', $db_conf['password']);
+define(&#39;DB_PASSWORD&#39;, $db_conf[&#39;password&#39;]);
 
 /** MySQL hostname */
-define('DB_HOST', $db_conf['host'] . ':' . $db_conf['port']);
+define(&#39;DB_HOST&#39;, $db_conf[&#39;host&#39;] . &#39;:&#39; . $db_conf[&#39;port&#39;]);
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8');
+define(&#39;DB_CHARSET&#39;, &#39;utf8&#39;);
 
-/** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
+/** The Database Collate type. Don&#39;t change this if in doubt. */
+define(&#39;DB_COLLATE&#39;, &#39;&#39;);
 
 /** The endpoint of your S3 provider (defaults to AWS) */
-define('S3_UPLOADS_ENDPOINT_URL', 'https://' . $s3_conf['accessHost']);
+define(&#39;S3_UPLOADS_ENDPOINT_URL&#39;, &#39;https://&#39; . $s3_conf[&#39;accessHost&#39;]);
 
 /** The name of your S3 bucket */
-define('S3_UPLOADS_BUCKET', 'my-bucket');
+define(&#39;S3_UPLOADS_BUCKET&#39;, &#39;my-bucket&#39;);
 
 /** Your S3 access key ID */
-define('S3_UPLOADS_KEY', $s3_conf['accessKey']);
+define(&#39;S3_UPLOADS_KEY&#39;, $s3_conf[&#39;accessKey&#39;]);
 
 /** Your S3 secret access key */
-define('S3_UPLOADS_SECRET', $s3_conf['sharedSecret']);
+define(&#39;S3_UPLOADS_SECRET&#39;, $s3_conf[&#39;sharedSecret&#39;]);
 
 /** Your S3 region */
-define('S3_UPLOADS_REGION', 'none');
+define(&#39;S3_UPLOADS_REGION&#39;, &#39;none&#39;);
 
 /** The URL where your uploads will be available */
-define('S3_UPLOADS_BUCKET_URL', 'https://' . $s3_conf['namespace'] . '.ds11s3ns.swisscom.com/' . S3_UPLOADS_BUCKET);
-</code></pre>
-
-<p>Don&rsquo;t forget to replace <code>my-bucket</code> with the actual name of your bucket.</p>
-
-<p>This config allows us to get the credentials to the database and the configuration for our S3 uploads from the environment as it&rsquo;s usually done in Cloud Foundry applications.</p>
-
+define(&#39;S3_UPLOADS_BUCKET_URL&#39;, &#39;https://&#39; . $s3_conf[&#39;namespace&#39;] . &#39;.ds11s3ns.swisscom.com/&#39; . S3_UPLOADS_BUCKET);
+</code></pre></div><p>Don't forget to replace <code>my-bucket</code> with the actual name of your bucket.</p>
+<p>This config allows us to get the credentials to the database and the configuration for our S3 uploads from the environment as it's usually done in Cloud Foundry applications.</p>
 <h2 id="install-s3-uploads-plugin">Install S3-Uploads Plugin</h2>
-
 <p>Luckily for us, there is a neat plugin for WordPress that allows uploads to be stored in S3 instead of the local file system. You can find the plugin on <a href="https://github.com/humanmade/S3-Uploads">GitHub</a>. We will directly clone it into the plugins directory of our WordPress so that we can push it to Cloud Foundry with WordPress itself:</p>
-
-<pre><code class="language-shell">$ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
-</code></pre>
-
-<p>This will make the plugin available for activation in WordPress&rsquo; admin GUI.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
+</code></pre></div><p>This will make the plugin available for activation in WordPress&rsquo; admin GUI.</p>
 <h2 id="create-s3-endpoint-plugin">Create S3-Endpoint Plugin</h2>
-
 <p>You can skip this step if you are using AWS S3.</p>
+<p>The S3-Uploads plugin works really well with <a href="https://aws.amazon.com/s3/">AWS S3</a>. If, however, we want to use it with a 3rd party S3 provider (e.g. the Swisscom Application Cloud Dynamic Storage), we'll have to add some more code to also allow us to specify a custom S3 endpoint. To do so, we'll create a very small plugin that reads the endpoint out of <code>wp-config.php</code>. In the <code>wp-content</code> directory, Create a new directory called <code>mu-plugins</code>. It holds so-called <a href="https://codex.wordpress.org/Must_Use_Plugins">Must Use Plugins</a> which are always used. In this directory, create a file called <code>S3-endpoint.php</code> and fill it with the following content:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#75715e">/*
+</span><span style="color:#75715e">Plugin Name:  S3 Uploads Endpoint
+</span><span style="color:#75715e">Description:  Add S3_UPLOADS_ENDPOINT_URL to S3-Uploads
+</span><span style="color:#75715e">Version:      1.0.0
+</span><span style="color:#75715e">*/</span>
 
-<p>The S3-Uploads plugin works really well with <a href="https://aws.amazon.com/s3/">AWS S3</a>. If, however, we want to use it with a 3rd party S3 provider (e.g. the Swisscom Application Cloud Dynamic Storage), we&rsquo;ll have to add some more code to also allow us to specify a custom S3 endpoint. To do so, we&rsquo;ll create a very small plugin that reads the endpoint out of <code>wp-config.php</code>. In the <code>wp-content</code> directory, Create a new directory called <code>mu-plugins</code>. It holds so-called <a href="https://codex.wordpress.org/Must_Use_Plugins">Must Use Plugins</a> which are always used. In this directory, create a file called <code>S3-endpoint.php</code> and fill it with the following content:</p>
-
-<pre><code class="language-php">&lt;?php
-/*
-Plugin Name:  S3 Uploads Endpoint
-Description:  Add S3_UPLOADS_ENDPOINT_URL to S3-Uploads
-Version:      1.0.0
-*/
-
-add_filter('s3_uploads_s3_client_params', 's3_uploads_add_endpoint_param');
-function s3_uploads_add_endpoint_param($params)
+<span style="color:#a6e22e">add_filter</span>(<span style="color:#e6db74">&#39;s3_uploads_s3_client_params&#39;</span>, <span style="color:#e6db74">&#39;s3_uploads_add_endpoint_param&#39;</span>);
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">s3_uploads_add_endpoint_param</span>($params)
 {
-    if (S3_UPLOADS_ENDPOINT_URL) {
-        $params['endpoint'] = S3_UPLOADS_ENDPOINT_URL;
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">S3_UPLOADS_ENDPOINT_URL</span>) {
+        $params[<span style="color:#e6db74">&#39;endpoint&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">S3_UPLOADS_ENDPOINT_URL</span>;
     }
 
-    return $params;
+    <span style="color:#66d9ef">return</span> $params;
 }
-</code></pre>
-
-<p>This simple one-file plugin checks if the constant <code>S3_UPLOADS_ENDPOINT_URL</code> is defined and, if so, enriches the S3 params with it as the <code>endpoint</code> parameter. If the variable is not defined, it will not set the <code>endpoint</code> param to make it use the default of AWS again.</p>
-
-<h2 id="create-manifest-yml">Create manifest.yml</h2>
-
-<p>Last but not least, we&rsquo;ll create a <code>manifest.yml</code> file to push our app to the cloud more easily. Create the file at the root of your <code>wordpress</code> directory and fill it with the following content:</p>
-
-<pre><code class="language-yaml">applications:
+</code></pre></div><p>This simple one-file plugin checks if the constant <code>S3_UPLOADS_ENDPOINT_URL</code> is defined and, if so, enriches the S3 params with it as the <code>endpoint</code> parameter. If the variable is not defined, it will not set the <code>endpoint</code> param to make it use the default of AWS again.</p>
+<h2 id="create-manifestyml">Create manifest.yml</h2>
+<p>Last but not least, we'll create a <code>manifest.yml</code> file to push our app to the cloud more easily. Create the file at the root of your <code>wordpress</code> directory and fill it with the following content:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">applications:
   - name: wordpress
     host: my-wordpress
     memory: 256M
@@ -194,18 +158,11 @@ function s3_uploads_add_endpoint_param($params)
     services:
       - wp-db
       - wp-storage
-</code></pre>
-
-<p>If the hostname is already taken, choose another one. You can use whatever you want.</p>
-
+</code></pre></div><p>If the hostname is already taken, choose another one. You can use whatever you want.</p>
 <h2 id="push-the-app">Push the app</h2>
-
-<p>Now it&rsquo;s time to push our app to the cloud. Run the following command:</p>
-
-<pre><code class="language-shell">$ cf push
-</code></pre>
-
-<p>Then visit your site and the respective URL and follow the WordPress installation wizard. Once you are on your WordPress Admin page, go to the &ldquo;Plugins&rdquo; section and activate the &ldquo;S3 Uploads&rdquo; plugin. From now on, all the uploads you make should go directly to S3. You now have a cloud native WordPress installation!</p>
+<p>Now it's time to push our app to the cloud. Run the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push
+</code></pre></div><p>Then visit your site and the respective URL and follow the WordPress installation wizard. Once you are on your WordPress Admin page, go to the &ldquo;Plugins&rdquo; section and activate the &ldquo;S3 Uploads&rdquo; plugin. From now on, all the uploads you make should go directly to S3. You now have a cloud native WordPress installation!</p>
 
     </div>
   </div>
