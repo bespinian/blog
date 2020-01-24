@@ -47,20 +47,20 @@
     <h2 class="subtitle is-6">December 11, 2017</h2>
     <h1 class="title">Run a Crypto Trading Bot on Cloud Foundry</h1>
     <div class="content">
-      <p>Everybody is talking about <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a> and its peer currencies. The hype is so great that even small investors, who have no idea about financial constructs, like myself want to get aboard the investing and trading train. That's why I recently decided to create my own account on <a href="https://www.gdax.com/">GDAX</a> and try my luck.</p>
-<p>Trading, at first, was fun but I realized pretty quickly that I'm not the kind of person who wants to watch their dashboard every five minutes. Furthermore, I have no clear strategy about when to invest in what and when to actually pull out. Being able to read the price charts correctly requires a lot of training and knowledge. However, there are patterns which can be recognized. Since this is a purely analytical work, I figured that it would be the perfect job for a computer. So I looked online and found my answer with <a href="https://github.com/carlos8f/zenbot">Zenbot</a>. It's an open source, cloud ready trading bot for crypto currencies. Let's deploy it to Cloud Foundry.</p>
-<p><strong>Important</strong>: The presented software and concepts are still very young. Please use them with great caution and don't start out with investing big amounts of money right away.</p>
+      <p>Everybody is talking about <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a> and its peer currencies. The hype is so great that even small investors, who have no idea about financial constructs, like myself want to get aboard the investing and trading train. That&rsquo;s why I recently decided to create my own account on <a href="https://www.gdax.com/">GDAX</a> and try my luck.</p>
+<p>Trading, at first, was fun but I realized pretty quickly that I&rsquo;m not the kind of person who wants to watch their dashboard every five minutes. Furthermore, I have no clear strategy about when to invest in what and when to actually pull out. Being able to read the price charts correctly requires a lot of training and knowledge. However, there are patterns which can be recognized. Since this is a purely analytical work, I figured that it would be the perfect job for a computer. So I looked online and found my answer with <a href="https://github.com/carlos8f/zenbot">Zenbot</a>. It&rsquo;s an open source, cloud ready trading bot for crypto currencies. Let&rsquo;s deploy it to Cloud Foundry.</p>
+<p><strong>Important</strong>: The presented software and concepts are still very young. Please use them with great caution and don&rsquo;t start out with investing big amounts of money right away.</p>
 <h2 id="clone-repo">Clone Repo</h2>
-<p>First, we need to clone the repo from <a href="https://github.com/carlos8f/zenbot">GitHub</a>. It's advisable to check out the latest tag so you're not trusting all your money to a possibly unstable <code>master</code> branch.</p>
+<p>First, we need to clone the repo from <a href="https://github.com/carlos8f/zenbot">GitHub</a>. It&rsquo;s advisable to check out the latest tag so you&rsquo;re not trusting all your money to a possibly unstable <code>master</code> branch.</p>
 <h2 id="create-services">Create Services</h2>
 <p>Zenbot has two dependencies it needs to work. The first one is <a href="https://www.mongodb.com/">MongoDB</a>. In most Cloud Foundry installations, you can get that with a simple command like:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service mongodb small zenbot-db
-</code></pre></div><p>The next dependency is a GDAX API client. Any of the big trading platforms will do but I'm using GDAX to keep things simple. <a href="https://github.com/carlos8f/zenbot#description">Here</a> you can find a list of the supported platforms. To use GDAX, visit their <a href="https://www.gdax.com/">website</a> and create an account. The process is a little tedious because you'll have to provide a photo ID and go through a couple of more verification steps. But, believe me, eventually it's worth it. After you are signed up, choose the product you'll want to trade (e.g. BTC/EUR) in the top left corner and transfer some money to your account (either from a credit card, from a bank account or from an existing <a href="https://www.coinbase.com">Coinbase</a> account.</p>
-<p>After that's done, go to the API settings and create a new set of API keys with the &ldquo;Trade&rdquo; permission. Note down the credentials and create a user provided service for them (be aware that this will allow anybody with the respective permissions in Cloud Foundry to see your API credentials):</p>
+</code></pre></div><p>The next dependency is a GDAX API client. Any of the big trading platforms will do but I&rsquo;m using GDAX to keep things simple. <a href="https://github.com/carlos8f/zenbot#description">Here</a> you can find a list of the supported platforms. To use GDAX, visit their <a href="https://www.gdax.com/">website</a> and create an account. The process is a little tedious because you&rsquo;ll have to provide a photo ID and go through a couple of more verification steps. But, believe me, eventually it&rsquo;s worth it. After you are signed up, choose the product you&rsquo;ll want to trade (e.g. BTC/EUR) in the top left corner and transfer some money to your account (either from a credit card, from a bank account or from an existing <a href="https://www.coinbase.com">Coinbase</a> account.</p>
+<p>After that&rsquo;s done, go to the API settings and create a new set of API keys with the &ldquo;Trade&rdquo; permission. Note down the credentials and create a user provided service for them (be aware that this will allow anybody with the respective permissions in Cloud Foundry to see your API credentials):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service zenbot-gdax -p <span style="color:#e6db74">&#39;{&#34;key&#34;:&#34;YOUR-API-KEY&#34;,&#34;b64secret&#34;:&#34;YOUR-API-SECRET&#34;,&#34;passphrase&#34;:&#34;YOUR-API-PASSPHRASE&#34;}&#39;</span>
 </code></pre></div><p>In case you are using a different trading platform, create a similar user provided service with their API credentials.</p>
 <h2 id="configure-the-bot">Configure the Bot</h2>
-<p>Now that we have the services set up, we'll need to tell Zenbot to use them. Copy <code>conf-sample.js</code> to <code>conf.js</code> and add the following lines to automatically read the respective config items from the <code>VCAP_SERVICES</code> environment variable Cloud Foundry exposes:</p>
+<p>Now that we have the services set up, we&rsquo;ll need to tell Zenbot to use them. Copy <code>conf-sample.js</code> to <code>conf.js</code> and add the following lines to automatically read the respective config items from the <code>VCAP_SERVICES</code> environment variable Cloud Foundry exposes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// Add this part after the existing MongoDB configuration
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>) {
@@ -81,7 +81,7 @@
   <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">passphrase</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">passphrase</span>;
 }
 </code></pre></div><p>This will ensure that the config is read automatically from the environment, if the <code>VCAP_SERVICES</code> variable is there.</p>
-<p>Furthermore, we'll make it possible to configure the traded product and the strategy to use through environment variables. For that, chage the following lines:</p>
+<p>Furthermore, we&rsquo;ll make it possible to configure the traded product and the strategy to use through environment variables. For that, chage the following lines:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
 <span style="color:#75715e">// name of default trade strategy
@@ -96,21 +96,21 @@
 $ ./zenbot.sh list-strategies
 </code></pre></div><h2 id="create-manifest">Create manifest</h2>
 <p>The last step before pushing your bot is to create a <code>manifest.yml</code> file to automate the setup of your deployment. It should look as follows:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">applications:
-  - name: zenbot
-    memory: 256M
-    buildpacks:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
+  - <span style="color:#66d9ef">name</span>: zenbot
+    <span style="color:#66d9ef">memory</span>: 256M
+    <span style="color:#66d9ef">buildpacks</span>:
       - https://github.com/cloudfoundry/nodejs-buildpack.git
-    no-route: <span style="color:#66d9ef">true</span>
-    health-check-type: process
-    services:
+    <span style="color:#66d9ef">no-route</span>: <span style="color:#66d9ef">true</span>
+    <span style="color:#66d9ef">health-check-type</span>: process
+    <span style="color:#66d9ef">services</span>:
       - zenbot-db
       - zenbot-gdax
-    env:
-      ZENBOT_SELECTOR: <span style="color:#e6db74">&#34;gdax.BTC-EUR&#34;</span>
-</code></pre></div><p>Replace the selector with the respective product you want to trade and add another line if you don't want to use the default trading strategy.</p>
+    <span style="color:#66d9ef">env</span>:
+      <span style="color:#66d9ef">ZENBOT_SELECTOR</span>: <span style="color:#e6db74">&#34;gdax.BTC-EUR&#34;</span>
+</code></pre></div><p>Replace the selector with the respective product you want to trade and add another line if you don&rsquo;t want to use the default trading strategy.</p>
 <h2 id="push">Push</h2>
-<p>Now, all that's left is to run <code>cf push</code> to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:</p>
+<p>Now, all that&rsquo;s left is to run <code>cf push</code> to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf logs zenbot --recent
 </code></pre></div><p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Esentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
 
@@ -136,7 +136,7 @@ $ ./zenbot.sh list-strategies
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>

@@ -47,8 +47,8 @@
     <h2 class="subtitle is-6">March 17, 2017</h2>
     <h1 class="title">Manage Buckets on Cloud Foundry S3 Services</h1>
     <div class="content">
-      <p><a href="https://aws.amazon.com/s3/">S3</a> is a great concept to store static files and larger <a href="https://en.wikipedia.org/wiki/Binary_large_object">BLOBs</a>. Let's look into how we can use it in Cloud Foundry.</p>
-<p>S3 was originally created by <a href="https://aws.amazon.com/">Amazon Web Services</a> but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don't, you can create your own by creating a <a href="https://docs.cloudfoundry.org/devguide/services/user-provided.html">user-provided service</a> and adding the respective S3 credentials (e.g. from AWS).</p>
+      <p><a href="https://aws.amazon.com/s3/">S3</a> is a great concept to store static files and larger <a href="https://en.wikipedia.org/wiki/Binary_large_object">BLOBs</a>. Let&rsquo;s look into how we can use it in Cloud Foundry.</p>
+<p>S3 was originally created by <a href="https://aws.amazon.com/">Amazon Web Services</a> but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don&rsquo;t, you can create your own by creating a <a href="https://docs.cloudfoundry.org/devguide/services/user-provided.html">user-provided service</a> and adding the respective S3 credentials (e.g. from AWS).</p>
 <p>This tutorial uses the <a href="https://docs.developer.swisscom.com/service-offerings/dynamic.html">Swisscom Application Cloud S3 Dynamic Storage</a> but you can also use any other S3 provider.</p>
 <p>To create an S3 service, run the following command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service dynstrg usage my-storage
@@ -59,16 +59,16 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf service-key my-storage my-key
 </code></pre></div><p>The credentials from this key will be used in the next steps.</p>
 <h2 id="create-s3-bucket">Create S3 Bucket</h2>
-<p>Now that we have our S3 service, we need to create a bucket to hold our data. I suggest to use the <a href="https://github.com/s3tools/s3cmd">s3cmd</a> CLI tool for that. You can either download it from the <a href="https://github.com/s3tools/s3cmd/releases">releases</a> page or by using <a href="http://brew.sh/">Homebrew</a> if you're on macOS. As soon as you have it installed, configure it using the following command:</p>
+<p>Now that we have our S3 service, we need to create a bucket to hold our data. I suggest to use the <a href="https://github.com/s3tools/s3cmd">s3cmd</a> CLI tool for that. You can either download it from the <a href="https://github.com/s3tools/s3cmd/releases">releases</a> page or by using <a href="http://brew.sh/">Homebrew</a> if you&rsquo;re on macOS. As soon as you have it installed, configure it using the following command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd --configure
 </code></pre></div><p>You will be prompted for your credentials. Most of them you can find by retrieving your service key from above or by using the defaults.</p>
 <p>If you are using the Swisscom Dynamic Storage, set the region to <code>nil</code> and note that <code>Secret Key</code> is your <code>sharedSecret</code> and that <code>S3 Endpoint</code> is your <code>accessHost</code>. For <code>DNS-style bucket+hostname:port template for accessing a bucket</code>, you can use <code>%(bucket)s.&lt;your-accessHost&gt;</code> with your respective <code>accessHost</code>.</p>
 <p>Now you should be able to run</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd ls
-</code></pre></div><p>which should return empty if you don't have any buckets or list your existing ones. Now, we can finally create our bucket called &ldquo;my-bucket&rdquo; with the following command:</p>
+</code></pre></div><p>which should return empty if you don&rsquo;t have any buckets or list your existing ones. Now, we can finally create our bucket called &ldquo;my-bucket&rdquo; with the following command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd mb s3://my-bucket
 </code></pre></div><h2 id="s3-manager">S3 Manager</h2>
-<p>Alternatively, you can use an open source app I've been developing called <a href="https://github.com/mastertinner/s3manager">S3 Manager</a>. You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.</p>
+<p>Alternatively, you can use an open source app I&rsquo;ve been developing called <a href="https://github.com/mastertinner/s3manager">S3 Manager</a>. You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.</p>
 
     </div>
   </div>
@@ -92,7 +92,7 @@
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
