@@ -48,9 +48,9 @@
     <h1 class="title">Observables With Angular and Feathers</h1>
     <div class="content">
       <p><a href="http://feathersjs.com">Feathers</a> is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the <a href="https://github.com/angular/angular-cli">Angular CLI</a> for your app.</p>
-<p>In my example, I'll use a simple todo service and a component that lists those todos.</p>
+<p>In my example, I&rsquo;ll use a simple todo service and a component that lists those todos.</p>
 <h2 id="import-libraries">Import libraries</h2>
-<p>As a first step we'll need to add the two libraries <code>socket.io-client</code> and <code>feathers-client</code> to our project. This can easily be done using npm:</p>
+<p>As a first step we&rsquo;ll need to add the two libraries <code>socket.io-client</code> and <code>feathers-client</code> to our project. This can easily be done using npm:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save socket.io-client feathers-client
 </code></pre></div><p>The TypeScript typings of <code>feathers-client</code> are already included in the library. However, we need to include the ones for <code>socket.io-client</code> manually:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save @types/socket.io-client
@@ -66,14 +66,14 @@
   }
 }
 </code></pre></div><h2 id="create-data-model">Create data model</h2>
-<p>Next, we create a class to represent our todo's data model:</p>
+<p>Next, we create a class to represent our todo&rsquo;s data model:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Todo</span> {
   <span style="color:#a6e22e">title</span>: <span style="color:#66d9ef">string</span>;
 }
 </code></pre></div><h2 id="create-actual-service">Create actual service</h2>
-<p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we've created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
+<p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.service.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
@@ -225,7 +225,7 @@
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>

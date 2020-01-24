@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "bespinian Blog"
 theme = "hemingway"
 publishDir = "docs"
-copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2019"
+copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2020"
 disqusShortname = "berndsgnch"
 googleAnalytics = "UA-22629901-2"
 

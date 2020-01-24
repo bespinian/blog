@@ -50,7 +50,7 @@
       <p><a href="https://piwik.org/">Piwik</a> is an open source analytics platform based on <a href="https://secure.php.net/">PHP</a> and <a href="https://www.mysql.com/">MySQL</a>. That makes it a perfect application to be run on Cloud Foundry based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.</p>
 <p>In this tutorial, I will use the <a href="https://developer.swisscom.com/">Swisscom Application Cloud</a> as an example, but any <a href="https://www.cloudfoundry.org/use/cloud-foundry-certified/">Cloud Foundry based platform</a> will do.</p>
 <h2 id="get-piwik">Get Piwik</h2>
-<p>Download the latest version of Piwik from <a href="https://piwik.org/download">https://piwik.org/download</a>. Then unzip it and <code>cd</code> into its root folder. The folder contains another subfolder called &ldquo;piwik&rdquo; and an instructions link. We don't need this nested structure. Execute the following command to normalize it:</p>
+<p>Download the latest version of Piwik from <a href="https://piwik.org/download">https://piwik.org/download</a>. Then unzip it and <code>cd</code> into its root folder. The folder contains another subfolder called &ldquo;piwik&rdquo; and an instructions link. We don&rsquo;t need this nested structure. Execute the following command to normalize it:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$  cp -rf piwik .. <span style="color:#f92672">&amp;&amp;</span> rm -rf piwik
 </code></pre></div><h2 id="set-up-database">Set Up Database</h2>
 <p>As a first step, we need to create the service in Cloud Foundry:</p>
@@ -85,8 +85,8 @@
     }
   }
 <span style="color:#75715e">?&gt;</span>
-</code></pre></div><p>This code runs before Piwik starts so it allows us to overwrite the default variables that are used to connect to the database. Again, you'll have to adjust the keyword <code>mariadbent</code> in the code if the SQL service is called differently with your CF provider.</p>
-<p>When Piwik is started for the first time, it shows a configuration wizard where the user has to provide the database credentials. We can overwrite the defaults for these values with the ones coming from the service environment variables so you can just click &ldquo;next&rdquo; in this wizard and don't have to look them up every time. To do so, open the file <code>plugins/Installation/FormDatabaseSetup.php</code> and navigate to the definition of the <code>init</code> method. There, replace the following lines:</p>
+</code></pre></div><p>This code runs before Piwik starts so it allows us to overwrite the default variables that are used to connect to the database. Again, you&rsquo;ll have to adjust the keyword <code>mariadbent</code> in the code if the SQL service is called differently with your CF provider.</p>
+<p>When Piwik is started for the first time, it shows a configuration wizard where the user has to provide the database credentials. We can overwrite the defaults for these values with the ones coming from the service environment variables so you can just click &ldquo;next&rdquo; in this wizard and don&rsquo;t have to look them up every time. To do so, open the file <code>plugins/Installation/FormDatabaseSetup.php</code> and navigate to the definition of the <code>init</code> method. There, replace the following lines:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
 $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
                                                                &#39;host&#39;          =&gt; &#39;127.0.0.1&#39;,
@@ -104,7 +104,7 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
                                                                &#39;tables_prefix&#39; =&gt; &#39;piwik_&#39;,
                                                           )));
 </code></pre></div><h2 id="security">Security</h2>
-<p>Next we have to add our site's URL that we also retrieve from the CF environment in <code>bootstrap.php</code> as a trusted host to Piwik. Open the file <code>plugins/Installation/Controller.php</code> and navigate to definition of the <code>addTrustedHosts</code> method. There, replace the following line</p>
+<p>Next we have to add our site&rsquo;s URL that we also retrieve from the CF environment in <code>bootstrap.php</code> as a trusted host to Piwik. Open the file <code>plugins/Installation/Controller.php</code> and navigate to definition of the <code>addTrustedHosts</code> method. There, replace the following line</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts = array();
 </code></pre></div><p>with these:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts = Config::getInstance()-&gt;General[&#39;trusted_hosts&#39;];
@@ -115,7 +115,7 @@ if (!is_array($trustedHosts)) {
 </code></pre></div><p>We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the <code>config/global.ini.php</code> file and change the setting of <code>force_ssl</code> fo <code>1</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">force_ssl = 1
 </code></pre></div><h2 id="routing">Routing</h2>
-<p>Next, we'll improve some more of the defaults Piwik uses during the set up wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file <code>plugins/Installation/FormFirstWebsiteSetup.php</code> and replace the following lines of the <code>init</code> method:</p>
+<p>Next, we&rsquo;ll improve some more of the defaults Piwik uses during the set up wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file <code>plugins/Installation/FormFirstWebsiteSetup.php</code> and replace the following lines of the <code>init</code> method:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
 $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
                                                                &#39;url&#39; =&gt; $urlExample,
@@ -127,7 +127,7 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
                                                                &#39;url&#39; =&gt; &#34;https://&#34; . $_ENV[&#34;APPURIS&#34;][0],
                                                           )));
 </code></pre></div><h2 id="composer">Composer</h2>
-<p>Since Piwik already comes with its dependencies installed, we don't want <a href="https://getcomposer.org/">Composer</a> to run again in Cloud Foundry. The PHP buildpack won't run Composer if it doesn't find any files that would indicate that. So let's ignore the Composer files when pushing. Add a <code>.cfignore</code> file to the root of your project and paste the following line into it:</p>
+<p>Since Piwik already comes with its dependencies installed, we don&rsquo;t want <a href="https://getcomposer.org/">Composer</a> to run again in Cloud Foundry. The PHP buildpack won&rsquo;t run Composer if it doesn&rsquo;t find any files that would indicate that. So let&rsquo;s ignore the Composer files when pushing. Add a <code>.cfignore</code> file to the root of your project and paste the following line into it:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">/composer.*
 </code></pre></div><h2 id="buildpack-configuration">Buildpack Configuration</h2>
 <p>The PHP buildpack allows us to configure any PHP app using a dedicated file. Create a folder <code>.bp-config</code> at the root of your project and inside, add a file called <code>options.json</code>. This file sets the version of PHP to use, which extensions to install and many more options. You can read more about it <a href="http://docs.cloudfoundry.org/buildpacks/php/gsg-php-config.html">here</a>. Paste the following content into our new file to install the needed PHP extensions and to use the latest PHP version:</p>
@@ -148,18 +148,18 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
   <span style="color:#f92672">&#34;PHP_VERSION&#34;</span>: <span style="color:#e6db74">&#34;{PHP_70_LATEST}&#34;</span>
 }
 </code></pre></div><h2 id="manifestyml">manifest.yml</h2>
-<p>To specify how the app should behave in Cloud Foundry, let's add a <code>manifest.yml</code> file to the root of our project. Then insert the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">applications:
-  - name: piwik
-    host: my-piwik
-    memory: 256M
-    buildpacks:
+<p>To specify how the app should behave in Cloud Foundry, let&rsquo;s add a <code>manifest.yml</code> file to the root of our project. Then insert the following content:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
+  - <span style="color:#66d9ef">name</span>: piwik
+    <span style="color:#66d9ef">host</span>: my-piwik
+    <span style="color:#66d9ef">memory</span>: 256M
+    <span style="color:#66d9ef">buildpacks</span>:
       - https://github.com/cloudfoundry/php-buildpack.git
-    services:
+    <span style="color:#66d9ef">services</span>:
       - piwik-db
 </code></pre></div><p>Be creative with the <code>host</code> because the default one is probably already taken.</p>
 <h2 id="deploy">Deploy</h2>
-<p>Now it's time to deploy our app to Cloud Foundry. Since we have already configured everything in our manifest file, all we need to do is</p>
+<p>Now it&rsquo;s time to deploy our app to Cloud Foundry. Since we have already configured everything in our manifest file, all we need to do is</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push
 </code></pre></div><p>When we navigate to our Piwik instance, we are presented with the configuration wizard. Since we have set all the correct defaults above, you can just click &ldquo;next&rdquo; on most of the steps. Piwik will complain about the file integrity check reporting some errors but we can safely ignore that sinc we were the ones modifying the files. After the wizard, you should have a fully functioning Piwik installation running on Cloud Foundry. Yay!</p>
 <p>This tutorial is based on a very similar but outdated one of the <a href="https://www.ibm.com/blogs/bluemix/2014/07/getting-started-piwik-ibm-bluemix/">Bluemix Blog</a>.</p>
@@ -186,7 +186,7 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>

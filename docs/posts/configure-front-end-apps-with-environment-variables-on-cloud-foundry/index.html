@@ -48,17 +48,17 @@
     <h1 class="title">Configure Front End Apps With Environment Variables on Cloud Foundry</h1>
     <div class="content">
       <p>The <a href="https://12factor.net/">12 factor manifest</a> tells us in point III that apps should retrieve their config from environment variables to <strong>strictly separate config from code</strong>. &ldquo;Config&rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the <code>manifest.yml</code> file or the <code>cf set-env</code> command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the <a href="https://github.com/cloudfoundry/staticfile-buildpack">staticfile buildpack</a>? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an <a href="https://angular.io/">Angular</a> or <a href="https://facebook.github.io/react/">React</a> app, we cannot use these variables.</p>
-<p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it's being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
+<p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it&rsquo;s being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
 <h2 id="how-to">How To</h2>
-<p>To get our custom configuration endpoint, we'll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
+<p>To get our custom configuration endpoint, we&rsquo;ll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;</span>
 <span style="color:#e6db74">location</span> <span style="color:#e6db74">/app-config</span> {
   <span style="color:#f92672">default_type</span> <span style="color:#e6db74">application/json</span>;
   <span style="color:#f92672">return</span> <span style="color:#ae81ff">200</span> <span style="color:#e6db74">&#39;&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;&#39;</span>;
 }
 <span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">end</span> <span style="color:#e6db74">%&gt;</span>
-</code></pre></div><p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn't exist, the endpoint won't be exposed at all.</p>
-<p>If you don't have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
+</code></pre></div><p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn&rsquo;t exist, the endpoint won&rsquo;t be exposed at all.</p>
+<p>If you don&rsquo;t have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">worker_processes</span> <span style="color:#ae81ff">1</span>;
 <span style="color:#66d9ef">daemon</span> <span style="color:#66d9ef">off</span>;
 
@@ -114,7 +114,7 @@
 
   <span style="color:#960050;background-color:#1e0010">}</span>
 <span style="color:#960050;background-color:#1e0010">}</span>
-</code></pre></div><p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you'll have to adjust the above code accordingly.</p>
+</code></pre></div><p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you&rsquo;ll have to adjust the above code accordingly.</p>
 <p>Now push your app with <code>cf push</code> and set the <code>APP_CONFIG</code> environment variable to some JSON string with the following command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push &lt;app-name&gt;
 $ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;apiUrl&#34;:&#34;https://jsonplaceholder.typicode.com&#34;}&#39;</span>
@@ -124,7 +124,7 @@ $ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;
 <h2 id="use-cases">Use Cases</h2>
 <p>You can use this method to configure different environments your app might be running in. E.g. you might use a different API server for your integration environment than for your production environment.</p>
 <p>Alternatively, you could use it to toggle feature flags dynamically to do <a href="https://en.wikipedia.org/wiki/A/B_testing">A/B testing</a> or a <a href="https://martinfowler.com/bliki/CanaryRelease.html">canary release</a>.</p>
-<p>I'm sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.</p>
+<p>I&rsquo;m sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.</p>
 <p>Many thanks to <a href="https://github.com/mkretz">@mkretz</a> for the inspiration for this post!</p>
 
     </div>
@@ -149,7 +149,7 @@ $ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2019</p>
+    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
   </div>
 </section>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
