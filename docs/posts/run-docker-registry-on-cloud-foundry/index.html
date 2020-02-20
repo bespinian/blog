@@ -53,7 +53,7 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ git clone https://github.com/docker/distribution.git
 </code></pre></div><p>It is advisable to check out the latest tag of the repo to build. This will ensure that you have a supported version of Docker Distribution and therefore the registry.</p>
 <p>Then <code>cd</code> into it and compile it using Docker:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker run --rm -v <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>PWD<span style="color:#e6db74">}</span><span style="color:#e6db74">:/go/src/github.com/docker/distribution</span><span style="color:#e6db74">&#34;</span> -w /go/src/github.com/docker/distribution golang make binaries
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker run --rm -v <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>PWD<span style="color:#e6db74">}</span><span style="color:#e6db74">:/go/src/github.com/docker/distribution&#34;</span> -w /go/src/github.com/docker/distribution golang make binaries
 </code></pre></div><p>After the compilation, create a new folder anywhere on your computer and copy the file <code>bin/registry</code> into it. This is the binary file that contains the whole registry application:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ mkdir ~/registry <span style="color:#f92672">&amp;&amp;</span> cp bin/registry ~/registry
 </code></pre></div><p>This will be your working directory for this tutorial.</p>
@@ -116,7 +116,7 @@ redis_port<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;<
 redis_password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>redis_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.password // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#75715e"># Fill in template and write it to config.yml</span>
-echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+echo <span style="color:#e6db74">&#34;
 </span><span style="color:#e6db74">version: 0.1
 </span><span style="color:#e6db74">
 </span><span style="color:#e6db74">storage:
@@ -147,7 +147,7 @@ echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
 </span><span style="color:#e6db74">    timeout: 3s
 </span><span style="color:#e6db74">    interval: 10s
 </span><span style="color:#e6db74">    threshold: 3
-</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span> &gt; config.yml
+</span><span style="color:#e6db74">&#34;</span> &gt; config.yml
 
 <span style="color:#75715e"># Start the app</span>
 ./registry serve config.yml

@@ -87,8 +87,8 @@
 
 <span style="color:#66d9ef">@Injectable</span>()
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodoService</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">APIService</span> {
-  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">todos$</span>: <span style="color:#66d9ef">Observable</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Todo</span>[]<span style="color:#f92672">&gt;</span>;
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todosObserver</span>: <span style="color:#66d9ef">Observer</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Todo</span>[]<span style="color:#f92672">&gt;</span>;
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">todos$</span>: <span style="color:#66d9ef">Observable</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
+  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todosObserver</span>: <span style="color:#66d9ef">Observer</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
   <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">feathersService</span>: <span style="color:#66d9ef">any</span>;
   <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">dataStore</span><span style="color:#f92672">:</span> {
     <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[];
@@ -101,17 +101,17 @@
     <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">feathers</span>().<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">feathers</span>.<span style="color:#a6e22e">socketio</span>(<span style="color:#a6e22e">socket</span>));
     <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">service</span>(<span style="color:#e6db74">&#34;todo&#34;</span>);
 
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;created&#34;</span>, <span style="color:#a6e22e">todo</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>));
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;updated&#34;</span>, <span style="color:#a6e22e">todo</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>));
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;removed&#34;</span>, <span style="color:#a6e22e">todo</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>));
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;created&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>));
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;updated&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>));
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;removed&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>));
 
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos</span><span style="color:#a6e22e">$</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Observable</span>(<span style="color:#a6e22e">observer</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>));
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos$</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Observable</span>((<span style="color:#a6e22e">observer</span>) <span style="color:#f92672">=&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>));
 
     <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">todos</span><span style="color:#f92672">:</span> [] };
   }
 
   <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">find() {</span>
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">find</span>((<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">find</span>((<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
       <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
 
       <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
@@ -162,7 +162,7 @@
   <span style="color:#a6e22e">ChangeDetectionStrategy</span>,
   <span style="color:#a6e22e">Component</span>,
   <span style="color:#a6e22e">OnDestroy</span>,
-  <span style="color:#a6e22e">OnInit</span>
+  <span style="color:#a6e22e">OnInit</span>,
 } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
 <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Subscription</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;rxjs/Subscription&#34;</span>;
 
@@ -173,7 +173,7 @@
   <span style="color:#a6e22e">selector</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;app-todos&#34;</span>,
   <span style="color:#a6e22e">providers</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">TodoService</span>],
   <span style="color:#a6e22e">changeDetection</span>: <span style="color:#66d9ef">ChangeDetectionStrategy.OnPush</span>,
-  <span style="color:#a6e22e">templateUrl</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;./todos.component.html&#34;</span>
+  <span style="color:#a6e22e">templateUrl</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;./todos.component.html&#34;</span>,
 })
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodosComponent</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">OnDestroy</span>, <span style="color:#a6e22e">OnInit</span> {
   <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[] <span style="color:#f92672">=</span> [];
@@ -185,12 +185,12 @@
   ) {}
 
   <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ngOnInit</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">todos</span><span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">subscribe</span>(
-      (<span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">todos$</span>.<span style="color:#a6e22e">subscribe</span>(
+      (<span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
         <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">ref</span>.<span style="color:#a6e22e">markForCheck</span>();
       },
-      <span style="color:#a6e22e">err</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> {
+      (<span style="color:#a6e22e">err</span>) <span style="color:#f92672">=&gt;</span> {
         <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
       }
     );

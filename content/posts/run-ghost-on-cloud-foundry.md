@@ -206,7 +206,57 @@ Blog Header:
 
 ```html
 <style>
-  .hljs{color:#a9b7c6;background:#282b2e;display:block;overflow-x:auto;padding:0.5em}.hljs-number,.hljs-literal,.hljs-symbol,.hljs-bullet{color:#6897BB!important}.hljs-keyword,.hljs-selector-tag,.hljs-deletion{color:#cc7832!important}.hljs-variable,.hljs-template-variable,.hljs-link{color:#629755!important}.hljs-comment,.hljs-quote{color:#808080!important}.hljs-meta{color:#bbb529!important}.hljs-string,.hljs-attribute,.hljs-addition{color:#6A8759!important}.hljs-section,.hljs-title,.hljs-type{color:#ffc66d!important}.hljs-name,.hljs-selector-id,.hljs-selector-class{color:#e8bf6a!important}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:bold}
+  .hljs {
+    color: #a9b7c6;
+    background: #282b2e;
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+  }
+  .hljs-number,
+  .hljs-literal,
+  .hljs-symbol,
+  .hljs-bullet {
+    color: #6897bb !important;
+  }
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-deletion {
+    color: #cc7832 !important;
+  }
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-link {
+    color: #629755 !important;
+  }
+  .hljs-comment,
+  .hljs-quote {
+    color: #808080 !important;
+  }
+  .hljs-meta {
+    color: #bbb529 !important;
+  }
+  .hljs-string,
+  .hljs-attribute,
+  .hljs-addition {
+    color: #6a8759 !important;
+  }
+  .hljs-section,
+  .hljs-title,
+  .hljs-type {
+    color: #ffc66d !important;
+  }
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class {
+    color: #e8bf6a !important;
+  }
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: bold;
+  }
 </style>
 ```
 
@@ -214,7 +264,9 @@ Blog Footer:
 
 ```html
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
 ```
 
 If want to use a different theme (the one above is called "androidstudio"), you'll have to copy the minified CSS from your theme into the `<style>` tags of the header and then add `!important` to all the colors so they don't get overwritten by Ghost's theme.
