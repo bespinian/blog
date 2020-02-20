@@ -65,7 +65,7 @@ set -e -u
 
 <span style="color:#75715e"># App URL</span>
 app_uri<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>VCAP_APPLICATION<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.application_uris[0] // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
-app_url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">https://</span><span style="color:#e6db74">${</span>app_uri<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+app_url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://</span><span style="color:#e6db74">${</span>app_uri<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#75715e"># Database</span>
 db_credentials<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>VCAP_SERVICES<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.[&#34;mariadbent&#34;][0].credentials // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
@@ -88,7 +88,7 @@ email_username<span style="color:#f92672">=</span><span style="color:#e6db74">&#
 email_password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>email_credentials<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | jq -r <span style="color:#e6db74">&#39;.password // &#34;&#34;&#39;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#75715e"># Create config file</span>
-jq -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{
+jq -n <span style="color:#e6db74">&#34;{
 </span><span style="color:#e6db74">    url: \&#34;</span><span style="color:#e6db74">${</span>app_url<span style="color:#e6db74">}</span><span style="color:#e6db74">\&#34;,
 </span><span style="color:#e6db74">    mail: {
 </span><span style="color:#e6db74">        transport: \&#34;SMTP\&#34;,
@@ -113,7 +113,7 @@ jq -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{
 </span><span style="color:#e6db74">        host: \&#34;0.0.0.0\&#34;,
 </span><span style="color:#e6db74">        port: </span><span style="color:#e6db74">${</span>PORT<span style="color:#e6db74">}</span><span style="color:#e6db74">
 </span><span style="color:#e6db74">    }
-</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> &gt; config.production.json
+</span><span style="color:#e6db74">}&#34;</span> &gt; config.production.json
 
 <span style="color:#75715e"># Initialize and Migrate DB</span>
 ./node_modules/.bin/knex-migrator init
@@ -182,11 +182,63 @@ s3_secret_access_key<span style="color:#f92672">=</span><span style="color:#e6db
 <p>To get it into your blog, simply add the following snippets to the &ldquo;Code injection&rdquo; section of your Ghost settings:</p>
 <p>Blog Header:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
-  .<span style="color:#a6e22e">hljs</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#a9b7c6</span>;<span style="color:#66d9ef">background</span>:<span style="color:#ae81ff">#282b2e</span>;<span style="color:#66d9ef">display</span>:<span style="color:#66d9ef">block</span>;<span style="color:#66d9ef">overflow-x</span>:<span style="color:#66d9ef">auto</span>;<span style="color:#66d9ef">padding</span>:<span style="color:#ae81ff">0.5</span><span style="color:#66d9ef">em</span>}.<span style="color:#a6e22e">hljs-number</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-literal</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-symbol</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-bullet</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#6897BB</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-keyword</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-selector-tag</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-deletion</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#cc7832</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-variable</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-template-variable</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-link</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#629755</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-comment</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-quote</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#808080</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-meta</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#bbb529</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-string</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-attribute</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-addition</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#6A8759</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-section</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-title</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-type</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#ffc66d</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-name</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-selector-id</span><span style="color:#f92672">,</span>.<span style="color:#a6e22e">hljs-selector-class</span>{<span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#e8bf6a</span><span style="color:#75715e">!important</span>}.<span style="color:#a6e22e">hljs-emphasis</span>{<span style="color:#66d9ef">font-style</span>:<span style="color:#66d9ef">italic</span>}.<span style="color:#a6e22e">hljs-strong</span>{<span style="color:#66d9ef">font-weight</span>:<span style="color:#66d9ef">bold</span>}
+  .<span style="color:#a6e22e">hljs</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#a9b7c6</span>;
+    <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#282b2e</span>;
+    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">block</span>;
+    <span style="color:#66d9ef">overflow-x</span>: <span style="color:#66d9ef">auto</span>;
+    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.5</span><span style="color:#66d9ef">em</span>;
+  }
+  .<span style="color:#a6e22e">hljs-number</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-literal</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-symbol</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-bullet</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#6897bb</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-keyword</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-selector-tag</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-deletion</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#cc7832</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-variable</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-template-variable</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-link</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#629755</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-comment</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-quote</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#808080</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-meta</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#bbb529</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-string</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-attribute</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-addition</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#6a8759</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-section</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-title</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-type</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#ffc66d</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-name</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-selector-id</span><span style="color:#f92672">,</span>
+  .<span style="color:#a6e22e">hljs-selector-class</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#e8bf6a</span> <span style="color:#75715e">!important</span>;
+  }
+  .<span style="color:#a6e22e">hljs-emphasis</span> {
+    <span style="color:#66d9ef">font-style</span>: <span style="color:#66d9ef">italic</span>;
+  }
+  .<span style="color:#a6e22e">hljs-strong</span> {
+    <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">bold</span>;
+  }
 &lt;/<span style="color:#f92672">style</span>&gt;
 </code></pre></div><p>Blog Footer:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-&lt;<span style="color:#f92672">script</span>&gt;<span style="color:#a6e22e">hljs</span>.<span style="color:#a6e22e">initHighlightingOnLoad</span>();&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span>&gt;
+  <span style="color:#a6e22e">hljs</span>.<span style="color:#a6e22e">initHighlightingOnLoad</span>();
+&lt;/<span style="color:#f92672">script</span>&gt;
 </code></pre></div><p>If want to use a different theme (the one above is called &ldquo;androidstudio&rdquo;), you&rsquo;ll have to copy the minified CSS from your theme into the <code>&lt;style&gt;</code> tags of the header and then add <code>!important</code> to all the colors so they don&rsquo;t get overwritten by Ghost&rsquo;s theme.</p>
 <p>This will load and initialize highlight.js. Hit &ldquo;Save&rdquo; to update your blog and enjoy colorful syntax highlighting!</p>
 

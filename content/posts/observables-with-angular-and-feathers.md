@@ -81,11 +81,11 @@ export class TodoService extends APIService {
     const client = feathers().configure(feathers.socketio(socket));
     this.feathersService = client.service("todo");
 
-    this.feathersService.on("created", todo => this.onCreated(todo));
-    this.feathersService.on("updated", todo => this.onUpdated(todo));
-    this.feathersService.on("removed", todo => this.onRemoved(todo));
+    this.feathersService.on("created", (todo) => this.onCreated(todo));
+    this.feathersService.on("updated", (todo) => this.onUpdated(todo));
+    this.feathersService.on("removed", (todo) => this.onRemoved(todo));
 
-    this.todos$ = new Observable(observer => (this.todosObserver = observer));
+    this.todos$ = new Observable((observer) => (this.todosObserver = observer));
 
     this.dataStore = { todos: [] };
   }
@@ -147,7 +147,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
@@ -158,7 +158,7 @@ import { Todo } from "./todo";
   selector: "app-todos",
   providers: [TodoService],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./todos.component.html"
+  templateUrl: "./todos.component.html",
 })
 export class TodosComponent implements OnDestroy, OnInit {
   private todos: Todo[] = [];
@@ -175,7 +175,7 @@ export class TodosComponent implements OnDestroy, OnInit {
         this.todos = todos;
         this.ref.markForCheck();
       },
-      err => {
+      (err) => {
         console.error(err);
       }
     );

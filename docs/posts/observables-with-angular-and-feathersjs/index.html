@@ -1,75 +1,102 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observables With Angular and Feathersjs | bespinian Blog</title>
-<link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Observables With Angular and Feathersjs | bespinian Blog</title>
+  <link rel="stylesheet" href="https://blog.bespinian.io//css/style.css" />
+  <link
+    rel="stylesheet"
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+  />
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+  <link
+    rel="stylesheet"
+    href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css"
+  />
 
+  <section class="section">
+    <div class="container">
+      <nav class="nav">
+        <div class="nav-left">
+          <a class="nav-item" href="https://blog.bespinian.io/"
+            ><h1 class="title is-4">bespinian Blog</h1></a
+          >
+        </div>
+        <div class="nav-right">
+          <nav class="nav-item level is-mobile">
+            <a class="level-item" href="https://github.com/bespinian">
+              <span class="icon">
+                <i class="fa fa-github"></i>
+              </span>
+            </a>
 
-<section class="section">
-  <div class="container">
-    <nav class="nav">
-      <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile">
-          
-          <a class="level-item" href="https://github.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-github"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://twitter.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-twitter"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="/index.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-          </a>
-          
-        </nav>
-      </div>
-    </nav>
-  </div>
-</section>
+            <a class="level-item" href="https://twitter.com/bespinian">
+              <span class="icon">
+                <i class="fa fa-twitter"></i>
+              </span>
+            </a>
 
-<section class="section">
-  <div class="container">
-    <h2 class="subtitle is-6">March 14, 2016</h2>
-    <h1 class="title">Observables With Angular and Feathersjs</h1>
-    <div class="content">
-      
+            <a class="level-item" href="/index.xml">
+              <span class="icon">
+                <i class="fa fa-rss"></i>
+              </span>
+            </a>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </section>
 
-<p><a href="http://feathersjs.com">FeathersJS</a> is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the <a href="https://github.com/angular/angular-cli">Angular CLI</a> for your app.</p>
+  <section class="section">
+    <div class="container">
+      <h2 class="subtitle is-6">March 14, 2016</h2>
+      <h1 class="title">Observables With Angular and Feathersjs</h1>
+      <div class="content">
+        <p>
+          <a href="http://feathersjs.com">FeathersJS</a> is a modern API
+          framework for Node.js. It exposes its backend services as a REST API
+          or as a websocket API. To consume the exposed websockets from an
+          Angular app, it makes sense to create Angular services to abstract the
+          respective Feathers services in a way that makes it easy for our
+          Angular components to consume them. This tutorial is assuming that you
+          are using the
+          <a href="https://github.com/angular/angular-cli">Angular CLI</a> for
+          your app.
+        </p>
 
-<p>In my example, I&rsquo;ll use a simple todo service and a component that lists those todos.</p>
+        <p>
+          In my example, I&rsquo;ll use a simple todo service and a component
+          that lists those todos.
+        </p>
 
-<h2 id="import-libraries">Import libraries</h2>
+        <h2 id="import-libraries">Import libraries</h2>
 
-<p>As a first step we&rsquo;ll need to add the two libraries <code>socket.io-client</code> and <code>feathers-client</code> to our project. This can easily be done using npm:</p>
+        <p>
+          As a first step we&rsquo;ll need to add the two libraries
+          <code>socket.io-client</code> and <code>feathers-client</code> to our
+          project. This can easily be done using npm:
+        </p>
 
-<pre><code class="language-shell">$ npm install --save socket.io-client feathers-client
+        <pre><code class="language-shell">$ npm install --save socket.io-client feathers-client
 </code></pre>
 
-<p>The TypeScript typings of <code>feathers-client</code> are already included in the library. However, we need to include the ones for <code>socket.io-client</code> manually:</p>
+        <p>
+          The TypeScript typings of <code>feathers-client</code> are already
+          included in the library. However, we need to include the ones for
+          <code>socket.io-client</code> manually:
+        </p>
 
-<pre><code class="language-shell">$ npm install --save @types/socket.io-client
+        <pre><code class="language-shell">$ npm install --save @types/socket.io-client
 </code></pre>
 
-<h2 id="create-base-api-service">Create base API service</h2>
+        <h2 id="create-base-api-service">Create base API service</h2>
 
-<p>Then we create an abstract class to extend upon, which contains the basic properties of a backend service:</p>
+        <p>
+          Then we create an abstract class to extend upon, which contains the
+          basic properties of a backend service:
+        </p>
 
-<pre><code class="language-typescript">// src/app/api.service.ts
+        <pre><code class="language-typescript">// src/app/api.service.ts
 
 export abstract class ApiService {
   private _url: string = &quot;https://my-todos-api.com&quot;;
@@ -80,22 +107,28 @@ export abstract class ApiService {
 }
 </code></pre>
 
-<h2 id="create-data-model">Create data model</h2>
+        <h2 id="create-data-model">Create data model</h2>
 
-<p>Next, we create a class to represent our todo&rsquo;s data model:</p>
+        <p>Next, we create a class to represent our todo&rsquo;s data model:</p>
 
-<pre><code class="language-typescript">// src/app/todos/todo.ts
+        <pre><code class="language-typescript">// src/app/todos/todo.ts
 
 export class Todo {
   title: string;
 }
 </code></pre>
 
-<h2 id="create-actual-service">Create actual service</h2>
+        <h2 id="create-actual-service">Create actual service</h2>
 
-<p>Then we create the actual service which connects to the FeathersJS backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The FeathersJS service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
+        <p>
+          Then we create the actual service which connects to the FeathersJS
+          backend and exposes it as a service in Angular. It inherits from the
+          base service we&rsquo;ve created above. The FeathersJS service is
+          exposed as an RxJS <code>Obersvable</code> which our components can
+          then subscribe to:
+        </p>
 
-<pre><code class="language-typescript">// src/app/todos/todo.service.ts
+        <pre><code class="language-typescript">// src/app/todos/todo.service.ts
 
 import { Injectable } from &quot;@angular/core&quot;;
 import { Observable } from &quot;rxjs/Observable&quot;;
@@ -176,11 +209,15 @@ export class TodoService extends APIService {
 }
 </code></pre>
 
-<h2 id="consume-from-component">Consume from component</h2>
+        <h2 id="consume-from-component">Consume from component</h2>
 
-<p>Now, our Angular service is ready. To use the <code>Observable</code> it exposes in an Angular component, follow the structure below:</p>
+        <p>
+          Now, our Angular service is ready. To use the
+          <code>Observable</code> it exposes in an Angular component, follow the
+          structure below:
+        </p>
 
-<pre><code class="language-typescript">// todos/todos.component.ts
+        <pre><code class="language-typescript">// todos/todos.component.ts
 
 import {
   ChangeDetectorRef,
@@ -228,66 +265,114 @@ export class TodosComponent implements OnDestroy, OnInit {
 }
 </code></pre>
 
-<p>Our component <code>TodosComponent</code> now has a property <code>todos</code> which contains the todos it gets from the respective FeathersJS service and which can be used in the app. It live-updates the UI every time a todo in the FeathersJS API is removed or added.</p>
-
+        <p>
+          Our component <code>TodosComponent</code> now has a property
+          <code>todos</code> which contains the todos it gets from the
+          respective FeathersJS service and which can be used in the app. It
+          live-updates the UI every time a todo in the FeathersJS API is removed
+          or added.
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section">
-  <div class="container">
-    <aside><div id="disqus_thread"></div></aside>
-    <script type="text/javascript">
-      var disqus_shortname = 'berndsgnch';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
+  <section class="section">
+    <div class="container">
+      <aside><div id="disqus_thread"></div></aside>
+      <script type="text/javascript">
+        var disqus_shortname = "berndsgnch";
+        (function () {
+          var dsq = document.createElement("script");
+          dsq.type = "text/javascript";
+          dsq.async = true;
+          dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+          (
+            document.getElementsByTagName("head")[0] ||
+            document.getElementsByTagName("body")[0]
+          ).appendChild(dsq);
+        })();
+      </script>
+      <noscript
+        >Please enable JavaScript to view the
+        <a href="https://disqus.com/?ref_noscript" rel="nofollow"
+          >comments powered by Disqus.</a
+        ></noscript
+      >
+    </div>
+  </section>
 
+  <section class="section">
+    <div class="container has-text-centered">
+      <p>&copy; <a href="https://bespinian.io">bespinian</a> 2018</p>
+    </div>
+  </section>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"
+  ></script>
 
-<section class="section">
-  <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2018</p>
-  </div>
-</section>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
+  <script
+    type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"
+  ></script>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
 
-<script>hljs.initHighlightingOnLoad();</script>
+  <script type="application/javascript">
+    var doNotTrack = false;
+    if (!doNotTrack) {
+      window.ga =
+        window.ga ||
+        function () {
+          (ga.q = ga.q || []).push(arguments);
+        };
+      ga.l = +new Date();
+      ga("create", "UA-22629901-2", "auto");
 
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-22629901-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-
+      ga("send", "pageview");
+    }
+  </script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+</html>
