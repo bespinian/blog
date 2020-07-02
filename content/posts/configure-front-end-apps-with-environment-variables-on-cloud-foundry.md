@@ -1,6 +1,6 @@
 ---
-title: "Configure Front End Apps With Environment Variables on Cloud Foundry"
-date: 2016-11-20T16:26:06+02:00
+title: Configure Front End Apps With Environment Variables on Cloud Foundry
+date: 2016-11-20
 ---
 
 The [12 factor manifest](https://12factor.net/) tells us in point III that apps should retrieve their config from environment variables to **strictly separate config from code**. "Config" meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the `manifest.yml` file or the `cf set-env` command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the [staticfile buildpack](https://github.com/cloudfoundry/staticfile-buildpack)? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an [Angular](https://angular.io/) or [React](https://facebook.github.io/react/) app, we cannot use these variables.

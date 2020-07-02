@@ -1,6 +1,6 @@
 ---
-title: "Docker for Local Development"
-date: 2017-06-08T16:22:44+02:00
+title: Docker for Local Development
+date: 2017-06-08
 ---
 
 I'm using [Docker](https://www.docker.com/). Daily. It has become a very valuable part of my toolchain because it allows me to quickly set up any backend my applications might need to run and tear it down the second I don't need it anymore. Gone are the days when you had to have all kinds of databases and other services installed just to be able to run your apps locally. With Docker you can do all of that and isolate it from your machine.

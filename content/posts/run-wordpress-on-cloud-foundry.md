@@ -1,6 +1,6 @@
 ---
-title: "Run WordPress on Cloud Foundry"
-date: 2017-08-25T16:19:58+02:00
+title: Run WordPress on Cloud Foundry
+date: 2017-08-25
 ---
 
 [WordPress](https://wordpress.org/) runs a huge portion of all websites on the internet. It therefore seems obvious, to run this software on Cloud Foundry. There's just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container based systems, that doesn't work because the container can be restarted at any time which would remove all stored files. For that reason, we need to externalize all file storage to a separate service. In our case, this will be an S3 compatible storage.

@@ -1,6 +1,6 @@
 ---
-title: "Run a CI/CD Server on Cloud Foundry"
-date: 2016-02-16T16:27:55+02:00
+title: Run a CI/CD Server on Cloud Foundry
+date: 2016-02-16
 ---
 
 Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the `cf push` command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That's where a CI/CD server comes in handy. It tests, builds and deploys your code every time you `git push` to any git repo.

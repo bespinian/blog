@@ -1,6 +1,6 @@
 ---
-title: "Run Ghost on Cloud Foundry"
-date: 2017-07-27T16:21:31+02:00
+title: Run Ghost on Cloud Foundry
+date: 2017-07-27
 ---
 
 This blog runs on [Ghost](https://github.com/TryGhost/Ghost). It's a pretty light weight blogging platform based on [Node.js](https://nodejs.org/). Let's look into how it can be run on Cloud Foundry.
