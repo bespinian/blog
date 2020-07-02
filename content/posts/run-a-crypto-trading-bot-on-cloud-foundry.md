@@ -1,6 +1,6 @@
 ---
-title: "Run a Crypto Trading Bot on Cloud Foundry"
-date: 2017-12-11T16:16:21+02:00
+title: Run a Crypto Trading Bot on Cloud Foundry
+date: 2017-12-11
 ---
 
 Everybody is talking about [Bitcoin](https://en.wikipedia.org/wiki/Bitcoin) and its peer currencies. The hype is so great that even small investors, who have no idea about financial constructs, like myself want to get aboard the investing and trading train. That's why I recently decided to create my own account on [GDAX](https://www.gdax.com/) and try my luck.

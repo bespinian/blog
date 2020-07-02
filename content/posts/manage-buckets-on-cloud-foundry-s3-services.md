@@ -1,6 +1,6 @@
 ---
-title: "Manage Buckets on Cloud Foundry S3 Services"
-date: 2017-03-17T16:23:32+02:00
+title: Manage Buckets on Cloud Foundry S3 Services
+date: 2017-03-17
 ---
 
 [S3](https://aws.amazon.com/s3/) is a great concept to store static files and larger [BLOBs](https://en.wikipedia.org/wiki/Binary_large_object). Let's look into how we can use it in Cloud Foundry.
