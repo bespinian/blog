@@ -1,6 +1,6 @@
 ---
-title: "Observables With Angular and Feathers"
-date: 2016-03-14T16:27:24+02:00
+title: Observables With Angular and Feathers
+date: 2016-03-14
 ---
 
 [Feathers](http://feathersjs.com) is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the [Angular CLI](https://github.com/angular/angular-cli) for your app.

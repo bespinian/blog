@@ -1,6 +1,6 @@
 ---
-title: "Run Docker Registry on Cloud Foundry"
-date: 2017-08-24T16:20:42+02:00
+title: Run Docker Registry on Cloud Foundry
+date: 2017-08-24
 ---
 
 If you work a lot with [Docker](https://www.docker.com/), you are probably used to the concept of having a [Docker Registry](https://docs.docker.com/registry/) which allows you to store your images in a safe place. There's a public registry that you can use for free at [Docker Store](https://store.docker.com/). But what if you don't want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.

@@ -1,6 +1,6 @@
 ---
-title: "Cloud Foundry Route Services"
-date: 2016-10-03T16:26:38+02:00
+title: Cloud Foundry Route Services
+date: 2016-10-03
 ---
 
 In Cloud Foundry, we use [services](https://docs.cloudfoundry.org/devguide/services/) to provide additional functionality as reserved resources to our apps. They get bound to the app(s) directly and are accessible from these bound apps only. The image below shows how they get provisioned through the service broker and are then accessible to the client through the app. This is obviously a great setup for services like databases, messaging brokers, app data loggers or other handy additions for our apps to consume.

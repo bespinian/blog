@@ -1,6 +1,6 @@
 ---
-title: "Blue Green Deployment on Cloud Foundry"
-date: 2016-12-12T16:24:44+02:00
+title: Blue Green Deployment on Cloud Foundry
+date: 2016-12-12
 ---
 
 Imagine you have one of your apps in production and want to `cf push` an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving `404`s when trying to access your application. Now, what if the new version of your app has an error in it and doesn't even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.
