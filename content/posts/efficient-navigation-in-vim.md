@@ -3,13 +3,13 @@ title: Efficient Navigation in Vim
 date: 2020-07-07
 ---
 
-When editing a file, it's quite crucial that one can navigate their cursor around rather quickly. [Vim](https://www.vim.org/) and [NeoVim](https://neovim.io/) allow for many different ways of doing so which, depending on the situation, can be more or less efficient and useful. This article examines the different ways of moving the cursor and compares them. Here, the term of "efficiency" refers to navigating the cursor with as little time and effort (i.e. the number of keystrokes) as possible.
+When editing a file, it's quite crucial that you can navigate your cursor around rather quickly. [Vim](https://www.vim.org/) and [NeoVim](https://neovim.io/) allow for many different ways of doing so which, depending on the situation, can be more or less efficient and useful. This article examines the different ways of moving the cursor and compares them. Here, the term of "efficiency" refers to navigating the cursor with as little time and effort (i.e. the number of keystrokes) as possible.
 
 ## Using the Mouse
 
 **TL;DR: Not recommended**
 
-Using the mouse pointer to navigate Vim may seem like an obvious choice for users coming from a GUI editor like [Visual Studio Code](https://code.visualstudio.com/) or similar. However, in Vim, the goal is to keep one's fingers on the "home row" of the keyboard (the row where the `F` and the `J` keys reside) and not having to move them greatly towards the touchpad or even the mouse. This should reduce the strain on one's hands and wrists and make editing more efficient. Therefore, navigating with the mouse should be highly discouraged in most situations and is even disabled by default.
+Using the mouse pointer to navigate Vim may seem like an obvious choice for users coming from a GUI editor like [Visual Studio Code](https://code.visualstudio.com/) or similar. However, in Vim, the goal is to keep your fingers on the "home row" of the keyboard (the row where the `F` and the `J` keys reside) and not having to move them greatly towards the touchpad or even the mouse. This should reduce the strain on your hands and wrists and make editing more efficient. Therefore, navigating with the mouse should be highly discouraged in most situations and is even disabled by default.
 
 It can be helpful to enable it for users transitioning from one of the aforementioned editors and would like to have a smooth transition by allowing themselves to use the mouse initially and switching it back off again later in their learning journey. To turn on mouse navigation, add the following to the configuration file (either `~/.vimrc` or `~/.config/nvim/init.vim`):
 
@@ -18,13 +18,13 @@ It can be helpful to enable it for users transitioning from one of the aforement
 set mouse=a
 ```
 
-This will allow to point and click to move the cursor and to scroll through the current buffer.
+This will allow you to point and click to move the cursor and to scroll through the current buffer.
 
 ## Using the Arrow Keys
 
 **TL;DR: Not recommended**
 
-Again, for users used to other text editors or even word processing software like [LibreOffice Writer](https://www.libreoffice.org/discover/writer/), it may be tempting to use what they know. In these programs, one mostly uses the arrow keys for keyboard-based navigation. This is not recommended because... you guessed it: They require the user to move their fingers away from the home row.
+Again, for users used to other text editors or even word processing software like [LibreOffice Writer](https://www.libreoffice.org/discover/writer/), it may be tempting to use what they know. In these programs, you mostly use the arrow keys for keyboard-based navigation. This is not recommended because... you guessed it: They require the user to move their fingers away from the home row.
 
 The alternative is, as described in the next section, to use the `h`, `j`, `k` and `l` keys on the keyboard which are conveniently placed at the center and where the user most likely has their fingers most of the time.
 
@@ -32,7 +32,7 @@ The alternative is, as described in the next section, to use the `h`, `j`, `k` a
 
 **TL;DR: Use for small navigations. Use in combination with relative line numbers.**
 
-`h`, `j`, `k` and `l` are the basic movement keys in Vim. They should be used instead of the usual arrow keys on the keyboard to, as discussed above, keep one's fingers on the home row as much as possible. It takes a little practice but will pay off in the long run.
+`h`, `j`, `k` and `l` are the basic movement keys in Vim. They should be used instead of the usual arrow keys on the keyboard to, as discussed above, keep your fingers on the home row as much as possible. It takes a little practice but will pay off in the long run.
 
 One hugely important thing to do with these keys is to not press them multiple times in sequence or even hold them down to move several columns or rows. As with many commands in Vim, they can be prefixed with numbers to move multiple times. For example, `12j` can be used rather than pressing the `j` key twelve times which is, obviously, much more efficient (three vs. twelve keystrokes). However, it is recommendable to only use these keys for small movements and mostly to move lines up or down because there are more efficient ways of moving longer vertical distances or horizontal distances in general.
 
@@ -56,7 +56,7 @@ So far, we've mostly looked at navigating from one line to another. The next ste
 abc def-ghi-jkl mno
 ```
 
-with the cursor currently on the `g` character, to get to a specific target character pressing the following commands would be the most efficient way to do so:
+with the cursor currently on the `g` character, pressing the following commands is the most efficient way to get to a specific target character:
 
 | Target Character | Command    |
 | ---------------- | ---------- |
@@ -74,7 +74,7 @@ When moving multiple words back and forth or when moving to a specific place wit
 
 **TL;DR: Great for moving larger distances vertically and horizontally**
 
-By far one of the most efficient ways of moving longer distances horizontally and vertically in a buffer is to use the search. The `/` key lets one search for a term and conveniently jump to its location. Pressing the `n` and `N` keys will jump to the next and previous occurrence of the search term respectively. The `?` key searches backwards from the current cursor position. Even though, the main purpose of the search command is obviously to search, it is an incredibly powerful tool to navigate quickly and efficiently.
+By far one of the most efficient ways of moving longer distances horizontally and vertically in a buffer is to use the search. The `/` key lets you search for a term and conveniently jump to its location. Pressing the `n` and `N` keys will jump to the next and previous occurrence of the search term respectively. The `?` key searches backwards from the current cursor position. Even though, the main purpose of the search command is obviously to search, it is an incredibly powerful tool to navigate quickly and efficiently.
 
 The user experience of the search command can be vastly improved by adding the following settings to the configuration file:
 
@@ -94,7 +94,7 @@ endif
 
 `incsearch` will make sure that the search pattern is applied incrementally while typing instead of only after pressing the enter key. The combination of `ignorecase` and `smartcase` ignores the case of the search term when not using any uppercase letters and doesn't ignore it when using at least one uppercase letter which is quite convenient and surprisingly intuitive. `hlsearch` highlights any matches for the search term allowing to easily jump between them using `n` and `N`. The last statement lets the user clear the highlighted search results by pressing `ctrl+l` to unclutter their view once done searching and jumping.
 
-All in all, search is one of the powerful tools for intuitive and efficient navigation. It covers the common use case of knowing the word or part of a word to navigate to but not having one's eyes directly pointed there yet. Furthermore, it's simply the fastest way of jumping somewhere in many cases and beats other methods of navigation quite often in that regard.
+All in all, search is one of the powerful tools for intuitive and efficient navigation. It covers the common use case of knowing the word or part of a word to navigate to but not having your eyes directly pointed there yet. Furthermore, it's simply the fastest way of jumping somewhere in many cases and beats other methods of navigation quite often in that regard.
 
 ## Clunky Movements
 
@@ -114,7 +114,7 @@ So far, we've only talked about features that are built into Vim or that can be 
 
 ### fzf
 
-One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but also between different locations within them. It is highly recommended to check it out and add the following lines to the configuration:
+One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but also between different locations within them. I highly recommend to check it out and add the following lines to the configuration:
 
 ```vim
 " Jump to specific file
@@ -127,7 +127,7 @@ The first line lets the user open files in the current project by pressing `ctrl
 
 ### EasyMotion
 
-Another useful plugin is [EasyMotion](https://github.com/easymotion/vim-easymotion). Instead of pressing `n` multiple times after a search to jump to the correct occurrence of the search term, it highlights each occurrence and assigns them a unique character combination. By pressing this combination, one can quickly jump to that occurrence with very few key strokes.
+Another useful plugin is [EasyMotion](https://github.com/easymotion/vim-easymotion). Instead of pressing `n` multiple times after a search to jump to the correct occurrence of the search term, it highlights each occurrence and assigns them a unique character combination. By pressing this combination, you can quickly jump to that occurrence with very few key strokes.
 
 An added bonus is that something very similar exists as a browser extension which allows to use many other Vim commands in a web browser and make browsing using only the keyboard possible. It's called [Vimium](https://github.com/philc/vimium).
 
@@ -137,4 +137,4 @@ Obviously, there are many other ways of navigating Vim buffer(s) that aren't cov
 
 Another thing to note is that this article talks only about motion commands. It does not discuss commands that go into insert mode while moving the cursor to a specific place (e.g. the `A` command which moves the cursor to the end of a line and enters insert mode). While those can be incredibly useful, discussing them here would have gone beyond the scope of this article.
 
-It is highly recommended to get to know as many different techniques as possible and carefully thinking about which one makes sense in which situation. Users shouldn't be afraid of forcing themselves a bit to use different ones until they have found their own toolbox of useful ones for different situations. It takes some practice to get these into muscle memory but it's worth it all the while to make Vim the efficient text editor it can be.
+I highly recommend to get to know as many different techniques as possible and carefully thinking about which one makes sense in which situation. You shouldn't be afraid of forcing themselves a bit to use different ones until they have found their own toolbox of useful ones for different situations. It takes some practice to get these into muscle memory but it's worth it all the while to make Vim the efficient text editor it can be.
