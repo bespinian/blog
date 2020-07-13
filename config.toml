@@ -5,7 +5,7 @@ theme = "hemingway"
 publishDir = "docs"
 copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2020"
 disqusShortname = "berndsgnch"
-googleAnalytics = "UA-22629901-2"
+googleAnalytics = "UA-132338301-2"
 
 [params]
 
