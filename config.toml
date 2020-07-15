@@ -24,6 +24,10 @@ languages = [
 ]
 
 [[params.social]]
+url = "https://bespinian.io/"
+fa_icon = "fa-globe"
+
+[[params.social]]
 url = "https://github.com/bespinian"
 fa_icon = "fa-github"
 
