@@ -3,7 +3,7 @@ title: Efficient Navigation in Vim
 date: 2020-07-15
 ---
 
-When editing a file, it's quite crucial that you can navigate your cursor around rather quickly. [Vim](https://www.vim.org/) and [NeoVim](https://neovim.io/) allow for many different ways of doing so which, depending on the situation, can be more or less efficient and useful. This article examines the different ways of moving the cursor and compares them. Here, the term "efficiency" refers to navigating the cursor with as little time and effort (i.e. the number of keystrokes) as possible.
+When editing a file, it is quite crucial that you can navigate your cursor around rather quickly. [Vim](https://www.vim.org/) and [NeoVim](https://neovim.io/) allow for many different ways of doing so which, depending on the situation, can be more or less efficient and useful. This article examines the different ways of moving the cursor and compares them. Here, the term "efficiency" refers to navigating the cursor with as little time and effort (i.e. the number of keystrokes) as possible.
 
 ## Using the Mouse
 
@@ -70,6 +70,16 @@ with the cursor currently on the `g` character, pressing the following commands 
 
 When moving multiple words back and forth or to a specific place within a word, `t` and `f` are incredibly helpful. Especially `f` moves to the next occurrence of a specific character which lets you make big jumps within a line. The difference is that `f` moves to a character and `t` moves to right before a character. So `t` is mostly useful for deleting everything to a character. These commands' uppercase variants `F` and `T` do the same thing but backwards. All of these commands can be "repeated" with the `;` command which jumps to the next occurrence of the targeted character while `,` jumps to the previous one.
 
+Another command worth mentioning at this point is `%` which you can use when a character which is part of a pair (e.g. `[` or `}`) is currently under your cursor. The `%` command will take the cursor to the corresponding "partner" of that character in the pair. So placing the cursor on a `(` and then executing this command will take you to its closing `)`.
+
+## Changelist and Jumplist
+
+**TL;DR: Use `ctrl+o` and `ctrl+i` to jump "back" and "forward". Use `g;` to jump to last edit.**
+
+The jumplist contains all the points in any buffer you recently jumped to (e.g. with `12j`). It can be accessed with `:jumps`. The commands to jump back and forth in the jumplist are `ctrl+o` and `ctrl+i` respectively. They can be very useful because they act like the "back" and "forward" buttons in a web browser.
+
+The changelist on the other hand contains all the points in the current buffer where you have recently changed something. It can be accessed with the `:changes` command. A very useful command here is `g;` which jumps to the last place where you have changed something (i.e. jumps back in the changelist). `g,` on the other hand takes you back to where you were before (i.e. jumps forward in the changelist). This allows you to easily switch back and forth between a point of reference (e.g. some documentation) and the place where you are currently editing.
+
 ## Search
 
 **TL;DR: Great for moving larger distances vertically and horizontally**
@@ -94,7 +104,7 @@ endif
 
 `incsearch` will make sure that the search pattern is applied incrementally while typing instead of only after pressing the enter key. The combination of `ignorecase` and `smartcase` ignores the case of the search term when not using any uppercase letters and doesn't ignore it when using at least one uppercase letter which is quite convenient and surprisingly intuitive. `hlsearch` highlights any matches for the search term allowing to easily jump between them using `n` and `N`. The last statement lets you clear the highlighted search results by pressing `ctrl+l` to unclutter your view once done searching and jumping.
 
-All in all, search is one of the powerful tools for intuitive and efficient navigation. It covers the common use case of knowing the word or part of a word to navigate to but not having your eyes directly pointed there yet. Furthermore, it's simply the fastest way of jumping somewhere in many cases and beats other methods of navigation quite often in that regard.
+All in all, search is one of the most powerful tools for intuitive and efficient navigation. It covers the common use case of knowing the word or part of a word to navigate to but not having your eyes directly pointed there yet. Furthermore, it's simply the fastest way of jumping somewhere in many cases and beats other methods of navigation quite often in that regard.
 
 ## Clunky Movements
 
@@ -125,9 +135,9 @@ nnoremap \ :Rg<space>
 
 The first line lets you open files in the current project by pressing `ctrl+p` and then typing with fuzzy matching. The second line allows to search the whole project with fuzzy matching by pressing `\` (in contrast to `/` which searches the current buffer).
 
-### EasyMotion
+### Sneak
 
-Another useful plugin is [EasyMotion](https://github.com/easymotion/vim-easymotion). Instead of pressing `n` multiple times after a search to jump to the correct occurrence of the search term, it highlights each occurrence and assigns them a unique character combination. By pressing this combination, you can quickly jump to that occurrence with very few key strokes.
+Another useful plugin is [Sneak](https://github.com/justinmk/vim-sneak). Instead of pressing `n` multiple times after a search to jump to the correct occurrence of the search term, it highlights each occurrence and assigns them a unique character combination. By pressing this combination, you can quickly jump to that occurrence with very few key strokes.
 
 An added bonus is that something very similar exists as a browser extension which allows to use many other Vim commands in a web browser and makes browsing using only the keyboard possible. It's called [Vimium](https://github.com/philc/vimium).
 
@@ -138,3 +148,5 @@ Obviously, there are many other ways of navigating Vim buffers that aren't cover
 Another thing to note is that this article only talks about motion commands. It does not discuss commands that go into insert mode while moving the cursor to a specific place (e.g. the `A` command which moves the cursor to the end of a line and enters insert mode). While those can be incredibly useful, discussing them here would have gone beyond the scope of this article.
 
 I highly recommend to get to know as many different techniques as possible and carefully thinking about which one makes sense in which situation. You shouldn't be afraid of forcing yourself a bit to use different ones until you have found your own toolbox of useful ones for different situations. It takes some practice to get these into muscle memory but it's worth it all the while to make Vim the efficient text editor it can be.
+
+For a full example of a configuration, check out my own [dotfiles](https://github.com/mastertinner/dotfiles/blob/master/nvim/.config/nvim/init.vim).
