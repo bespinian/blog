@@ -65,78 +65,78 @@
 <p>Next, we&rsquo;ll need an S3 compatible storage that contains a bucket that is publicly accessible. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on how to create one and call the service &ldquo;wp-storage&rdquo;.</p>
 <h2 id="configure-wordpress">Configure WordPress</h2>
 <p>Wordpress itself doesn&rsquo;t run on Cloud Foundry out of the box. We&rsquo;ll need to make some adjustments to the <code>wp-config.php</code> file. Open it and replace these lines:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define(&#39;DB_NAME&#39;, &#39;database_name_here&#39;);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// ** MySQL settings - You can get this info from your web host ** //
+</span><span style="color:#75715e"></span><span style="color:#e6db74">/** The name of the database for WordPress */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_NAME&#39;</span>, <span style="color:#e6db74">&#39;database_name_here&#39;</span>);
 
-/** MySQL database username */
-define(&#39;DB_USER&#39;, &#39;username_here&#39;);
+<span style="color:#e6db74">/** MySQL database username */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_USER&#39;</span>, <span style="color:#e6db74">&#39;username_here&#39;</span>);
 
-/** MySQL database password */
-define(&#39;DB_PASSWORD&#39;, &#39;password_here&#39;);
+<span style="color:#e6db74">/** MySQL database password */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_PASSWORD&#39;</span>, <span style="color:#e6db74">&#39;password_here&#39;</span>);
 
-/** MySQL hostname */
-define(&#39;DB_HOST&#39;, &#39;localhost&#39;);
+<span style="color:#e6db74">/** MySQL hostname */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_HOST&#39;</span>, <span style="color:#e6db74">&#39;localhost&#39;</span>);
 
-/** Database Charset to use in creating database tables. */
-define(&#39;DB_CHARSET&#39;, &#39;utf8&#39;);
+<span style="color:#e6db74">/** Database Charset to use in creating database tables. */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_CHARSET&#39;</span>, <span style="color:#e6db74">&#39;utf8&#39;</span>);
 
-/** The Database Collate type. Don&#39;t change this if in doubt. */
-define(&#39;DB_COLLATE&#39;, &#39;&#39;);
+<span style="color:#e6db74">/** The Database Collate type. Don&#39;t change this if in doubt. */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_COLLATE&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>);
 </code></pre></div><p>with the following ones:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// ** Read service properties from _ENV[&#39;VCAP_SERVICES&#39;] ** //
-$services = json_decode(getenv(&#39;VCAP_SERVICES&#39;), true);
-$db_service = $services[&#39;mariadbent&#39;][0];
-$db_conf = $db_service[&#39;credentials&#39;];
-$s3_service = $services[&#39;dynstrg&#39;][0];
-$s3_conf = $s3_service[&#39;credentials&#39;];
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// ** Read service properties from _ENV[&#39;VCAP_SERVICES&#39;] ** //
+</span><span style="color:#75715e"></span>$services <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>(<span style="color:#a6e22e">getenv</span>(<span style="color:#e6db74">&#39;VCAP_SERVICES&#39;</span>), <span style="color:#66d9ef">true</span>);
+$db_service <span style="color:#f92672">=</span> $services[<span style="color:#e6db74">&#39;mariadbent&#39;</span>][<span style="color:#ae81ff">0</span>];
+$db_conf <span style="color:#f92672">=</span> $db_service[<span style="color:#e6db74">&#39;credentials&#39;</span>];
+$s3_service <span style="color:#f92672">=</span> $services[<span style="color:#e6db74">&#39;dynstrg&#39;</span>][<span style="color:#ae81ff">0</span>];
+$s3_conf <span style="color:#f92672">=</span> $s3_service[<span style="color:#e6db74">&#39;credentials&#39;</span>];
 
-// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define(&#39;DB_NAME&#39;, $db_conf[&#39;database&#39;]);
+<span style="color:#75715e">// ** MySQL settings - You can get this info from your web host ** //
+</span><span style="color:#75715e"></span><span style="color:#e6db74">/** The name of the database for WordPress */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_NAME&#39;</span>, $db_conf[<span style="color:#e6db74">&#39;database&#39;</span>]);
 
-/** MySQL database username */
-define(&#39;DB_USER&#39;, $db_conf[&#39;username&#39;]);
+<span style="color:#e6db74">/** MySQL database username */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_USER&#39;</span>, $db_conf[<span style="color:#e6db74">&#39;username&#39;</span>]);
 
-/** MySQL database password */
-define(&#39;DB_PASSWORD&#39;, $db_conf[&#39;password&#39;]);
+<span style="color:#e6db74">/** MySQL database password */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_PASSWORD&#39;</span>, $db_conf[<span style="color:#e6db74">&#39;password&#39;</span>]);
 
-/** MySQL hostname */
-define(&#39;DB_HOST&#39;, $db_conf[&#39;host&#39;] . &#39;:&#39; . $db_conf[&#39;port&#39;]);
+<span style="color:#e6db74">/** MySQL hostname */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_HOST&#39;</span>, $db_conf[<span style="color:#e6db74">&#39;host&#39;</span>] <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">.</span> $db_conf[<span style="color:#e6db74">&#39;port&#39;</span>]);
 
-/** Database Charset to use in creating database tables. */
-define(&#39;DB_CHARSET&#39;, &#39;utf8&#39;);
+<span style="color:#e6db74">/** Database Charset to use in creating database tables. */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_CHARSET&#39;</span>, <span style="color:#e6db74">&#39;utf8&#39;</span>);
 
-/** The Database Collate type. Don&#39;t change this if in doubt. */
-define(&#39;DB_COLLATE&#39;, &#39;&#39;);
+<span style="color:#e6db74">/** The Database Collate type. Don&#39;t change this if in doubt. */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_COLLATE&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>);
 
-/** The endpoint of your S3 provider (defaults to AWS) */
-define(&#39;S3_UPLOADS_ENDPOINT_URL&#39;, &#39;https://&#39; . $s3_conf[&#39;accessHost&#39;]);
+<span style="color:#e6db74">/** The endpoint of your S3 provider (defaults to AWS) */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_ENDPOINT_URL&#39;</span>, <span style="color:#e6db74">&#39;https://&#39;</span> <span style="color:#f92672">.</span> $s3_conf[<span style="color:#e6db74">&#39;accessHost&#39;</span>]);
 
-/** The name of your S3 bucket */
-define(&#39;S3_UPLOADS_BUCKET&#39;, &#39;my-bucket&#39;);
+<span style="color:#e6db74">/** The name of your S3 bucket */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_BUCKET&#39;</span>, <span style="color:#e6db74">&#39;my-bucket&#39;</span>);
 
-/** Your S3 access key ID */
-define(&#39;S3_UPLOADS_KEY&#39;, $s3_conf[&#39;accessKey&#39;]);
+<span style="color:#e6db74">/** Your S3 access key ID */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_KEY&#39;</span>, $s3_conf[<span style="color:#e6db74">&#39;accessKey&#39;</span>]);
 
-/** Your S3 secret access key */
-define(&#39;S3_UPLOADS_SECRET&#39;, $s3_conf[&#39;sharedSecret&#39;]);
+<span style="color:#e6db74">/** Your S3 secret access key */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_SECRET&#39;</span>, $s3_conf[<span style="color:#e6db74">&#39;sharedSecret&#39;</span>]);
 
-/** Your S3 region */
-define(&#39;S3_UPLOADS_REGION&#39;, &#39;none&#39;);
+<span style="color:#e6db74">/** Your S3 region */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_REGION&#39;</span>, <span style="color:#e6db74">&#39;none&#39;</span>);
 
-/** The URL where your uploads will be available */
-define(&#39;S3_UPLOADS_BUCKET_URL&#39;, &#39;https://&#39; . $s3_conf[&#39;namespace&#39;] . &#39;.ds11s3ns.swisscom.com/&#39; . S3_UPLOADS_BUCKET);
+<span style="color:#e6db74">/** The URL where your uploads will be available */</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;S3_UPLOADS_BUCKET_URL&#39;</span>, <span style="color:#e6db74">&#39;https://&#39;</span> <span style="color:#f92672">.</span> $s3_conf[<span style="color:#e6db74">&#39;namespace&#39;</span>] <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;.ds11s3ns.swisscom.com/&#39;</span> <span style="color:#f92672">.</span> <span style="color:#a6e22e">S3_UPLOADS_BUCKET</span>);
 </code></pre></div><p>Don&rsquo;t forget to replace <code>my-bucket</code> with the actual name of your bucket.</p>
 <p>This config allows us to get the credentials to the database and the configuration for our S3 uploads from the environment as it&rsquo;s usually done in Cloud Foundry applications.</p>
 <h2 id="install-s3-uploads-plugin">Install S3-Uploads Plugin</h2>
 <p>Luckily for us, there is a neat plugin for WordPress that allows uploads to be stored in S3 instead of the local file system. You can find the plugin on <a href="https://github.com/humanmade/S3-Uploads">GitHub</a>. We will directly clone it into the plugins directory of our WordPress so that we can push it to Cloud Foundry with WordPress itself:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ git clone https://github.com/humanmade/S3-Uploads.git wp-content/plugins/S3-Uploads
-</code></pre></div><p>This will make the plugin available for activation in WordPress&rsquo; admin GUI.</p>
+</code></pre></div><p>This will make the plugin available for activation in WordPress' admin GUI.</p>
 <h2 id="create-s3-endpoint-plugin">Create S3-Endpoint Plugin</h2>
 <p>You can skip this step if you are using AWS S3.</p>
 <p>The S3-Uploads plugin works really well with <a href="https://aws.amazon.com/s3/">AWS S3</a>. If, however, we want to use it with a 3rd party S3 provider (e.g. the Swisscom Application Cloud Dynamic Storage), we&rsquo;ll have to add some more code to also allow us to specify a custom S3 endpoint. To do so, we&rsquo;ll create a very small plugin that reads the endpoint out of <code>wp-config.php</code>. In the <code>wp-content</code> directory, Create a new directory called <code>mu-plugins</code>. It holds so-called <a href="https://codex.wordpress.org/Must_Use_Plugins">Must Use Plugins</a> which are always used. In this directory, create a file called <code>S3-endpoint.php</code> and fill it with the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
 <span style="color:#75715e">/*
 </span><span style="color:#75715e">Plugin Name:  S3 Uploads Endpoint
 </span><span style="color:#75715e">Description:  Add S3_UPLOADS_ENDPOINT_URL to S3-Uploads
@@ -155,15 +155,15 @@ define(&#39;S3_UPLOADS_BUCKET_URL&#39;, &#39;https://&#39; . $s3_conf[&#39;names
 </code></pre></div><p>This simple one-file plugin checks if the constant <code>S3_UPLOADS_ENDPOINT_URL</code> is defined and, if so, enriches the S3 params with it as the <code>endpoint</code> parameter. If the variable is not defined, it will not set the <code>endpoint</code> param to make it use the default of AWS again.</p>
 <h2 id="create-manifestyml">Create manifest.yml</h2>
 <p>Last but not least, we&rsquo;ll create a <code>manifest.yml</code> file to push our app to the cloud more easily. Create the file at the root of your <code>wordpress</code> directory and fill it with the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
-  - <span style="color:#66d9ef">name</span>: wordpress
-    <span style="color:#66d9ef">host</span>: my-wordpress
-    <span style="color:#66d9ef">memory</span>: 256M
-    <span style="color:#66d9ef">buildpacks</span>:
-      - https://github.com/cloudfoundry/php-buildpack.git
-    <span style="color:#66d9ef">services</span>:
-      - wp-db
-      - wp-storage
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">applications</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">wordpress</span>
+    <span style="color:#f92672">host</span>: <span style="color:#ae81ff">my-wordpress</span>
+    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256M</span>
+    <span style="color:#f92672">buildpacks</span>:
+      - <span style="color:#ae81ff">https://github.com/cloudfoundry/php-buildpack.git</span>
+    <span style="color:#f92672">services</span>:
+      - <span style="color:#ae81ff">wp-db</span>
+      - <span style="color:#ae81ff">wp-storage</span>
 </code></pre></div><p>If the hostname is already taken, choose another one. You can use whatever you want.</p>
 <h2 id="push-the-app">Push the app</h2>
 <p>Now it&rsquo;s time to push our app to the cloud. Run the following command:</p>
