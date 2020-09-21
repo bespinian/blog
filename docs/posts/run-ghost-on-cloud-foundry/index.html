@@ -131,17 +131,17 @@ npm start
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ chmod +x entrypoint-cf.sh
 </code></pre></div><p>This script gets all the necessary environment variables and uses <code>jq</code> (which comes pre-installed in the Node.js Buildpack) to create a config JSON string which is then written into a <code>config.production.json</code> file. The script then executes a database migration (if necessary) and starts the app itself.</p>
 <p>Now, all we&rsquo;ll need to do is tell Cloud Foundry to run this script to start the app instead of calling <code>npm start</code> directly (which is the default for Node.js apps). We can do this in the <code>manifest.yml</code> file, which is where Cloud Foundry gets its instructions of how to run an app. Create a new file called <code>manifest.yml</code> in the root directory of the app and paste the following content in there:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
-  - <span style="color:#66d9ef">name</span>: my-blog
-    <span style="color:#66d9ef">memory</span>: 256MB
-    <span style="color:#66d9ef">buildpacks</span>:
-      - https://github.com/cloudfoundry/nodejs-buildpack.git
-    <span style="color:#66d9ef">command</span>: ./entrypoint-cf.sh
-    <span style="color:#66d9ef">services</span>:
-      - blog-db
-      - mailgun
-    <span style="color:#66d9ef">env</span>:
-      <span style="color:#66d9ef">NODE_ENV</span>: production
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">applications</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">my-blog</span>
+    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256MB</span>
+    <span style="color:#f92672">buildpacks</span>:
+      - <span style="color:#ae81ff">https://github.com/cloudfoundry/nodejs-buildpack.git</span>
+    <span style="color:#f92672">command</span>: <span style="color:#ae81ff">./entrypoint-cf.sh</span>
+    <span style="color:#f92672">services</span>:
+      - <span style="color:#ae81ff">blog-db</span>
+      - <span style="color:#ae81ff">mailgun</span>
+    <span style="color:#f92672">env</span>:
+      <span style="color:#f92672">NODE_ENV</span>: <span style="color:#ae81ff">production</span>
 </code></pre></div><p>This tells CF to use the correct buildpack and to initiate the app with our entrypoint script. It also sets the <code>NODE_ENV</code> environment variable to <code>production</code> which optimizes Node.js and Ghost to run with better performance. Furthermore, it tells Cloud Foundry to bind the two services we&rsquo;ve created above to our blog app.</p>
 <p>The configuration for our app is done. All that&rsquo;s left to do is run the following command to get our blog running in the cloud:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cf push
@@ -154,7 +154,7 @@ npm start
 <p>At some point, you&rsquo;ll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So we&rsquo;ll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.</p>
 <p>To do so, follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> to create an S3 service with bucket and name the service instance &ldquo;blog-storage&rdquo;.</p>
 <p>Next, we&rsquo;ll need to bind the app to our newly created service. Add the following line to the <code>services</code> part of our <code>manifest.yml</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- blog-storage
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ae81ff">blog-storage</span>
 </code></pre></div><p>Now we need to install the <a href="https://github.com/colinmeinke/ghost-storage-adapter-s3">ghost-storage-adapter-s3</a> so that Ghost will know how to talk to our S3 service. To do so, run the installation commands from the link above in the folder where you have the Ghost repo. Cloud Foundry will try to install the dependencies for Ghost using <code>yarn</code>. Since the installation commands install the S3 storage adapter with <code>npm</code>, we&rsquo;ll need to change that. This can simply be achieved by removing the <code>yarn.lock</code> file:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ rm yarn.lock
 </code></pre></div><p>Next, we&rsquo;ll need to adjust our <code>entrypoint-cf.sh</code> script to include the S3 service. Add the following lines where the services variables are read:</p>

@@ -95,18 +95,18 @@
 </code></pre></div><p>This will create a service in our space which exposes your Mailgun credentials via environment variables to any app bound to it.</p>
 <h3 id="add-manifestyml">Add manifest.yml</h3>
 <p>Your app is now ready to run locally (using <code>npm start</code>). To push it to the cloud, create a <code>manifest.yml</code> file in the root folder of Strider and insert the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
-  - <span style="color:#66d9ef">name</span>: strider
-    <span style="color:#66d9ef">host</span>: strider
-    <span style="color:#66d9ef">memory</span>: 2048MB
-    <span style="color:#66d9ef">instances</span>: <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">buildpacks</span>:
-      - https://github.com/cloudfoundry/buildpack-nodejs.git
-    <span style="color:#66d9ef">services</span>:
-      - strider-db
-      - mailgun
-    <span style="color:#66d9ef">env</span>:
-      <span style="color:#66d9ef">NODE_ENV</span>: production
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">applications</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">strider</span>
+    <span style="color:#f92672">host</span>: <span style="color:#ae81ff">strider</span>
+    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">2048MB</span>
+    <span style="color:#f92672">instances</span>: <span style="color:#ae81ff">1</span>
+    <span style="color:#f92672">buildpacks</span>:
+      - <span style="color:#ae81ff">https://github.com/cloudfoundry/buildpack-nodejs.git</span>
+    <span style="color:#f92672">services</span>:
+      - <span style="color:#ae81ff">strider-db</span>
+      - <span style="color:#ae81ff">mailgun</span>
+    <span style="color:#f92672">env</span>:
+      <span style="color:#f92672">NODE_ENV</span>: <span style="color:#ae81ff">production</span>
 </code></pre></div><p>This will provide the setup instructions for Cloud Foundry to properly run your application. It creates an app with 2048MB of memory, so charges may apply (depending on your provider).</p>
 <h3 id="cf-push">cf push</h3>
 <p>That&rsquo;s it. You are now ready to run your Strider instance in Cloud Foundry. Just run <code>cf push</code> to deploy it in the cloud.</p>

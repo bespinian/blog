@@ -63,7 +63,7 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service mariadbent usage piwik-db
 </code></pre></div><p>In the Swisscom Application Cloud, the SQL service is called <code>mariadbent</code>. You might have to adjust this if you are using a different CF provider.</p>
 <p>Then we need to instruct Piwik to connect to our database provided as a Cloud Foundry service. Create a new file <code>bootstrap.php</code> in the root of your project and insert the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
   $_ENV[<span style="color:#e6db74">&#34;SQLDB&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">NULL</span>;
   $_ENV[<span style="color:#e6db74">&#34;SQLHOST&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">NULL</span>;
   $_ENV[<span style="color:#e6db74">&#34;SQLPORT&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">NULL</span>;
@@ -90,47 +90,47 @@
       $_ENV[<span style="color:#e6db74">&#34;SQLPASSWORD&#34;</span>] <span style="color:#f92672">=</span> $mysql_config[<span style="color:#e6db74">&#34;password&#34;</span>];
     }
   }
-<span style="color:#75715e">?&gt;</span>
-</code></pre></div><p>This code runs before Piwik starts so it allows us to overwrite the default variables that are used to connect to the database. Again, you&rsquo;ll have to adjust the keyword <code>mariadbent</code> in the code if the SQL service is called differently with your CF provider.</p>
+<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>This code runs before Piwik starts so it allows us to overwrite the default variables that are used to connect to the database. Again, you&rsquo;ll have to adjust the keyword <code>mariadbent</code> in the code if the SQL service is called differently with your CF provider.</p>
 <p>When Piwik is started for the first time, it shows a configuration wizard where the user has to provide the database credentials. We can overwrite the defaults for these values with the ones coming from the service environment variables so you can just click &ldquo;next&rdquo; in this wizard and don&rsquo;t have to look them up every time. To do so, open the file <code>plugins/Installation/FormDatabaseSetup.php</code> and navigate to the definition of the <code>init</code> method. There, replace the following lines:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
-$this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
-                                                               &#39;host&#39;          =&gt; &#39;127.0.0.1&#39;,
-                                                               &#39;type&#39;          =&gt; $defaultDatabaseType,
-                                                               &#39;tables_prefix&#39; =&gt; &#39;piwik_&#39;,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// default values
+</span><span style="color:#75715e"></span>$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">addDataSource</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HTML_QuickForm2_DataSource_Array</span>(<span style="color:#66d9ef">array</span>(
+                                                               <span style="color:#e6db74">&#39;host&#39;</span>          <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>,
+                                                               <span style="color:#e6db74">&#39;type&#39;</span>          <span style="color:#f92672">=&gt;</span> $defaultDatabaseType,
+                                                               <span style="color:#e6db74">&#39;tables_prefix&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;piwik_&#39;</span>,
                                                           )));
 </code></pre></div><p>with these:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
-$this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
-                                                               &#39;host&#39;          =&gt; $_ENV[&#34;SQLHOST&#34;].&#39;:&#39;.$_ENV[&#34;SQLPORT&#34;],
-                                                               &#39;username&#39;      =&gt; $_ENV[&#34;SQLUSER&#34;],
-                                                               &#39;password&#39;      =&gt; $_ENV[&#34;SQLPASSWORD&#34;],
-                                                               &#39;dbname&#39;        =&gt; $_ENV[&#34;SQLDB&#34;],
-                                                               &#39;type&#39;          =&gt; $defaultDatabaseType,
-                                                               &#39;tables_prefix&#39; =&gt; &#39;piwik_&#39;,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// default values
+</span><span style="color:#75715e"></span>$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">addDataSource</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HTML_QuickForm2_DataSource_Array</span>(<span style="color:#66d9ef">array</span>(
+                                                               <span style="color:#e6db74">&#39;host&#39;</span>          <span style="color:#f92672">=&gt;</span> $_ENV[<span style="color:#e6db74">&#34;SQLHOST&#34;</span>]<span style="color:#f92672">.</span><span style="color:#e6db74">&#39;:&#39;</span><span style="color:#f92672">.</span>$_ENV[<span style="color:#e6db74">&#34;SQLPORT&#34;</span>],
+                                                               <span style="color:#e6db74">&#39;username&#39;</span>      <span style="color:#f92672">=&gt;</span> $_ENV[<span style="color:#e6db74">&#34;SQLUSER&#34;</span>],
+                                                               <span style="color:#e6db74">&#39;password&#39;</span>      <span style="color:#f92672">=&gt;</span> $_ENV[<span style="color:#e6db74">&#34;SQLPASSWORD&#34;</span>],
+                                                               <span style="color:#e6db74">&#39;dbname&#39;</span>        <span style="color:#f92672">=&gt;</span> $_ENV[<span style="color:#e6db74">&#34;SQLDB&#34;</span>],
+                                                               <span style="color:#e6db74">&#39;type&#39;</span>          <span style="color:#f92672">=&gt;</span> $defaultDatabaseType,
+                                                               <span style="color:#e6db74">&#39;tables_prefix&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;piwik_&#39;</span>,
                                                           )));
 </code></pre></div><h2 id="security">Security</h2>
 <p>Next we have to add our site&rsquo;s URL that we also retrieve from the CF environment in <code>bootstrap.php</code> as a trusted host to Piwik. Open the file <code>plugins/Installation/Controller.php</code> and navigate to definition of the <code>addTrustedHosts</code> method. There, replace the following line</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts = array();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts <span style="color:#f92672">=</span> <span style="color:#66d9ef">array</span>();
 </code></pre></div><p>with these:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts = Config::getInstance()-&gt;General[&#39;trusted_hosts&#39;];
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$trustedHosts <span style="color:#f92672">=</span> <span style="color:#a6e22e">Config</span><span style="color:#f92672">::</span><span style="color:#a6e22e">getInstance</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">General</span>[<span style="color:#e6db74">&#39;trusted_hosts&#39;</span>];
 
-if (!is_array($trustedHosts)) {
-    $trustedHosts = array();
+<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">is_array</span>($trustedHosts)) {
+    $trustedHosts <span style="color:#f92672">=</span> <span style="color:#66d9ef">array</span>();
 }
 </code></pre></div><p>We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the <code>config/global.ini.php</code> file and change the setting of <code>force_ssl</code> fo <code>1</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">force_ssl = 1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">force_ssl</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 </code></pre></div><h2 id="routing">Routing</h2>
 <p>Next, we&rsquo;ll improve some more of the defaults Piwik uses during the set up wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file <code>plugins/Installation/FormFirstWebsiteSetup.php</code> and replace the following lines of the <code>init</code> method:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
-$this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
-                                                               &#39;url&#39; =&gt; $urlExample,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// default values
+</span><span style="color:#75715e"></span>$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">addDataSource</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HTML_QuickForm2_DataSource_Array</span>(<span style="color:#66d9ef">array</span>(
+                                                               <span style="color:#e6db74">&#39;url&#39;</span> <span style="color:#f92672">=&gt;</span> $urlExample,
                                                           )));
 </code></pre></div><p>with these:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// default values
-$this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
-                                                               &#39;siteName&#39; =&gt; $_ENV[&#34;APPURIS&#34;][0],
-                                                               &#39;url&#39; =&gt; &#34;https://&#34; . $_ENV[&#34;APPURIS&#34;][0],
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">// default values
+</span><span style="color:#75715e"></span>$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">addDataSource</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HTML_QuickForm2_DataSource_Array</span>(<span style="color:#66d9ef">array</span>(
+                                                               <span style="color:#e6db74">&#39;siteName&#39;</span> <span style="color:#f92672">=&gt;</span> $_ENV[<span style="color:#e6db74">&#34;APPURIS&#34;</span>][<span style="color:#ae81ff">0</span>],
+                                                               <span style="color:#e6db74">&#39;url&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;https://&#34;</span> <span style="color:#f92672">.</span> $_ENV[<span style="color:#e6db74">&#34;APPURIS&#34;</span>][<span style="color:#ae81ff">0</span>],
                                                           )));
 </code></pre></div><h2 id="composer">Composer</h2>
 <p>Since Piwik already comes with its dependencies installed, we don&rsquo;t want <a href="https://getcomposer.org/">Composer</a> to run again in Cloud Foundry. The PHP buildpack won&rsquo;t run Composer if it doesn&rsquo;t find any files that would indicate that. So let&rsquo;s ignore the Composer files when pushing. Add a <code>.cfignore</code> file to the root of your project and paste the following line into it:</p>
@@ -155,14 +155,14 @@ $this-&gt;addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 }
 </code></pre></div><h2 id="manifestyml">manifest.yml</h2>
 <p>To specify how the app should behave in Cloud Foundry, let&rsquo;s add a <code>manifest.yml</code> file to the root of our project. Then insert the following content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">applications</span>:
-  - <span style="color:#66d9ef">name</span>: piwik
-    <span style="color:#66d9ef">host</span>: my-piwik
-    <span style="color:#66d9ef">memory</span>: 256M
-    <span style="color:#66d9ef">buildpacks</span>:
-      - https://github.com/cloudfoundry/php-buildpack.git
-    <span style="color:#66d9ef">services</span>:
-      - piwik-db
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">applications</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">piwik</span>
+    <span style="color:#f92672">host</span>: <span style="color:#ae81ff">my-piwik</span>
+    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256M</span>
+    <span style="color:#f92672">buildpacks</span>:
+      - <span style="color:#ae81ff">https://github.com/cloudfoundry/php-buildpack.git</span>
+    <span style="color:#f92672">services</span>:
+      - <span style="color:#ae81ff">piwik-db</span>
 </code></pre></div><p>Be creative with the <code>host</code> because the default one is probably already taken.</p>
 <h2 id="deploy">Deploy</h2>
 <p>Now it&rsquo;s time to deploy our app to Cloud Foundry. Since we have already configured everything in our manifest file, all we need to do is</p>

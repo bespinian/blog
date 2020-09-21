@@ -67,7 +67,7 @@
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiService</span> {
   <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">_url</span>: <span style="color:#66d9ef">string</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://my-todos-api.com&#34;</span>;
 
-  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">url</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
+  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">url</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_url</span>;
   }
 }
@@ -82,14 +82,14 @@
 <p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.service.ts
 </span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;rxjs/Observable&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observer</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;rxjs/Observer&#34;</span>;
-<span style="color:#66d9ef">import</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">io</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;socket.io-client&#34;</span>;
-<span style="color:#66d9ef">import</span> <span style="color:#a6e22e">feathers</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;feathers-client&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observable&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observer</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observer&#34;</span>;
+<span style="color:#66d9ef">import</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">io</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;socket.io-client&#34;</span>;
+<span style="color:#66d9ef">import</span> <span style="color:#a6e22e">feathers</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;feathers-client&#34;</span>;
 
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">ApiService</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;../api.service&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">ApiService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;../api.service&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
 
 <span style="color:#66d9ef">@Injectable</span>()
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodoService</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">APIService</span> {
@@ -169,11 +169,11 @@
   <span style="color:#a6e22e">Component</span>,
   <span style="color:#a6e22e">OnDestroy</span>,
   <span style="color:#a6e22e">OnInit</span>,
-} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Subscription</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;rxjs/Subscription&#34;</span>;
+} <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Subscription</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Subscription&#34;</span>;
 
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">TodoService</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;./todo.service&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">TodoService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo.service&#34;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
 
 <span style="color:#66d9ef">@Component</span>({
   <span style="color:#a6e22e">selector</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;app-todos&#34;</span>,
