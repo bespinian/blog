@@ -1,5 +1,6 @@
 ---
 title: Run WordPress on Cloud Foundry
+author: Lena Fuhrimann
 date: 2017-08-25
 ---
 
