@@ -1,5 +1,6 @@
 ---
 title: Run Docker Registry on Cloud Foundry
+author: Lena Fuhrimann
 date: 2017-08-24
 ---
 

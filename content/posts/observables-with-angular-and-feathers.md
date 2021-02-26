@@ -1,5 +1,6 @@
 ---
 title: Observables With Angular and Feathers
+author: Lena Fuhrimann
 date: 2016-03-14
 ---
 
