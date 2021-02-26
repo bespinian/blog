@@ -1,5 +1,6 @@
 ---
 title: Run a Crypto Trading Bot on Cloud Foundry
+author: Lena Fuhrimann
 date: 2017-12-11
 ---
 

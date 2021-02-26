@@ -1,5 +1,6 @@
 ---
 title: Efficient Navigation in Vim
+author: Lena Fuhrimann
 date: 2020-07-15
 ---
 
