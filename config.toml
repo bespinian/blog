@@ -1,13 +1,14 @@
 baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
 title = "bespinian Blog"
-theme = "hemingway"
+theme = "tale"
 publishDir = "docs"
 copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2020"
 disqusShortname = "berndsgnch"
 googleAnalytics = "UA-132338301-2"
 
 [params]
+css = ["custom.css"]
 
 [params.highlight]
 style = "androidstudio"
