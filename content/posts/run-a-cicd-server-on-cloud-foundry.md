@@ -1,6 +1,7 @@
 ---
 title: Run a CI/CD Server on Cloud Foundry
 author: Lena Fuhrimann
+comments: true
 date: 2016-02-16
 ---
 

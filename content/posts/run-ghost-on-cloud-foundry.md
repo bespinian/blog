@@ -1,6 +1,7 @@
 ---
 title: Run Ghost on Cloud Foundry
 author: Lena Fuhrimann
+comments: true
 date: 2017-07-27
 ---
 
