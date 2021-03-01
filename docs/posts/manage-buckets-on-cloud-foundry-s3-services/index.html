@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Manage Buckets on Cloud Foundry S3 Services | bespinian Blog</title>
-<link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+		<title>Manage Buckets on Cloud Foundry S3 Services &middot; bespinian Blog</title>
 
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/custom.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-<section class="section">
-  <div class="container">
-    <nav class="nav">
-      <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile">
-          
-          <a class="level-item" href="https://bespinian.io/">
-            <span class="icon">
-              <i class="fa fa-globe"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://github.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-github"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://twitter.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-twitter"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="/index.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-          </a>
-          
-        </nav>
-      </div>
-    </nav>
-  </div>
-</section>
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="bespinian Blog" />
+	</head>
 
-<section class="section">
-  <div class="container">
-    <h2 class="subtitle is-6">March 17, 2017</h2>
-    <h1 class="title">Manage Buckets on Cloud Foundry S3 Services</h1>
-    <div class="content">
-      <p><a href="https://aws.amazon.com/s3/">S3</a> is a great concept to store static files and larger <a href="https://en.wikipedia.org/wiki/Binary_large_object">BLOBs</a>. Let&rsquo;s look into how we can use it in Cloud Foundry.</p>
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">bespinian Blog</h2>
+				</a>
+				<ul>
+    
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Lena Fuhrimann
+        <br>
+        <span>on&nbsp;</span><time datetime="2017-03-17 00:00:00 &#43;0000 UTC">March 17, 2017</time>
+</div>
+
+		<h1 class="post-title">Manage Buckets on Cloud Foundry S3 Services</h1>
+<div class="post-line"></div>
+
+		
+
+		<p><a href="https://aws.amazon.com/s3/">S3</a> is a great concept to store static files and larger <a href="https://en.wikipedia.org/wiki/Binary_large_object">BLOBs</a>. Let&rsquo;s look into how we can use it in Cloud Foundry.</p>
 <p>S3 was originally created by <a href="https://aws.amazon.com/">Amazon Web Services</a> but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don&rsquo;t, you can create your own by creating a <a href="https://docs.cloudfoundry.org/devguide/services/user-provided.html">user-provided service</a> and adding the respective S3 credentials (e.g. from AWS).</p>
 <p>This tutorial uses the <a href="https://docs.developer.swisscom.com/service-offerings/dynamic.html">Swisscom Application Cloud S3 Dynamic Storage</a> but you can also use any other S3 provider.</p>
 <p>To create an S3 service, run the following command:</p>
@@ -76,64 +71,68 @@
 </code></pre></div><h2 id="s3-manager">S3 Manager</h2>
 <p>Alternatively, you can use an open source app I&rsquo;ve been developing called <a href="https://github.com/mastertinner/s3manager">S3 Manager</a>. You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.</p>
 
-    </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="container">
-    <aside><div id="disqus_thread"></div></aside>
-    <script type="text/javascript">
-      var disqus_shortname = 'berndsgnch';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
+		<div
+  class="bespinian-social-nav-container bespinian-social-nav-container--footer"
+>
+  <nav class="bespinian-social-nav">
+    
+    <a class="bespinian-social-nav-link" href="https://bespinian.io/">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian website">
+          <title>bespinian website</title>
+          <use href="/icons/globe.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://github.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on GitHub">
+          <title>bespinian on GitHub</title>
+          <use href="/icons/github.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://twitter.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on Twitter">
+          <title>bespinian on Twitter</title>
+          <use href="/icons/twitter.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="/index.xml">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="The bespinian blog RSS feed">
+          <title>The bespinian blog RSS feed</title>
+          <use href="/icons/rss.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+  </nav>
+</div>
 
+	</div>
 
-<section class="section">
-  <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
-  </div>
-</section>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+	<div class="pagination">
+		<a href="/posts/blue-green-deployment-on-cloud-foundry/" class="left arrow">&#8592;</a>
+		<a href="/posts/docker-for-local-development/" class="right arrow">&#8594;</a>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad();</script>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-132338301-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
 
 
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2021-03-01 11:38:31.243901644 &#43;0100 CET m=&#43;0.046385982">2021</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
 
+    </body>
+</html>
