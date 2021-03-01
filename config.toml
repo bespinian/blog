@@ -26,16 +26,20 @@ languages = [
 
 [[params.social]]
 url = "https://bespinian.io/"
-fa_icon = "fa-globe"
+alt_text = "bespinian website"
+icon_file = "globe.svg"
 
 [[params.social]]
 url = "https://github.com/bespinian"
-fa_icon = "fa-github"
+alt_text = "bespinian on GitHub"
+icon_file = "github.svg"
 
 [[params.social]]
 url = "https://twitter.com/bespinian"
-fa_icon = "fa-twitter"
+alt_text = "bespinian on Twitter"
+icon_file = "twitter.svg"
 
 [[params.social]]
 url = "/index.xml"
-fa_icon = "fa-rss"
+alt_text = "The bespinian blog RSS feed"
+icon_file = "rss.svg"

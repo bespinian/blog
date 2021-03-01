@@ -79,3 +79,33 @@ h6,
 .highlight {
   background-color: #272822;
 }
+
+.bespinian-social-nav-container {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.bespinian-social-nav-container {
+  margin-top: 40px;
+}
+
+.bespinian-social-nav {
+  margin-top: 10px;
+  display: flex;
+}
+
+.bespinian-social-nav-link {
+  color: #353535;
+  margin-left: 10px;
+}
+
+.bespinian-social-nav-link:hover {
+  color: #555555;
+}
+.bespinian-icon svg {
+  width: 24px;
+  height: 24px;
+}
