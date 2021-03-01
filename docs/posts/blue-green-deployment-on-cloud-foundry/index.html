@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blue Green Deployment on Cloud Foundry | bespinian Blog</title>
-<link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+		<title>Blue Green Deployment on Cloud Foundry &middot; bespinian Blog</title>
 
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/custom.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-<section class="section">
-  <div class="container">
-    <nav class="nav">
-      <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile">
-          
-          <a class="level-item" href="https://bespinian.io/">
-            <span class="icon">
-              <i class="fa fa-globe"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://github.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-github"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://twitter.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-twitter"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="/index.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-          </a>
-          
-        </nav>
-      </div>
-    </nav>
-  </div>
-</section>
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="bespinian Blog" />
+	</head>
 
-<section class="section">
-  <div class="container">
-    <h2 class="subtitle is-6">December 12, 2016</h2>
-    <h1 class="title">Blue Green Deployment on Cloud Foundry</h1>
-    <div class="content">
-      <p>Imagine you have one of your apps in production and want to <code>cf push</code> an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving <code>404</code>s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&rsquo;t even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.</p>
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">bespinian Blog</h2>
+				</a>
+				<ul>
+    
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Lena Fuhrimann
+        <br>
+        <span>on&nbsp;</span><time datetime="2016-12-12 00:00:00 &#43;0000 UTC">December 12, 2016</time>
+</div>
+
+		<h1 class="post-title">Blue Green Deployment on Cloud Foundry</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>Imagine you have one of your apps in production and want to <code>cf push</code> an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving <code>404</code>s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&rsquo;t even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.</p>
 <p>To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called &ldquo;Blue-Green Deployment&rdquo;. I won&rsquo;t go into the depths of this concept because you can read all about it in the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">Cloud Foundry documentation</a>. Generally, it allows you to have two instances of your application running at the same time while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.</p>
 <p>Cloud Foundry doesn&rsquo;t provide this functionality out of the box. That&rsquo;s why I wrote a simple shell script to do this blue-green deployment for you.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
@@ -158,64 +153,68 @@ cf rename <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${
 </ul>
 <p>My script is there to show you what happens behind the curtains and to be used by CI/CD systems or if you need more fine-grained control over what is happening during the deployment. Personally, I really like the BlueGreenDeploy plugin. It&rsquo;s easy to use and does the job.</p>
 
-    </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="container">
-    <aside><div id="disqus_thread"></div></aside>
-    <script type="text/javascript">
-      var disqus_shortname = 'berndsgnch';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
+		<div
+  class="bespinian-social-nav-container bespinian-social-nav-container--footer"
+>
+  <nav class="bespinian-social-nav">
+    
+    <a class="bespinian-social-nav-link" href="https://bespinian.io/">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian website">
+          <title>bespinian website</title>
+          <use href="/icons/globe.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://github.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on GitHub">
+          <title>bespinian on GitHub</title>
+          <use href="/icons/github.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://twitter.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on Twitter">
+          <title>bespinian on Twitter</title>
+          <use href="/icons/twitter.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="/index.xml">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="The bespinian blog RSS feed">
+          <title>The bespinian blog RSS feed</title>
+          <use href="/icons/rss.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+  </nav>
+</div>
 
+	</div>
 
-<section class="section">
-  <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
-  </div>
-</section>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+	<div class="pagination">
+		<a href="/posts/run-piwik-on-cloud-foundry/" class="left arrow">&#8592;</a>
+		<a href="/posts/manage-buckets-on-cloud-foundry-s3-services/" class="right arrow">&#8594;</a>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad();</script>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-132338301-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
 
 
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2021-03-01 11:38:31.233432226 &#43;0100 CET m=&#43;0.035916664">2021</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
 
+    </body>
+</html>
