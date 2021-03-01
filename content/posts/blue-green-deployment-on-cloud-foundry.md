@@ -1,6 +1,7 @@
 ---
 title: Blue Green Deployment on Cloud Foundry
 author: Lena Fuhrimann
+comments: true
 date: 2016-12-12
 ---
 

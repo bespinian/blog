@@ -1,6 +1,7 @@
 ---
 title: Docker for Local Development
 author: Lena Fuhrimann
+comments: true
 date: 2017-06-08
 ---
 

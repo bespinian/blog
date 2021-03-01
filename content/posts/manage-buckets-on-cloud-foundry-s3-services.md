@@ -1,6 +1,7 @@
 ---
 title: Manage Buckets on Cloud Foundry S3 Services
 author: Lena Fuhrimann
+comments: true
 date: 2017-03-17
 ---
 
