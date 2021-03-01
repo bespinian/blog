@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cloud Foundry Route Services | bespinian Blog</title>
-<link rel="stylesheet" href="https://blog.bespinian.io//css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/androidstudio.min.css">
+		<title>Cloud Foundry Route Services &middot; bespinian Blog</title>
 
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/custom.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-<section class="section">
-  <div class="container">
-    <nav class="nav">
-      <div class="nav-left">
-        <a class="nav-item" href="https://blog.bespinian.io/"><h1 class="title is-4">bespinian Blog</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile">
-          
-          <a class="level-item" href="https://bespinian.io/">
-            <span class="icon">
-              <i class="fa fa-globe"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://github.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-github"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="https://twitter.com/bespinian">
-            <span class="icon">
-              <i class="fa fa-twitter"></i>
-            </span>
-          </a>
-          
-          <a class="level-item" href="/index.xml">
-            <span class="icon">
-              <i class="fa fa-rss"></i>
-            </span>
-          </a>
-          
-        </nav>
-      </div>
-    </nav>
-  </div>
-</section>
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="bespinian Blog" />
+	</head>
 
-<section class="section">
-  <div class="container">
-    <h2 class="subtitle is-6">October 3, 2016</h2>
-    <h1 class="title">Cloud Foundry Route Services</h1>
-    <div class="content">
-      <p>In Cloud Foundry, we use <a href="https://docs.cloudfoundry.org/devguide/services/">services</a> to provide additional functionality as reserved resources to our apps. They get bound to the app(s) directly and are accessible from these bound apps only. The image below shows how they get provisioned through the service broker and are then accessible to the client through the app. This is obviously a great setup for services like databases, messaging brokers, app data loggers or other handy additions for our apps to consume.</p>
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">bespinian Blog</h2>
+				</a>
+				<ul>
+    
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Lena Fuhrimann
+        <br>
+        <span>on&nbsp;</span><time datetime="2016-10-03 00:00:00 &#43;0000 UTC">October 3, 2016</time>
+</div>
+
+		<h1 class="post-title">Cloud Foundry Route Services</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>In Cloud Foundry, we use <a href="https://docs.cloudfoundry.org/devguide/services/">services</a> to provide additional functionality as reserved resources to our apps. They get bound to the app(s) directly and are accessible from these bound apps only. The image below shows how they get provisioned through the service broker and are then accessible to the client through the app. This is obviously a great setup for services like databases, messaging brokers, app data loggers or other handy additions for our apps to consume.</p>
 <p><img src="https://s12.postimg.org/onyin2gwd/services.png" alt="Services"></p>
 <p>The service broker shown in this diagram is not used for user-provided services.</p>
 <p><a href="https://docs.cloudfoundry.org/devguide/services/route-binding.html">Route services</a>, on the other hand, work on a different level. They are not bound to an app but instead directly to a route. This allows them to act as an &ldquo;interceptor&rdquo; and either reject certain requests or modify them before they even reach the app. This is ideal to provide external authentication, rate limiting or logging on a route level. The image below shows the exact place of a route service in respect to the client and our application.</p>
@@ -89,64 +84,68 @@ $ cf restage rate-limiter
 <h2 id="whats-next">What&rsquo;s next?</h2>
 <p>The Cloud Foundry <a href="https://github.com/cloudfoundry-samples">samples library</a> also contain a second route service you can deploy in the same way: The <a href="https://github.com/cloudfoundry-samples/logging-route-service">Logging Route Service</a>. Do you have any other ideas for route service use cases? Please let me know in the comments!</p>
 
-    </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="container">
-    <aside><div id="disqus_thread"></div></aside>
-    <script type="text/javascript">
-      var disqus_shortname = 'berndsgnch';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
+		<div
+  class="bespinian-social-nav-container bespinian-social-nav-container--footer"
+>
+  <nav class="bespinian-social-nav">
+    
+    <a class="bespinian-social-nav-link" href="https://bespinian.io/">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian website">
+          <title>bespinian website</title>
+          <use href="/icons/globe.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://github.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on GitHub">
+          <title>bespinian on GitHub</title>
+          <use href="/icons/github.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://twitter.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on Twitter">
+          <title>bespinian on Twitter</title>
+          <use href="/icons/twitter.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="/index.xml">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="The bespinian blog RSS feed">
+          <title>The bespinian blog RSS feed</title>
+          <use href="/icons/rss.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+  </nav>
+</div>
 
+	</div>
 
-<section class="section">
-  <div class="container has-text-centered">
-    <p>&copy; <a href="https://bespinian.io">bespinian</a> 2020</p>
-  </div>
-</section>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+	<div class="pagination">
+		<a href="/posts/observables-with-angular-and-feathers/" class="left arrow">&#8592;</a>
+		<a href="/posts/configure-front-end-apps-with-environment-variables-on-cloud-foundry/" class="right arrow">&#8594;</a>
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/bash.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/go.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/html.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/javascript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/json.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/nginx.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/php.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/typescript.min.js"></script>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/languages/yaml.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad();</script>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-132338301-2', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
 
 
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2021-03-01 11:38:31.231178022 &#43;0100 CET m=&#43;0.033662360">2021</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
 
+    </body>
+</html>
