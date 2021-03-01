@@ -1,6 +1,7 @@
 ---
 title: Cloud Foundry Route Services
 author: Lena Fuhrimann
+comments: true
 date: 2016-10-03
 ---
 

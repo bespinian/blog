@@ -1,6 +1,7 @@
 ---
 title: Configure Front End Apps With Environment Variables on Cloud Foundry
 author: Lena Fuhrimann
+comments: true
 date: 2016-11-20
 ---
 
