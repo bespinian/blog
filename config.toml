@@ -1,28 +1,18 @@
+title = "bespinian Blog"
 baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
-title = "bespinian Blog"
 theme = "tale"
 publishDir = "docs"
-copyright = "&copy; <a href=\"https://bespinian.io\">bespinian</a> 2020"
 disqusShortname = "berndsgnch"
 googleAnalytics = "UA-132338301-2"
+enableRobotsTXT = true
+
+[author]
+  name = "bespinian"
+  homepage = "https://bespinian.io"
 
 [params]
 css = ["custom.css"]
-
-[params.highlight]
-style = "androidstudio"
-languages = [
-  "bash",
-  "go",
-  "html",
-  "javascript",
-  "json",
-  "nginx",
-  "php",
-  "typescript",
-  "yaml",
-]
 
 [[params.social]]
 url = "https://bespinian.io/"
