@@ -6,7 +6,17 @@
     <description>Recent content in Posts on bespinian Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes Cost Transparency</title>
+      <link>https://blog.bespinian.io/posts/kubernetes-chargeback/</link>
+      <pubDate>Fri, 09 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bespinian.io/posts/kubernetes-chargeback/</guid>
+      <description>The cloud promises transparency into the cost of our applications and technical services. However, Kubernetes, even when managed by one of the big cloud service providers, usually gets charged as a black box, and is often used by dozens or hundreds of applications in your organization.
+This post outlines the necessary steps to approach cost transparency for your Kubernetes clusters from an organizational perspective, proposes a high level technical design to start with and addresses some of the more common challenges and pitfalls.</description>
+    </item>
+    
     <item>
       <title>Installing Arch Linux on UEFI with Full Disk Encryption</title>
       <link>https://blog.bespinian.io/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/</link>
