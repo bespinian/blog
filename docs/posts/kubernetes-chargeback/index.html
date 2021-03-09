@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-132338301-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Kubernetes Cost Transparency &middot; bespinian Blog</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/custom.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="bespinian Blog" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">bespinian Blog</h2>
+				</a>
+				<ul>
+    
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Gabriel Koch
+        <br>
+        <span>on&nbsp;</span><time datetime="2021-04-09 00:00:00 &#43;0000 UTC">April 9, 2021</time>
+</div>
+
+		<h1 class="post-title">Kubernetes Cost Transparency</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>The cloud promises transparency into the cost of our applications and technical services. However, Kubernetes, even when managed by one of the big cloud service providers, usually gets charged as a black box, and is often used by dozens or hundreds of applications in your organization.</p>
+<p>This post outlines the necessary steps to approach cost transparency for your Kubernetes clusters from an organizational perspective, proposes a high level technical design to start with and addresses some of the more common challenges and pitfalls.</p>
+<h2 id="goals">Goals</h2>
+<p>Kubernetes clusters are usually multi-tenant systems, used by many teams within your organization. They are an expensive, but extremely valuable tool for your teams.</p>
+<p>Eventually you&rsquo;ll want to bring transparency into which applications and workloads cause what cost in order to:</p>
+<ul>
+<li>give your team and tenants detailed insight into which resources and projects drive cost</li>
+<li>incentivize tenants to use fewer resources in order to save money</li>
+<li>split cost fairly among the cluster tenants</li>
+<li>calculate chargebacks into your organization&rsquo;s internal cost centers</li>
+<li>alert someone when costs are rising quickly and unexpectedly</li>
+<li>forecast the cost of your IT infrastructure</li>
+</ul>
+<p>You want to achieve these goals, while retaining the benefits Kubernetes brings with its flexible scaling and deployment options.</p>
+<h2 id="overview">Overview</h2>
+<p>Since Kubernetes does not track any information about cost or even persistently store the resource usage of our workloads, we need a system that records each workload and which resources it consumes for how long (Price x Quantity). Additionally, we want to ensure workloads are attributable to a person, team, project or cost center in our organization, if we want to effectively make chargebacks or support business decisions.</p>
+<p>Storing this information in a suitable database allows us to create the desired reports, dashboards, alerts and chargebacks into our organization.</p>
+<h2 id="proposed-toolchain">Proposed Toolchain</h2>
+<p>There are some companies providing tools to enable transparency.</p>
+<p>You may have much of the required tools already available in your Kubernetes clusters. In fact, a powerful toolchain enabling dynamic cost transparency queries and reports uses Prometheus at the core, which is often deployed with Kubernetes clusters for monitoring purposes already. Prometheus is a time-series database and allows efficient ingestion, storing and querying of time series data, such as resource usage data which is scraped on a fixed interval like once a minute.</p>
+<p>The Prometheus ecosystem also contains the following tools which serve our use case well and are often installed with it.</p>
+<ul>
+<li>The Prometheus Node Exporter measures CPU and memory usage of pods and containers as well as other metrics on nodes in a Kubernetes cluster.</li>
+<li>Kube-State-Metrics prepares other Kubernetes information for ingestion by Prometheus.</li>
+<li>The Prometheus Alertmanager allows us to alert based on specific thresholds and send emails, trigger a pager or generate a ticket.</li>
+<li>Grafana enables us to create dashboards to visualize resource usage over time and interactive cost exploration.</li>
+</ul>
+<h3 id="kubecost">Kubecost</h3>
+<p>Kubecost is an open source cost monitoring tool for Kubernetes that is also based on Prometheus and its ecosystem and can already give you insight per namespace.</p>
+<p>It runs on your cluster, offers basic reports and dashboards and makes some recommendations to rightsize specific workloads.</p>
+<h2 id="introducing-a-cost-management-solution-in-your-organization">Introducing A Cost Management Solution In Your Organization</h2>
+<p>While the proposed toolchain fulfills the technical needs to gain insight, I want to discuss the path for introducing a cost management solution in your organization.</p>
+<h3 id="starting-to-extract-the-data">Starting To Extract The Data</h3>
+<p>As mentioned before, Kubernetes does not persist any of the data required for cost aggregation. The first step is therefore to put the infrastructure for tracking and storing this data in place. Your historical data will now start building and allow you insight on a weekly, monthly and eventually yearly basis.</p>
+<h3 id="create-first-reports">Create First Reports</h3>
+<p>Once resource usage data is available for a short time period, a week is a good start, you&rsquo;ll be able to create first reports and start identifying some of the bigger resource consumers, which you may approach to ensure their consumption is expedient for your business.</p>
+<h3 id="workload-attribution">Workload Attribution</h3>
+<p>At this point you may notice that many of the workloads do not clearly belong to a specific team, organizational unit, project or cost center. You&rsquo;ll have to find this information in your organization and then <strong>tag</strong> these resources, e.g. using Kubernetes annotations, in order to automatically attribute costs to the right cost center in the future.</p>
+<p>Additionally, you should define a process or framework for future resources to be tagged with that information from the start.</p>
+<h3 id="communicate-to-teams">Communicate To Teams</h3>
+<p>Before you start the chargebacks in your organization, you should try to build awareness of what costs are approaching, and provide transparent information of what these costs are composed of. As such it&rsquo;s useful to pass on not only your defined prices (cost per CPU / gigabyte of memory), but also detailed information about which of their Kubernetes objects used what resources at which time. This helps teams understand the cost and may already incentivize them to rethink their infrastructure usage and start optimizing their workloads.</p>
+<p>A great way to create this transparency is to create interactive dashboards using Grafana.</p>
+<h3 id="chargebacks">Chargebacks</h3>
+<p>Eventually you may want to automatically chargeback with your organizations internal billing processes. Based on the workload attribution it is now possible to create consistently structured billing reports on a monthly or yearly basis or an API and feed it into your internal billing processes.</p>
+<h3 id="forecasting--budgeting">Forecasting / Budgeting</h3>
+<p>Many organizations desire to forecast the cost of projects or applications into the future, which is now possible, based on the data you have. However, since scaling and ad-hoc deployments are a desired feature, which you want developers to make use of, forecast accuracy is often limited.</p>
+<p>Introducing budgets per application, which have to be clearly communicated to the responsible teams, may help you track your forecast accuracy and highlight and even prevent potential cost overruns early.</p>
+<h3 id="continuous-optimization">Continuous Optimization</h3>
+<p>Kubernetes clusters and the workloads running on them are constantly changing. You should invest some time to continuously review whether your processes and billing model still match reality and whether your billing model is being exploited.</p>
+<p>Optimizing Kubernetes workloads' resource efficiency across your organization is complicated and requires a significant amount of know-how, since many obvious actions have potentially negative side effects on performance or even availability of the applications. Fostering an exchange around this optimization within your organization can help teams use resources more efficiently, while avoiding these side effects.</p>
+<h2 id="common-challenges-and-issues">Common Challenges and Issues</h2>
+<h3 id="reserved-used-and-burst-capacity">Reserved, Used, And Burst Capacity</h3>
+<p>There are some challenges around CPU and memory still. In shared clusters, you may want to ensure the provisioned capacity matches the required capacity closely. If the infrastructure layer of your Kubernetes cluster allows very quick scaling, this may be more easily achievable even while the required capacity changes.</p>
+<p>Most cloud providers offer reserved instances, which are significantly cheaper than pay-as-you-go billed instances. Reserved instances are often 50 % to 70 % cheaper with a 3 years reservation. You need to make sure you provision a baseline capacity using reserved instances.</p>
+<p>Using reserved instances is therefore highly recommended, but introduces more complexity into the cost structure of your Kubernetes clusters.</p>
+<blockquote>
+<h4 id="provisioning-is-a-best-effort-operation">Provisioning Is A Best Effort Operation</h4>
+<p>Provisioning new infrastructure on your cloud or on-premise provider is usually a best effort operation for most cloud resources and there have been some rare occasions where virtual machines of specific types could not be provisioned in certain regions:</p>
+<ul>
+<li><a href="https://www.computerweekly.com/news/450415571/AWS-London-users-suffer-insufficient-capacity-problems-with-T2-Micro-Instances">AWS London users suffer &ldquo;insufficient capacity&rdquo; problems with T2 Micro Instances (2017)</a></li>
+<li><a href="https://www.zdnet.com/article/european-users-reporting-theyre-hitting-azure-capacity-constraints/">European users reporting they&rsquo;re hitting Azure capacity constraints (2020 / COVID)</a></li>
+</ul>
+</blockquote>
+<p>I recommend defining reserved and burst capacity for your resources and billing them differently. Reserved capacity should always be immediately available to a resource, even if the specific resource (e.g. a namespace) is not using all of it, while burst capacity may take a little longer to provision and in rare cases not be provisioned at all. The main advantage being, that assuming reserved capacity of the workloads is relatively stable, you can confidently provision reserved instances on your cloud provider, but that implies that reserved capacity cannot be reduced. If it&rsquo;s no longer required for one workload, it would have to be shifted.</p>
+<p>Defining reserved and burst capacity per namespace is best practice, since it&rsquo;s easy to track and the burst capacity as the upper limit can be automatically enforced using Kubernetes <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a>.</p>
+<p>Reserved capacity should be billed, regardless of whether it&rsquo;s been used or not, but at a lower price, reflecting your possibility to use reserved instances. Burst capacity should be billed using a pay-as-you-go model, where you compute the capacity used that exceeded the reserved amount and bill that difference using a pay-as-you-go rate.</p>
+<p>I suggest this model, as it supports using reserved instances, allows communicating prices transparently to the tenants of the Kubernetes cluster and incentivize them planning ahead, while retaining much of the flexibility in scaling and pay-as-you-go billing for certain use cases. However, it is more complex than a single pay-as-you-go pricing model and therefore requires better communication to teams.</p>
+<h3 id="non-compute-resources">Non-Compute Resources</h3>
+<p>CPU and memory are usually the main cost drivers for Kubernetes clusters and should be your focus at first. However, eventually you may want to extend your billing to disks, especially SSDs, network IO, load balancers and other resources which incur cost within your organization. This prevents exploitation of the billing model and increases transparency into the true cost of your applications.</p>
+<p>Much of this information can be extracted from Kubernetes as well and integrated into your solution.</p>
+<h3 id="attributing-workloads">Attributing Workloads</h3>
+<p>Once you start analyzing the workloads on your cluster from the resource usage and cost perspective, you may notice that a significant amount of your workloads cannot be obviously attributed to an organizational unit or cost center.</p>
+<p>This makes it challenging, if you&rsquo;re trying to match workloads to preexisting cost management constructs. However, in many cases workloads running on Kubernetes belong to the same application or are managed by the same team are grouped together in the same namespace for technical or organizational reasons already. Namespaces are therefore a great starting point.</p>
+<p>Using namespaces to link workloads to your cost management constructs has several more advantages:</p>
+<ul>
+<li>All relevant Kubernetes objects belong to a namespace.</li>
+<li>Kubernetes objects belong to <strong>only one</strong> namespace.</li>
+<li>Namespaces are not ephemeral — They usually live months or years.</li>
+<li>You&rsquo;ll have much fewer namespaces than pods or other resource consuming objects.</li>
+<li>The namespace of an object is available in almost all contexts, simplifying aggregation.</li>
+<li>You can set quotas on namespaces.</li>
+</ul>
+<p>Defining a process for creating namespaces, where attribution of the resources can be ensured is recommended, to enable automatic attribution in the future.</p>
+<blockquote>
+<h4 id="using-annotations">Using Annotations</h4>
+<p>Another approach to attribute workloads to your organizational units, relies on Kubernetes <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/">annotations</a> which can be attached to all Kubernetes objects. This allows more flexibility, but requires more investment into aggregating data.</p>
+<p>You can also rely on namespaces and attach annotations on them to keep the relevant data together within Kubernetes. Additionally, defining reserved capacity using annotations on namespaces is a good way to manage everything in the same place.</p>
+</blockquote>
+<h4 id="shared-namespaces">Shared Namespaces</h4>
+<p>You may encounter namespaces that contain resources that should be attributed to different cost centers or organizational units. This is generally discouraged and where possible should be changed.</p>
+<p>However, there are good reasons for shared namespaces. A few teams may run infrastructure together supporting their development process, such as build servers or artifact management repositories. This practice allows them to synergize the management of these components. Some of these components use a lot of resources regardless of load and sharing them reduces the cost on the whole organization. While there are many options to split the cost (new cost centers, defining a split using annotations on the namespace), just billing to one of the cost centers is recommended, unless these shared namespaces turn out to be a major cost driver in your cluster.</p>
+<p>In some cases, shared namespace may also highlight a rigid cost center structure or slow and complicated processes around it or the creation of namespaces, causing namespaces to be shared or even reused instead of decommissioned. Simplifying these tasks could reduce the desire to create shared namespaces or reuse them.</p>
+<p>Additionally, you&rsquo;ll have namespaces that contain resources necessary for Kubernetes or additional tooling, such as logging and monitoring infrastructure. It makes sense to calculate this cost into the maintenance cost of the cluster, which you either bill to a separate cost center or add as a surcharge to the pricing of your resources.</p>
+<h2 id="most-common-optimization-opportunities">Most Common Optimization Opportunities</h2>
+<h3 id="non-production-environments">Non-Production Environments</h3>
+<p>Development and testing environments are often responsible for a significant amount of your cost, especially when they are used the same way as with traditional virtual machines or bare-metal hardware, where you often had dedicated instances running for each of those environments at all times. The reasons for having long-running non-production environments were usually, that provisioning such an environment would traditionally take days or weeks and that sharing compute resources was difficult and impractical.</p>
+<p>Kubernetes forces your system and software engineers to package applications in a way that they can be provisioned very quickly and managing compute resources is one of Kubernetes' core features. Accordingly, you can encourage them, to spin up non-production environments only when needed and implement auto-shutdowns where possible. In cases where a non-production environment needs to be running continuously, it often makes sense to reduce its memory and CPU allocation or run with a fewer instances than usual, scaling up for load-testing and deployment tests only when needed.</p>
+<h3 id="rightsizing-your-workloads">Rightsizing Your Workloads</h3>
+<p>Kubernetes requests and limits are a way of giving a pod or container a guaranteed amount of resources and an upper burst limit. These values are often arbitrarily set and not based on experience or empirical evidence from load tests. For example, you may encounter pods with a whole CPU assigned in their requests when they rarely even burst to 10% of that. Rightsizing these workloads may free up a lot of resources and therefore reduce cost significantly.</p>
+<p>The proposed tools allow you to compare the resources effectively used by workloads to what amount is dedicated to them and pass this information on to the development teams.</p>
+<p>Prometheus allows you to find resource usage by percentiles, which are a good indication for sizing your pods and containers. For example, if you have a pod where the 99th percentile for CPU usage is 18% (it uses less than 18% of a CPU core 99% of the time), you may want to set requests for that pod at around 180 millicores. The best ratio or percentile to use for that indication depends on the specific workload. Load tests are recommended to find out the best values for requests and limits and for validating that applications work well when these settings have changed.</p>
+<blockquote>
+<h4 id="careful-with-memory-limits">Careful With Memory Limits</h4>
+<p>As opposed to CPU, memory is an incompressible resource. This means that Kubernetes cannot take away memory from a process other than killing it completely, which is not the case when the CPU is congested.</p>
+<p>This means, that you should set requests and limits differently for memory than for CPU. For example, if your process uses 500 MB memory at the 99th percentile, you must set memory requests to a value higher than 500 MB (e.g. 750 MB), to avoid having it killed regularly.</p>
+</blockquote>
+<h3 id="encourage-automatic-scaling">Encourage Automatic Scaling</h3>
+<p>If your teams do not already implement automatic scaling for their workloads, you can encourage them to use the <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/">Horizontal Pod Autoscaler</a> to scale in and out only when needed.</p>
+<h2 id="summary">Summary</h2>
+<p>While Kubernetes does not have built-in cost management tools, we can use simple open source tools and some Kubernetes native features to gain transparency of what drives cost in our clusters.</p>
+<p>The first steps in your journey to increase cost transparency is ensuring usage data is continuously recorded and workloads are attributable to some well defined entity in your cost management structure such as a team, project or cost center.</p>
+<p>Based on this, you will be able to identify the main drivers of cost, create reports and start optimizing some workloads.</p>
+<p>In order to incentivize teams to reduce their cost on a larger scale, make this information available easily through dashboards and detailed reports, define a pricing model to increase comparability and eventually introduce chargebacks.</p>
+
+
+		<div
+  class="bespinian-social-nav-container bespinian-social-nav-container--footer"
+>
+  <nav class="bespinian-social-nav">
+    
+    <a class="bespinian-social-nav-link" href="https://bespinian.io/">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian website">
+          <title>bespinian website</title>
+          <use href="/icons/globe.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://github.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on GitHub">
+          <title>bespinian on GitHub</title>
+          <use href="/icons/github.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://twitter.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on Twitter">
+          <title>bespinian on Twitter</title>
+          <use href="/icons/twitter.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="/index.xml">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="The bespinian blog RSS feed">
+          <title>The bespinian blog RSS feed</title>
+          <use href="/icons/rss.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+  </nav>
+</div>
+
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+            <figure class="article-discussion">
+              <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "berndsgnch" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </figure>
+			
+			<span>
+			&copy; <time datetime="2021-04-09 16:03:47.181810165 &#43;0200 CEST m=&#43;0.036567151">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
