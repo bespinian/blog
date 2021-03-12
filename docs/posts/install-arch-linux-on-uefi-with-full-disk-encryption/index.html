@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-132338301-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Install Arch Linux on UEFI with Full Disk Encryption &middot; bespinian Blog</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/custom.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="bespinian Blog" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">bespinian Blog</h2>
+				</a>
+				<ul>
+    
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Lena Fuhrimann
+        <br>
+        <span>on&nbsp;</span><time datetime="2021-03-12 00:00:00 &#43;0000 UTC">March 12, 2021</time>
+</div>
+
+		<h1 class="post-title">Install Arch Linux on UEFI with Full Disk Encryption</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>This is a step by step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling.</p>
+<h2 id="download-iso">Download ISO</h2>
+<ol>
+<li>Download the latest ISO from the <a href="https://archlinux.org/download/">Arch Linux website</a></li>
+</ol>
+<h2 id="create-bootable-usb-stick">Create Bootable USB Stick</h2>
+<p>You can skip this step if you just want to run Arch Linux in a VM. In that case, just run the ISO from your favorite VM management tool like <a href="https://www.qemu.org/">QEMU</a>.</p>
+<ol>
+<li>Create a bootable USB drive by inserting an USB stick</li>
+<li>Run <code>lsblk</code> to find the correct disk</li>
+<li>Run <code>sudo unmount /dev/sdx</code> or whatever the USB stick is</li>
+<li>Run <code>sudo dd bs=4M if=path/to/input.iso of=/dev/sdx oflag=sync status=progress</code> to write the ISO to the drive while replacing the two paths</li>
+<li>Insert the USB stick into the target computer and boot it from there</li>
+</ol>
+<p>As soon as you can see the Arch Linux prompt, you are ready for the next step.</p>
+<h2 id="check-for-uefi-support">Check for UEFI support</h2>
+<ol>
+<li>Run <code>ls /sys/firmware/efi/efivars</code> to check if that directory exists. If it doesn&rsquo;t, your system does not support UEFI and this guide is not for you.</li>
+</ol>
+<h2 id="establish-connectivity">Establish Connectivity</h2>
+<ol>
+<li>Connect computer via ethernet (recommended) or run <code>iwctl</code> to log into WiFi</li>
+<li>Check for internet connectivity with <code>ping archlinux.org</code></li>
+<li>Make sure clock is synced with <code>timedatectl set-ntp true</code></li>
+</ol>
+<h2 id="load-encryption-kernel-module">Load Encryption Kernel Module</h2>
+<ol>
+<li>Run <code>modprobe dm-crypt</code> to load the encryption kernel module</li>
+</ol>
+<h2 id="partition">Partition</h2>
+<ol>
+<li>Check for different drives and partitions with <code>fdisk -l</code> and then start to partition with <code>fdisk /dev/nvme0n1</code> (or whatever the disk is)</li>
+<li>Press <code>g</code> to create a new GPT partition table</li>
+<li>Create boot partition with <code>n</code> and make it a &ldquo;primary&rdquo; with number 1, default first sector and last sector at <code>+512M</code></li>
+<li>Create home partition with <code>n</code> and make it a &ldquo;primary&rdquo; with number 2, default first sector and default last sector</li>
+<li>Press <code>t</code> to change the type of the first partition to &ldquo;EFI System&rdquo; (usually number <code>1</code>)</li>
+<li>Press <code>t</code> to change the type of the third partition to &ldquo;Linux root (x86-64)&rdquo; (usually number <code>23</code>)</li>
+<li>Press <code>w</code> to write partitions</li>
+<li>Run <code>fdisk -l</code> again to verify partitioning</li>
+</ol>
+<h2 id="encrypt-root-partition">Encrypt Root Partition</h2>
+<ol>
+<li>Run <code>cryptsetup luksFormat /dev/nvme0n1p2</code> and then type <code>YES</code> and the new encryption password to encrypt the root partition</li>
+<li>Run <code>cryptsetup open /dev/nvme0n1p2 cryptroot</code> to open the encrypted partition</li>
+</ol>
+<h2 id="create-file-systems">Create File Systems</h2>
+<ol>
+<li>Create boot file system with <code>mkfs.fat -F32 /dev/nvme0n1p1</code> (or whatever the partition is called)</li>
+<li>Create root file system with <code>mkfs.ext4 /dev/mapper/cryptroot</code></li>
+</ol>
+<h2 id="mount-file-systems">Mount File Systems</h2>
+<ol>
+<li>Mount root file system with <code>mount /dev/mapper/cryptroot /mnt</code></li>
+<li>Run <code>fdisk -l</code> again to verify mounting</li>
+</ol>
+<h2 id="create-swap-file-not-needed-on-vms">Create Swap File (not needed on VMs)</h2>
+<ol>
+<li>Run <code>dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress</code> to create the swap file where the count is the number of Mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)</li>
+<li>Run <code>chmod 600 /mnt/swapfile</code> to set the right permissions on it</li>
+<li>Run <code>mkswap /mnt/swapfile</code> to make it an actual swap file</li>
+<li>Run <code>swapon /mnt/swapfile</code> to turn it on</li>
+</ol>
+<h2 id="install-arch-linux">Install Arch Linux</h2>
+<ol>
+<li>Run <code>pacstrap /mnt base linux linux-firmware neovim</code> to install Arch Linux (<code>linux-firmware</code> is not needed on VMs)</li>
+</ol>
+<h2 id="generate-file-system-table">Generate File System Table</h2>
+<ol>
+<li>Run <code>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</code> to generate fstab with UUIDs</li>
+</ol>
+<h2 id="switch-to-your-new-linux-installation">Switch to Your New Linux Installation</h2>
+<ol>
+<li>Run <code>arch-chroot /mnt</code> to switch to your new Arch Linux installation</li>
+</ol>
+<h2 id="set-locales">Set Locales</h2>
+<ol>
+<li>Run <code>ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime</code> (or whatever your timezone is) to set your time zone</li>
+<li>Run <code>hwclock --systohc</code></li>
+<li>Run <code>nvim /etc/locale.gen</code> and uncomment yours (e.g. <code>en_US.UTF-8 UTF-8</code>)</li>
+<li>Run <code>locale-gen</code> to generate the locales</li>
+<li>Run <code>echo 'LANG=en-US.UTF-8' &gt; /etc/locale.conf</code></li>
+</ol>
+<h2 id="set-hostname">Set Hostname</h2>
+<ol>
+<li>Run <code>echo 'arch' &gt; /etc/hostname</code> (or whatever your hostname should be)</li>
+<li>Run <code>nvim /etc/hosts</code> and insert the following lines:</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">127.0.0.1     localhost
+::1           localhost
+127.0.1.1     arch.localdomain        arch
+</code></pre></div><p>for the last line: change <code>arch</code> to whatever hostname you picked in the last step</p>
+<h2 id="set-root-password">Set Root Password</h2>
+<ol>
+<li>Run <code>passwd</code> and set your root password</li>
+</ol>
+<h2 id="install-boot-loader">Install Boot Loader</h2>
+<ol>
+<li>Run <code>pacman -Syu --noconfirm grub efibootmgr intel-ucode</code> (or <code>amd-ucode</code> if you have an AMD processor) to install the GRUB package and CPU microcode</li>
+<li>Run <code>mkdir /boot/efi</code> to create the boot directory</li>
+<li>Run <code>mount /dev/nvme0n1p1 /boot/efi</code> to mount your boot file system</li>
+<li>Run <code>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB</code> to install GRUB for your system</li>
+<li>Run <code>nvim /etc/default/grub</code> and set <code>GRUB_TIMEOUT=0</code> to disable GRUB waiting until it chooses your OS (only makes sense if you don&rsquo;t dual boot with another OS) and set <code>GRUB_CMDLINE_LINUX=&quot;cryptdevice=/dev/nvme0n1p2:cryptroot&quot;</code> to tell Grub about our encrypted file system</li>
+<li>Run <code>grub-mkconfig -o /boot/grub/grub.cfg</code> to configure GRUB</li>
+</ol>
+<h2 id="configure-initramfs">Configure Initramfs</h2>
+<ol>
+<li>Run <code>nvim /etc/mkinitcpio.conf</code> and add <code>encrypt</code> to the <code>HOOKS</code> array between <code>block</code> and <code>filesystems</code></li>
+<li>Run <code>mkinitcpio -p linux</code></li>
+</ol>
+<h2 id="install-network-manager">Install Network Manager</h2>
+<ol>
+<li>Run <code>pacman -Syu --noconfirm networkmanager</code> to install NetworkManager</li>
+<li>Run <code>systemctl enable NetworkManager</code> to run NetworkManager at boot</li>
+</ol>
+<h2 id="reboot">Reboot</h2>
+<ol>
+<li>Run <code>exit</code> to return to the outer shell</li>
+<li>Run <code>reboot</code> to get out of setup</li>
+</ol>
+<h2 id="connect-to-wifi-only-needed-if-theres-no-ethernet-connection">Connect to WiFi (only needed if there&rsquo;s no ethernet connection)</h2>
+<ol>
+<li>Run <code>nmcli d wifi list</code> to list available networks</li>
+<li>Run <code>nmcli d wifi connect MY_WIFI password MY_PASSWORD</code> to connect to one of them</li>
+</ol>
+<h2 id="add-user">Add User</h2>
+<ol>
+<li>Run <code>pacman -Syu opendoas</code> to install doas</li>
+<li>Run <code>echo 'permit nopass keepenv :wheel' &gt; /etc/doas.conf</code> to allow members of the <code>wheel</code> group to run privileged commands</li>
+<li>Run <code>useradd --create-home --groups wheel,video lena</code> (or whatever your user name should be) to create the user</li>
+<li>Run <code>passwd lena</code> to set your password</li>
+<li>Run <code>exit</code> and log back in with your new user</li>
+</ol>
+<h2 id="install-window-manager">Install Window Manager</h2>
+<ol>
+<li>Run <code>doas pacman -Syu --noconfirm sway swayidle swaylock</code> to install Sway</li>
+<li>Add the following to <code>~/.zlogin</code> or whatever shell you are using:</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Start window manager</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>tty<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/dev/tty1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  exec sway
+<span style="color:#66d9ef">fi</span>
+</code></pre></div><h2 id="set-up-sound">Set Up Sound</h2>
+<ol>
+<li>Run <code>doas pacman -Syu --noconfirm pipewire pipewire-pulse</code> to install Pipewire</li>
+</ol>
+<h2 id="set-up-bluetooth">Set Up Bluetooth</h2>
+<ol>
+<li>Run <code>doas pacman -Syu --noconfirm bluez bluez-utils</code> to install the bluetooth utilities</li>
+<li>Run <code>doas systemctl enable bluetooth.service --now</code> to start bluetooth</li>
+</ol>
+<h2 id="lock-root-user-to-be-extra-secure">Lock Root User (to be extra secure)</h2>
+<ol>
+<li>Run <code>doas passwd -l root</code> to lock out the root user</li>
+</ol>
+<h2 id="install-a-firewall">Install a Firewall</h2>
+<ol>
+<li>Run <code>doas pacman -Syu --noconfirm nftables</code> to install the firewall</li>
+<li>Edit <code>/etc/nftables.conf</code> and remove the part about allowing incoming SSH connections if you don&rsquo;t need that</li>
+<li>Run <code>doas systemctl enable nftables.service --now</code> to enable the firewall</li>
+</ol>
+<h2 id="enable-time-synchronization">Enable Time Synchronization</h2>
+<ol>
+<li>Run <code>doas systemctl enable systemd-timesyncd.service --now</code> to enable automated time synchronization</li>
+</ol>
+<h2 id="improve-power-management-only-makes-sense-on-laptops">Improve Power Management (only makes sense on laptops)</h2>
+<ol>
+<li>Run <code>doas pacman -Syu --noconfirm tlp tlp-rdw</code> to install TLP</li>
+<li>Run <code>doas systemctl enable tlp.service --now</code> to run these optimizations automatically</li>
+<li>Run <code>doas systemctl enable NetworkManager-dispatcher.service --now</code> to prevent conflicts</li>
+<li>Run <code>doas tlp-stat</code> and follow any warnings and instructions there</li>
+</ol>
+<h2 id="enable-scheduled-fstrim-only-makes-sense-for-ssds">Enable Scheduled fstrim (only makes sense for SSDs)</h2>
+<ol>
+<li>Run <code>doas systemctl enable fstrim.timer --now</code> to enable running fstrim on a regular basis</li>
+</ol>
+<h2 id="enable-scheduled-mirrorlist-updates">Enable Scheduled Mirrorlist Updates</h2>
+<ol>
+<li>Run <code>doas pacman -Syu reflector</code> to install reflector</li>
+<li>Run <code>doas nvim /etc/xdg/reflector/reflector.conf</code> to your liking</li>
+<li>Run <code>doas systemctl enable reflector.timer --now</code> to enable running reflector regularly</li>
+</ol>
+<h2 id="reduce-swappiness-only-makes-sense-if-you-have-more-than-4gb-of-ram">Reduce Swappiness (only makes sense if you have more than 4GB of RAM)</h2>
+<ol>
+<li>Run <code>echo 'vm.swappiness=10' | doas tee /etc/sysctl.d/99-swappiness.conf</code> to reduce the swappiness permanently</li>
+</ol>
+<h2 id="install-dotfiles">Install Dotfiles</h2>
+<ol>
+<li>Install <a href="https://github.com/mastertinner/dotfiles/">Mastertinner&rsquo;s dotfiles</a> or some other ones to customize your installation</li>
+</ol>
+
+
+		<div
+  class="bespinian-social-nav-container bespinian-social-nav-container--footer"
+>
+  <nav class="bespinian-social-nav">
+    
+    <a class="bespinian-social-nav-link" href="https://bespinian.io/">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian website">
+          <title>bespinian website</title>
+          <use href="/icons/globe.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://github.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on GitHub">
+          <title>bespinian on GitHub</title>
+          <use href="/icons/github.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="https://twitter.com/bespinian">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on Twitter">
+          <title>bespinian on Twitter</title>
+          <use href="/icons/twitter.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+    <a class="bespinian-social-nav-link" href="/index.xml">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="The bespinian blog RSS feed">
+          <title>The bespinian blog RSS feed</title>
+          <use href="/icons/rss.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
+  </nav>
+</div>
+
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/creating-grafana-dashboards-for-nodejs-on-kubernetes/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+            <figure class="article-discussion">
+              <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "berndsgnch" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </figure>
+			
+			<span>
+			&copy; <time datetime="2021-03-12 20:55:33.774573627 &#43;0100 CET m=&#43;0.120297203">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
