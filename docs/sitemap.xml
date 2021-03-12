@@ -3,12 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.bespinian.io/</loc>
-    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://blog.bespinian.io/posts/creating-grafana-dashboards-for-nodejs-on-kubernetes/</loc>
-    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+    <loc>https://blog.bespinian.io/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/</loc>
+    <lastmod>2021-03-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.bespinian.io/posts/</loc>
+    <lastmod>2021-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.bespinian.io/posts/creating-grafana-dashboards-for-nodejs-on-kubernetes/</loc>
     <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.bespinian.io/posts/efficient-navigation-in-vim/</loc>
