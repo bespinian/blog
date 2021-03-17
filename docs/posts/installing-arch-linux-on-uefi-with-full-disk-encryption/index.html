@@ -187,7 +187,7 @@ if (!doNotTrack) {
 </ol>
 <h2 id="add-user">Add User</h2>
 <ol>
-<li>Run <code>pacman -Syu opendoas</code> to install doas</li>
+<li>Run <code>pacman -Syu --noconfirm opendoas</code> to install doas</li>
 <li>Run <code>echo 'permit nopass keepenv :wheel' &gt; /etc/doas.conf</code> to allow members of the <code>wheel</code> group to run privileged commands</li>
 <li>Run <code>useradd --create-home --groups wheel,video lena</code> (or whatever your user name should be) to create the user</li>
 <li>Run <code>passwd lena</code> to set your password</li>
@@ -238,7 +238,7 @@ if (!doNotTrack) {
 </ol>
 <h2 id="enable-scheduled-mirrorlist-updates">Enable Scheduled Mirrorlist Updates</h2>
 <ol>
-<li>Run <code>doas pacman -Syu reflector</code> to install reflector</li>
+<li>Run <code>doas pacman -Syu --noconfirm reflector</code> to install reflector</li>
 <li>Run <code>doas nvim /etc/xdg/reflector/reflector.conf</code> and change the file to your liking</li>
 <li>Run <code>doas systemctl enable reflector.timer --now</code> to enable running reflector regularly</li>
 </ol>
@@ -248,6 +248,7 @@ if (!doNotTrack) {
 </ol>
 <h2 id="install-dotfiles">Install Dotfiles</h2>
 <ol>
+<li>Run <code>doas pacman -Syu --noconfirm git</code> to install Git</li>
 <li>Install <a href="https://github.com/mastertinner/dotfiles/">Mastertinner&rsquo;s dotfiles</a> or some other ones to customize your installation</li>
 </ol>
 
@@ -332,7 +333,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-03-17 20:34:55.274243855 &#43;0100 CET m=&#43;0.047074414">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-03-17 23:13:14.582014212 &#43;0100 CET m=&#43;0.057557123">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
