@@ -138,7 +138,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Add User
 
-1. Run `pacman -Syu opendoas` to install doas
+1. Run `pacman -Syu --noconfirm opendoas` to install doas
 1. Run `echo 'permit nopass keepenv :wheel' > /etc/doas.conf` to allow members of the `wheel` group to run privileged commands
 1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user name should be) to create the user
 1. Run `passwd lena` to set your password
@@ -192,7 +192,7 @@ fi
 
 ## Enable Scheduled Mirrorlist Updates
 
-1. Run `doas pacman -Syu reflector` to install reflector
+1. Run `doas pacman -Syu --noconfirm reflector` to install reflector
 2. Run `doas nvim /etc/xdg/reflector/reflector.conf` and change the file to your liking
 3. Run `doas systemctl enable reflector.timer --now` to enable running reflector regularly
 
@@ -202,4 +202,5 @@ fi
 
 ## Install Dotfiles
 
+1. Run `doas pacman -Syu --noconfirm git` to install Git
 1. Install [Mastertinner's dotfiles](https://github.com/mastertinner/dotfiles/) or some other ones to customize your installation
