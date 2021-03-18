@@ -5,7 +5,7 @@ comments: true
 date: 2021-03-12
 ---
 
-This is a step by step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling.
+This is a step by step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling. It is havily based on the [Arch Linux wiki's installation guide](https://wiki.archlinux.org/index.php/Installation_guide) so if you're ever stuck, just refer to it and the rest of the awesome Arch wiki.
 
 ## Download ISO
 
