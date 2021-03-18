@@ -13,8 +13,8 @@
       <pubDate>Fri, 12 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/</guid>
-      <description>This is a step by step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling.
-Download ISO  Download the latest ISO from the Arch Linux website  Create Bootable USB Stick You can skip this step if you just want to run Arch Linux in a VM. In that case, just run the ISO from your favorite VM management tool like QEMU.</description>
+      <description>This is a step by step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling. It is havily based on the Arch Linux wiki&amp;rsquo;s installation guide so if you&amp;rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.
+Download ISO  Download the latest ISO from the Arch Linux website  Create Bootable USB Stick You can skip this step if you just want to run Arch Linux in a VM.</description>
     </item>
     
     <item>
