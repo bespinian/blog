@@ -109,7 +109,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Install Boot Loader
 
-1. Run `pacman -Syu --noconfirm grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
+1. Run `pacman -S --noconfirm grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
 1. Run `mkdir /boot/efi` to create the boot directory
 1. Run `mount /dev/nvme0n1p1 /boot/efi` to mount your boot file system
 1. Run `grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB` to install GRUB for your system
@@ -123,7 +123,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Install Network Manager
 
-1. Run `pacman -Syu --noconfirm networkmanager` to install NetworkManager
+1. Run `pacman -S --noconfirm networkmanager` to install NetworkManager
 1. Run `systemctl enable NetworkManager` to run NetworkManager at boot
 
 ## Reboot
@@ -138,7 +138,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Add User
 
-1. Run `pacman -Syu --noconfirm opendoas` to install doas
+1. Run `pacman -S --noconfirm opendoas` to install doas
 1. Run `echo 'permit nopass keepenv :wheel' > /etc/doas.conf` to allow members of the `wheel` group to run privileged commands
 1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user name should be) to create the user
 1. Run `passwd lena` to set your password
@@ -146,7 +146,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Install Window Manager
 
-1. Run `doas pacman -Syu --noconfirm sway swayidle swaylock` to install Sway
+1. Run `doas pacman -S --noconfirm sway swayidle swaylock` to install Sway
 1. Add the following to `~/.zlogin` or whatever shell you are using:
 
 ```bash
@@ -158,11 +158,11 @@ fi
 
 ## Set Up Sound
 
-1. Run `doas pacman -Syu --noconfirm pipewire pipewire-pulse` to install Pipewire
+1. Run `doas pacman -S --noconfirm pipewire pipewire-pulse` to install Pipewire
 
 ## Set Up Bluetooth
 
-1. Run `doas pacman -Syu --noconfirm bluez bluez-utils` to install the bluetooth utilities
+1. Run `doas pacman -S --noconfirm bluez bluez-utils` to install the bluetooth utilities
 1. Run `doas systemctl enable bluetooth.service --now` to start bluetooth
 
 ## Lock Root User (to be extra secure)
@@ -171,7 +171,7 @@ fi
 
 ## Install a Firewall
 
-1. Run `doas pacman -Syu --noconfirm nftables` to install the firewall
+1. Run `doas pacman -S --noconfirm nftables` to install the firewall
 1. Edit `/etc/nftables.conf` and remove the part about allowing incoming SSH connections if you don't need that
 1. Run `doas systemctl enable nftables.service --now` to enable the firewall
 
@@ -181,7 +181,7 @@ fi
 
 ## Improve Power Management (only makes sense on laptops)
 
-1. Run `doas pacman -Syu --noconfirm tlp tlp-rdw` to install TLP
+1. Run `doas pacman -S --noconfirm tlp tlp-rdw` to install TLP
 1. Run `doas systemctl enable tlp.service --now` to run power optimizations automatically
 1. Run `doas systemctl enable NetworkManager-dispatcher.service --now` to prevent conflicts
 1. Run `doas tlp-stat` and follow any warnings and instructions there
@@ -192,7 +192,7 @@ fi
 
 ## Enable Scheduled Mirrorlist Updates
 
-1. Run `doas pacman -Syu --noconfirm reflector` to install reflector
+1. Run `doas pacman -S --noconfirm reflector` to install reflector
 2. Run `doas nvim /etc/xdg/reflector/reflector.conf` and change the file to your liking
 3. Run `doas systemctl enable reflector.timer --now` to enable running reflector regularly
 
@@ -202,5 +202,5 @@ fi
 
 ## Install Dotfiles
 
-1. Run `doas pacman -Syu --noconfirm git` to install Git
+1. Run `doas pacman -S --noconfirm git` to install Git
 1. Install [Mastertinner's dotfiles](https://github.com/mastertinner/dotfiles/) or some other ones to customize your installation
