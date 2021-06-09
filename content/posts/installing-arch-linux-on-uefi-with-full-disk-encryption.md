@@ -39,14 +39,11 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Partition
 
-1. Check for different drives and partitions with `fdisk -l` and then start to partition with `fdisk /dev/nvme0n1` (or whatever the disk is)
-1. Press `g` to create a new GPT partition table
-1. Create boot partition with `n` with number 1, default first sector and last sector at `+512M`
-1. Create home partition with `n` with number 2, default first sector and default last sector
-1. Press `t` to change the type of the first partition to "EFI System" (usually number `1`)
-1. Press `t` to change the type of the third partition to "Linux root (x86-64)" (usually number `23`)
+1. Check for different drives and partitions with `lsblk` and then start to partition with `gdisk /dev/nvme0n1` (or whatever the disk is)
+1. Create boot partition with `n` with default number, default first sector, last sector at `+512M` and select `ef00` "EFI System" as the type
+1. Create root partition with `n` with default number, default first sector, default last sector and select `8300` "Linux filesystem" as the type
 1. Press `w` to write partitions
-1. Run `fdisk -l` again to verify partitioning
+1. Run `lsblk` again to verify partitioning
 
 ## Encrypt Root Partition
 
@@ -61,7 +58,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 ## Mount File Systems
 
 1. Mount the root file system with `mount /dev/mapper/cryptroot /mnt`
-1. Run `fdisk -l` again to verify mounting
+1. Run `lsblk` again to verify mounting
 
 ## Create Swap File (not needed on VMs)
 
