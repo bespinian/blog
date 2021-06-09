@@ -92,14 +92,11 @@ if (!doNotTrack) {
 </ol>
 <h2 id="partition">Partition</h2>
 <ol>
-<li>Check for different drives and partitions with <code>fdisk -l</code> and then start to partition with <code>fdisk /dev/nvme0n1</code> (or whatever the disk is)</li>
-<li>Press <code>g</code> to create a new GPT partition table</li>
-<li>Create boot partition with <code>n</code> with number 1, default first sector and last sector at <code>+512M</code></li>
-<li>Create home partition with <code>n</code> with number 2, default first sector and default last sector</li>
-<li>Press <code>t</code> to change the type of the first partition to &ldquo;EFI System&rdquo; (usually number <code>1</code>)</li>
-<li>Press <code>t</code> to change the type of the third partition to &ldquo;Linux root (x86-64)&rdquo; (usually number <code>23</code>)</li>
+<li>Check for different drives and partitions with <code>lsblk</code> and then start to partition with <code>gdisk /dev/nvme0n1</code> (or whatever the disk is)</li>
+<li>Create boot partition with <code>n</code> with default number, default first sector, last sector at <code>+512M</code> and select <code>ef00</code> &ldquo;EFI System&rdquo; as the type</li>
+<li>Create root partition with <code>n</code> with default number, default first sector, default last sector and select <code>8300</code> &ldquo;Linux filesystem&rdquo; as the type</li>
 <li>Press <code>w</code> to write partitions</li>
-<li>Run <code>fdisk -l</code> again to verify partitioning</li>
+<li>Run <code>lsblk</code> again to verify partitioning</li>
 </ol>
 <h2 id="encrypt-root-partition">Encrypt Root Partition</h2>
 <ol>
@@ -114,7 +111,7 @@ if (!doNotTrack) {
 <h2 id="mount-file-systems">Mount File Systems</h2>
 <ol>
 <li>Mount the root file system with <code>mount /dev/mapper/cryptroot /mnt</code></li>
-<li>Run <code>fdisk -l</code> again to verify mounting</li>
+<li>Run <code>lsblk</code> again to verify mounting</li>
 </ol>
 <h2 id="create-swap-file-not-needed-on-vms">Create Swap File (not needed on VMs)</h2>
 <ol>
@@ -334,7 +331,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-06-07 10:01:57.300201116 &#43;0200 CEST m=&#43;0.269018383">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-06-10 00:08:55.572431079 &#43;0200 CEST m=&#43;0.040622471">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
