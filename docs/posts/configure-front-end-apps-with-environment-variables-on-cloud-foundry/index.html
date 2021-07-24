@@ -65,7 +65,7 @@ if (!doNotTrack) {
 <p>Luckily, our <a href="https://www.nginx.com/">nginx</a> (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The <code>nginx.conf</code> file is parsed by Ruby before it&rsquo;s being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.</p>
 <h2 id="how-to">How To</h2>
 <p>To get our custom configuration endpoint, we&rsquo;ll need to add the following block to a custom <code>nginx.conf</code> file residing in the root folder of our app:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">if</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;</span>
 <span style="color:#e6db74">location</span> <span style="color:#e6db74">/app-config</span> {
   <span style="color:#f92672">default_type</span> <span style="color:#e6db74">application/json</span>;
   <span style="color:#f92672">return</span> <span style="color:#ae81ff">200</span> <span style="color:#e6db74">&#39;&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_CONFIG&#34;]</span> <span style="color:#e6db74">%&gt;&#39;</span>;
@@ -73,7 +73,7 @@ if (!doNotTrack) {
 <span style="color:#66d9ef">&lt;%</span> <span style="color:#e6db74">end</span> <span style="color:#e6db74">%&gt;</span>
 </code></pre></div><p>This will add an endpoint <code>/app-config</code> which exposes your configuration as JSON if the environment variable <code>APP_CONFIG</code> exists. If it doesn&rsquo;t exist, the endpoint won&rsquo;t be exposed at all.</p>
 <p>If you don&rsquo;t have a custom <code>nginx.conf</code> yet, you can use this sample one which already includes the above code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">worker_processes</span> <span style="color:#ae81ff">1</span>;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">worker_processes</span> <span style="color:#ae81ff">1</span>;
 <span style="color:#66d9ef">daemon</span> <span style="color:#66d9ef">off</span>;
 
 <span style="color:#66d9ef">error_log</span> <span style="color:#e6db74">&lt;%=</span> <span style="color:#e6db74">ENV[&#34;APP_ROOT&#34;]</span> <span style="color:#e6db74">%&gt;/nginx/logs/error.log</span>;
@@ -130,10 +130,10 @@ if (!doNotTrack) {
 <span style="color:#960050;background-color:#1e0010">}</span>
 </code></pre></div><p>This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you&rsquo;ll have to adjust the above code accordingly.</p>
 <p>Now push your app with <code>cf push</code> and set the <code>APP_CONFIG</code> environment variable to some JSON string with the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push &lt;app-name&gt;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push &lt;app-name&gt;
 $ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;apiUrl&#34;:&#34;https://jsonplaceholder.typicode.com&#34;}&#39;</span>
 </code></pre></div><p>Now restage your app, as suggested, with:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf restage &lt;app-name&gt;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf restage &lt;app-name&gt;
 </code></pre></div><p>If you visit the <code>/app-config</code> endpoint of your app, it should return the specified JSON. Your front end app can now retrieve its config dynamically from that endpoint. You might have a fallback for all of these config items for local development if you use something like the <a href="https://webpack.github.io/docs/webpack-dev-server.html">webpack-dev-serer</a>. Of course, you can also configure your dev server to expose the same endpoint and create a development config for that.</p>
 <h2 id="use-cases">Use Cases</h2>
 <p>You can use this method to configure different environments your app might be running in. E.g. you might use a different API server for your integration environment than for your production environment.</p>
@@ -223,7 +223,7 @@ $ cf set-env &lt;app-name&gt; APP_CONFIG <span style="color:#e6db74">&#39;{&#34;
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-07-07 12:41:16.570776296 &#43;0200 CEST m=&#43;0.068687245">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-07-24 12:49:15.110215845 &#43;0200 CEST m=&#43;0.594725987">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
