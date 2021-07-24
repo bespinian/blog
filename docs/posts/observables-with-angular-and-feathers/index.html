@@ -65,12 +65,12 @@ if (!doNotTrack) {
 <p>In my example, I&rsquo;ll use a simple todo service and a component that lists those todos.</p>
 <h2 id="import-libraries">Import libraries</h2>
 <p>As a first step we&rsquo;ll need to add the two libraries <code>socket.io-client</code> and <code>feathers-client</code> to our project. This can easily be done using npm:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save socket.io-client feathers-client
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save socket.io-client feathers-client
 </code></pre></div><p>The TypeScript typings of <code>feathers-client</code> are already included in the library. However, we need to include the ones for <code>socket.io-client</code> manually:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save @types/socket.io-client
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save @types/socket.io-client
 </code></pre></div><h2 id="create-base-api-service">Create base API service</h2>
 <p>Then we create an abstract class to extend upon, which contains the basic properties of a backend service:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/api.service.ts
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/api.service.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiService</span> {
   <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">_url</span>: <span style="color:#66d9ef">string</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://my-todos-api.com&#34;</span>;
@@ -81,14 +81,14 @@ if (!doNotTrack) {
 }
 </code></pre></div><h2 id="create-data-model">Create data model</h2>
 <p>Next, we create a class to represent our todo&rsquo;s data model:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.ts
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Todo</span> {
   <span style="color:#a6e22e">title</span>: <span style="color:#66d9ef">string</span>;
 }
 </code></pre></div><h2 id="create-actual-service">Create actual service</h2>
 <p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.service.ts
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.service.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
 <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observable&#34;</span>;
@@ -169,7 +169,7 @@ if (!doNotTrack) {
 }
 </code></pre></div><h2 id="consume-from-component">Consume from component</h2>
 <p>Now, our Angular service is ready. To use the <code>Observable</code> it exposes in an Angular component, follow the structure below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// todos/todos.component.ts
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// todos/todos.component.ts
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">import</span> {
   <span style="color:#a6e22e">ChangeDetectorRef</span>,
@@ -299,7 +299,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-07-07 12:41:16.58188209 &#43;0200 CEST m=&#43;0.079793055">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-07-24 12:49:15.170202996 &#43;0200 CEST m=&#43;0.654713113">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

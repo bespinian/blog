@@ -75,24 +75,24 @@ if (!doNotTrack) {
 <p>This tutorial assumes that you have a running app on Cloud Foundry which you can apply the rate limiter to. Any app that has a route will do. In case you don&rsquo;t have one, you can simply <code>cf push</code> a dummy app like <a href="https://github.com/swisscom/cf-default-app-staticfile">this one</a>.</p>
 <h3 id="push-rate-limiter">Push Rate Limiter</h3>
 <p>As a first step, let&rsquo;s create the actual rate limiter. Simply clone <a href="https://github.com/cloudfoundry-samples/ratelimit-service">this repo</a> which contains a small Go rate limiting app. Then push the app to your space with the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push rate-limiter -m 64M
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf push rate-limiter -m 64M
 </code></pre></div><p>You may have to specify an alternate hostname using the <code>--hostname</code> flag or use a random one using the <code>--random-route</code> flag because the default one is taken.</p>
 <h3 id="create-user-provided-service">Create User-Provided Service</h3>
 <p>Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as <code>-r</code> (don&rsquo;t forget to adjust the hostname of the URL to the one you have chosen for your &ldquo;rate-limiter&rdquo; app):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
 </code></pre></div><p>You should aways use <code>https</code> for this URL to make the link between the CF router and your route service more secure.</p>
 <h3 id="bind-service-to-route">Bind Service to Route</h3>
 <p>As a last step, we bind the newly created service to the route bound to the app we want to apply the rate limiter to (don&rsquo;t forget to replace the hostname with your own):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
 </code></pre></div><h3 id="test-our-rate-limiter">Test Our Rate Limiter</h3>
 <p>To test our rate limiter, we decrease the limit to 1 request per second (the default is 10). To do so, set the environment variable <code>RATE_LIMIT</code> to <code>1</code> and restage the app:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf set-env rate-limiter RATE_LIMIT <span style="color:#ae81ff">1</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf set-env rate-limiter RATE_LIMIT <span style="color:#ae81ff">1</span>
 $ cf restage rate-limiter
 </code></pre></div><p>The next step is to put some load onto the app. I&rsquo;m using <a href="https://www.npmjs.com/package/loadtest">loadtest</a> but you can use any tool like <a href="https://en.wikipedia.org/wiki/ApacheBench">ab</a> or <a href="https://goad.io/#demo">Goad</a>. Again, don&rsquo;t forget to replace the hostname with the one you have chosen for your app.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ loadtest --rps <span style="color:#ae81ff">1000</span> https://myapp.scapp.io
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ loadtest --rps <span style="color:#ae81ff">1000</span> https://myapp.scapp.io
 </code></pre></div><p>You can open the logs of your rate limiter in a separate window with <code>cf logs rate-limiter</code> to directly tail the requests it gets.</p>
 <p>The app should remain functional, even with the load of 1000 requests per second. If you turn off the rate limiter by unbinding &ldquo;rate-limiter-service&rdquo; from the route</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf unbind-route-service scapp.io rate-limiter-service --hostname myapp
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf unbind-route-service scapp.io rate-limiter-service --hostname myapp
 </code></pre></div><p>and then run the test again, the app will most likely not be able to serve all request in a timely manner because it&rsquo;s not protected by the rate limiter anymore.</p>
 <h2 id="whats-next">What&rsquo;s next?</h2>
 <p>The Cloud Foundry <a href="https://github.com/cloudfoundry-samples">samples library</a> also contain a second route service you can deploy in the same way: The <a href="https://github.com/cloudfoundry-samples/logging-route-service">Logging Route Service</a>. Do you have any other ideas for route service use cases? Please let me know in the comments!</p>
@@ -179,7 +179,7 @@ $ cf restage rate-limiter
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-07-07 12:41:16.569045309 &#43;0200 CEST m=&#43;0.066956263">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-07-24 12:49:15.102904498 &#43;0200 CEST m=&#43;0.587414653">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
