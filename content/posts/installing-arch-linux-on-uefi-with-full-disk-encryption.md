@@ -17,7 +17,7 @@ You can skip this step if you just want to run Arch Linux in a VM. In that case,
 
 1. Insert an USB stick into your computer
 1. Run `lsblk` to find the correct disk
-1. Run `sudo unmount /dev/sdx` or whatever the USB stick is
+1. Run `sudo umount /dev/sdx` or whatever the USB stick is
 1. Run `sudo dd bs=4M if=path/to/input.iso of=/dev/sdx oflag=sync status=progress` to write the ISO to the USB stick. Don't forget to replace the two paths with the correct ones.
 1. Insert the USB stick into the target computer and boot it from there
 
@@ -33,13 +33,10 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 1. Check for internet connectivity with `ping archlinux.org`
 1. Make sure the clock is synced with `timedatectl set-ntp true`
 
-## Load Encryption Kernel Module
-
-1. Run `modprobe dm-crypt` to load the encryption kernel module
-
 ## Partition
 
 1. Check for different drives and partitions with `lsblk` and then start to partition with `gdisk /dev/nvme0n1` (or whatever the disk is)
+1. Delete any existing partitions using `d`
 1. Create boot partition with `n` with default number, default first sector, last sector at `+512M` and select `ef00` "EFI System" as the type
 1. Create root partition with `n` with default number, default first sector, default last sector and select `8300` "Linux filesystem" as the type
 1. Press `w` to write partitions
@@ -47,7 +44,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Encrypt Root Partition
 
-1. Run `cryptsetup luksFormat /dev/nvme0n1p2` and then type `YES` and the new encryption password to encrypt the root partition
+1. Run `cryptsetup -y -v luksFormat /dev/nvme0n1p2` and then type `YES` and the new encryption password to encrypt the root partition
 1. Run `cryptsetup open /dev/nvme0n1p2 cryptroot` to open the encrypted partition
 
 ## Create File Systems
@@ -57,7 +54,9 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Mount File Systems
 
-1. Mount the root file system with `mount /dev/mapper/cryptroot /mnt`
+1. Run `mount /dev/mapper/cryptroot /mnt` to mount the root file system
+1. Run `mkdir /mnt/boot` to create the boot directory
+1. Run `mount /dev/nvme0n1p1 /mnt/boot` to mount your boot file system
 1. Run `lsblk` again to verify mounting
 
 ## Create Swap File (not needed on VMs)
@@ -69,7 +68,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Install Arch Linux
 
-1. Run `pacstrap /mnt base linux linux-firmware neovim` to install Arch Linux (`linux-firmware` is not needed on VMs)
+1. Run `pacstrap /mnt base base-devel linux linux-firmware neovim` to install Arch Linux (`linux-firmware` is not needed on VMs)
 
 ## Generate File System Table
 
@@ -104,23 +103,22 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 1. Run `passwd` and set your root password
 
-## Install Boot Loader
-
-1. Run `pacman -S --noconfirm grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
-1. Run `mkdir /boot/efi` to create the boot directory
-1. Run `mount /dev/nvme0n1p1 /boot/efi` to mount your boot file system
-1. Run `grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB` to install GRUB for your system
-1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual boot with another OS) and set `GRUB_CMDLINE_LINUX="cryptdevice=/dev/nvme0n1p2:cryptroot"` to tell GRUB about our encrypted file system
-1. Run `grub-mkconfig -o /boot/grub/grub.cfg` to configure GRUB
-
 ## Configure Initramfs
 
-1. Run `nvim /etc/mkinitcpio.conf` and add `encrypt` to the `HOOKS` array between `block` and `filesystems`
-1. Run `mkinitcpio -p linux`
+1. Run `nvim /etc/mkinitcpio.conf` and, to the `HOOKS` array, add `keyboard` between `autodetect` and `modconf` and add `encrypt` between `block` and `filesystems`
+1. Run `mkinitcpio -P`
+
+## Install Boot Loader
+
+1. Run `pacman -S grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
+1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
+1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:cryptroot"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
+1. Run `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB` to install GRUB for your system
+1. Run `grub-mkconfig -o /boot/grub/grub.cfg` to configure GRUB
 
 ## Install Network Manager
 
-1. Run `pacman -S --noconfirm networkmanager` to install NetworkManager
+1. Run `pacman -S networkmanager` to install NetworkManager
 1. Run `systemctl enable NetworkManager` to run NetworkManager at boot
 
 ## Reboot
@@ -135,15 +133,14 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Add User
 
-1. Run `pacman -S --noconfirm opendoas` to install doas
-1. Run `echo 'permit nopass keepenv :wheel' > /etc/doas.conf` to allow members of the `wheel` group to run privileged commands
+1. Run `EDITOR=nvim visudo` and uncomment `%wheel ALL=(ALL) NOPASSWD: ALL` to allow members of the `wheel` group to run privileged commands
 1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user name should be) to create the user
 1. Run `passwd lena` to set your password
 1. Run `exit` and log back in with your new user
 
 ## Install Window Manager
 
-1. Run `doas pacman -S --noconfirm sway swayidle swaylock` to install Sway
+1. Run `sudo pacman -S sway swayidle swaylock` to install Sway
 1. Add the following to `~/.zlogin` or whatever shell you are using:
 
 ```bash
@@ -155,49 +152,49 @@ fi
 
 ## Set Up Sound
 
-1. Run `doas pacman -S --noconfirm pipewire pipewire-pulse` to install Pipewire
+1. Run `sudo pacman -S pipewire pipewire-pulse` to install Pipewire
 
 ## Set Up Bluetooth
 
-1. Run `doas pacman -S --noconfirm bluez bluez-utils` to install the bluetooth utilities
-1. Run `doas systemctl enable bluetooth.service --now` to start bluetooth
+1. Run `sudo pacman -S bluez bluez-utils` to install the bluetooth utilities
+1. Run `sudo systemctl enable bluetooth.service --now` to start bluetooth
 
 ## Lock Root User (to be extra secure)
 
-1. Run `doas passwd -l root` to lock out the root user
+1. Run `sudo passwd -l root` to lock out the root user
 
 ## Install a Firewall
 
-1. Run `doas pacman -S --noconfirm nftables` to install the firewall
-1. Edit `/etc/nftables.conf` and remove the part about allowing incoming SSH connections if you don't need that
-1. Run `doas systemctl enable nftables.service --now` to enable the firewall
+1. Run `sudo pacman -S nftables` to install the firewall
+1. Run `sudo nvim /etc/nftables.conf` to edit the config to our liking and remove the part about allowing incoming SSH connections if you don't need that
+1. Run `sudo systemctl enable nftables.service --now` to enable the firewall
 
 ## Enable Time Synchronization
 
-1. Run `doas systemctl enable systemd-timesyncd.service --now` to enable automated time synchronization
+1. Run `sudo systemctl enable systemd-timesyncd.service --now` to enable automated time synchronization
 
 ## Improve Power Management (only makes sense on laptops)
 
-1. Run `doas pacman -S --noconfirm tlp tlp-rdw` to install TLP
-1. Run `doas systemctl enable tlp.service --now` to run power optimizations automatically
-1. Run `doas systemctl enable NetworkManager-dispatcher.service --now` to prevent conflicts
-1. Run `doas tlp-stat` and follow any warnings and instructions there
+1. Run `sudo pacman -S tlp tlp-rdw` to install TLP
+1. Run `sudo systemctl enable tlp.service --now` to run power optimizations automatically
+1. Run `sudo systemctl enable NetworkManager-dispatcher.service --now` to prevent conflicts
+1. Run `sudo tlp-stat` and follow any recommendations there
 
 ## Enable Scheduled fstrim (only makes sense for SSDs)
 
-1. Run `doas systemctl enable fstrim.timer --now` to enable regular housekeeping of your SSD
+1. Run `sudo systemctl enable fstrim.timer --now` to enable regular housekeeping of your SSD
 
 ## Enable Scheduled Mirrorlist Updates
 
-1. Run `doas pacman -S --noconfirm reflector` to install reflector
-2. Run `doas nvim /etc/xdg/reflector/reflector.conf` and change the file to your liking
-3. Run `doas systemctl enable reflector.timer --now` to enable running reflector regularly
+1. Run `sudo pacman -S reflector` to install reflector
+2. Run `sudo nvim /etc/xdg/reflector/reflector.conf` and change the file to your liking
+3. Run `sudo systemctl enable reflector.timer --now` to enable running reflector regularly
 
 ## Reduce Swappiness (only makes sense if you have more than 4GB of RAM)
 
-1. Run `echo 'vm.swappiness=10' | doas tee /etc/sysctl.d/99-swappiness.conf` to reduce the swappiness permanently
+1. Run `echo 'vm.swappiness=10' | sudo tee /etc/sysctl.d/99-swappiness.conf` to reduce the swappiness permanently
 
 ## Install Dotfiles
 
-1. Run `doas pacman -S --noconfirm git` to install Git
+1. Run `sudo pacman -S git` to install Git
 1. Install [Mastertinner's dotfiles](https://github.com/mastertinner/dotfiles/) or some other ones to customize your installation
