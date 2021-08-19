@@ -84,7 +84,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 1. Run `hwclock --systohc`
 1. Run `nvim /etc/locale.gen` and uncomment yours (e.g. `en_US.UTF-8 UTF-8`)
 1. Run `locale-gen` to generate the locales
-1. Run `echo 'LANG=en-US.UTF-8' > /etc/locale.conf`
+1. Run `echo 'LANG=en_US.UTF-8' > /etc/locale.conf`
 
 ## Set Hostname
 
