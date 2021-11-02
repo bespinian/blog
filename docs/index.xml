@@ -6,7 +6,17 @@
     <description>Recent content on bespinian Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git - The Important Parts</title>
+      <link>https://blog.bespinian.io/posts/git-the-important-parts/</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bespinian.io/posts/git-the-important-parts/</guid>
+      <description>This blog post is the first part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
+In this first part we will look at Git and what is important when using it in a team. The second part will be about Infrastructure as Code, a handy concept which helps to unify environments and be aware of the exact changes made to different parts of your infrastructure.</description>
+    </item>
+    
     <item>
       <title>Kubernetes Cost Transparency</title>
       <link>https://blog.bespinian.io/posts/kubernetes-chargeback/</link>
