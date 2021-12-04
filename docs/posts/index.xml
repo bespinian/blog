@@ -6,7 +6,17 @@
     <description>Recent content in Posts on bespinian Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 15 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 03 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Infrastructure as Code</title>
+      <link>https://blog.bespinian.io/posts/infrastructure-as-code/</link>
+      <pubDate>Fri, 03 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bespinian.io/posts/infrastructure-as-code/</guid>
+      <description>This blog post is the second part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
+In this second part we will look into a topic that is crucial to any modern cloud-native environment in order to provide stability and parity across environments: Infrastructure as Code. We will delve into some interesting tools in that realm and compare different concepts and configurations around how to deploy and maintain infrastructure in a sane way.</description>
+    </item>
+    
     <item>
       <title>Git - The Important Parts</title>
       <link>https://blog.bespinian.io/posts/git-the-important-parts/</link>
