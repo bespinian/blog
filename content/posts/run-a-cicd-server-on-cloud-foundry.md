@@ -164,7 +164,7 @@ cf target -o "${CF_ORG}" -s "${CF_SPACE}"
 cf push
 ```
 
-This script will simply push our app using the credentials we provide it with the "Environment" plugin and the latest Cloud Foundry CLI. For a more advanced deployment script, you can refer to my [Blue-Green-Deployment script](https://gist.github.com/mastertinner/3eb3c0e2e5e3558d56d1) on Github.
+This script will simply push our app using the credentials we provide it with the "Environment" plugin and the latest Cloud Foundry CLI. For a more advanced deployment script, you can refer to my [Blue-Green-Deployment script](https://gist.github.com/cloudlena/3eb3c0e2e5e3558d56d1) on Github.
 
 ### Add Environment Variables
 

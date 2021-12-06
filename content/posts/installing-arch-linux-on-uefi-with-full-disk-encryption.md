@@ -197,4 +197,4 @@ fi
 ## Install Dotfiles
 
 1. Run `sudo pacman -S git` to install Git
-1. Install [Mastertinner's dotfiles](https://github.com/mastertinner/dotfiles/) or some other ones to customize your installation
+1. Install [Cloudlena's dotfiles](https://github.com/cloudlena/dotfiles/) or some other ones to customize your installation
