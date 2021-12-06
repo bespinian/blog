@@ -151,4 +151,4 @@ Another thing to note is that this article only talks about motion commands. It 
 
 I highly recommend to get to know as many different techniques as possible and carefully thinking about which one makes sense in which situation. You shouldn't be afraid of forcing yourself a bit to use different ones until you have found your own toolbox of useful ones for different situations. It takes some practice to get these into muscle memory but it's worth it all the while to make Vim the efficient text editor it can be.
 
-For a full example of a configuration, check out my own [dotfiles](https://github.com/mastertinner/dotfiles/blob/master/nvim/.config/nvim/init.vim).
+For a full example of a configuration, check out my own [dotfiles](https://github.com/cloudlena/dotfiles/blob/master/nvim/.config/nvim/init.vim).
