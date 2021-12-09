@@ -56,7 +56,7 @@ if (!doNotTrack) {
     <span>Written by</span>
         Lena Fuhrimann / Mathis Kretz
         <br>
-        <span>on&nbsp;</span><time datetime="2021-12-03 00:00:00 &#43;0000 UTC">December 3, 2021</time>
+        <span>on&nbsp;</span><time datetime="2021-12-09 00:00:00 &#43;0000 UTC">December 9, 2021</time>
 </div>
 
 		<h1 class="post-title">Infrastructure as Code</h1>
@@ -73,14 +73,14 @@ if (!doNotTrack) {
 <p>Or actually, let’s start off by looking at what we would not call Infrastructure as Code. While certainly being awesome in their own right, we would not consider as Infrastructure as Code tools like Ansible, Puppet and Chef which allow you to apply configurations to existing VMs. The reason for this is that these tools generally do not take care of the VM or resource creation step itself which, as you will see later, we consider an important part of Infrastructure as Code. That said, tools for VM configuration certainly have their place in DevOps as we will also see when we have a closer look at Packer.</p>
 <p>Furthermore, we would also not consider imperative scripts which create VMs (and possibly install things on them) as Infrastructure as Code. This is because we consider declarativeness as an important feature of Infrastructure as Code as you will also see later.</p>
 <h2 id="what-is-infrastructure-as-code">What is Infrastructure as Code?</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;vm_instance&#34;</span> <span style="color:#e6db74">&#34;my_vm&#34;</span> {
-    <span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;My VM&#34;</span>
-    <span style="color:#a6e22e">instance_type</span> = <span style="color:#e6db74">&#34;x-large&#34;</span>
-    <span style="color:#a6e22e">availability_zone</span> = var.<span style="color:#a6e22e">availability_zone</span>
-    <span style="color:#a6e22e">security_group_ids</span> = [<span style="color:#a6e22e">security_group</span>.<span style="color:#a6e22e">my_sg</span>.<span style="color:#a6e22e">id</span>]
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;vm_instance&#34; &#34;my_vm&#34;</span> {
+    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;My VM&#34;</span>
+    instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x-large&#34;</span>
+    availability_zone <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">availability_zone</span>
+    security_group_ids <span style="color:#f92672">=</span> [<span style="color:#66d9ef">security_group</span>.<span style="color:#66d9ef">my_sg</span>.<span style="color:#66d9ef">id</span>]
 
-    <span style="color:#a6e22e">tags</span> = {
-        <span style="color:#a6e22e">Name</span> = <span style="color:#e6db74">&#34;IaC-managed VM Instance&#34;</span>
+    tags <span style="color:#f92672">=</span> {
+        Name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;IaC-managed VM Instance&#34;</span>
     }
 }
 </code></pre></div><p>So what is Infrastructure as Code then? Similar to source code which, when unchanged, produces the same binary every time it is compiled, Infrastructure as Code mandates that the same model, given as code in a textual format always generate the same environment. Furthermore, it generates the environment automatically without the need for manual configuration or installation steps.</p>
@@ -109,13 +109,13 @@ $ cli create vm ...
 
 $ cli create k8s
 </code></pre></div><p>The opposite of imperative is declarative. A declarative representation of your infrastructure describes a desired state which you want your environment to be in. A declarative representation says things like “There is a VPC, there is a VM and there is a Kubernetes cluster.”. It does not say which steps need to be undertaken to get from the current state of your environment to this new desired state.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#66d9ef">resource</span> <span style="color:#a6e22e">vpc</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vpc</span> {
 ...
 }
-<span style="color:#66d9ef">resource</span> <span style="color:#a6e22e">vm</span> {
+<span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vm</span> {
 ...
 }
-<span style="color:#66d9ef">resource</span> <span style="color:#a6e22e">k8s</span> {
+<span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">k8s</span> {
 ...
 }
 </code></pre></div><p>So why do we prefer a declarative style over the imperative one when automating infrastructure? If we think more deeply about our imperative example we see that there are lot of cases which our script needs to catch in order to function correctly. What if a VM with the same name already exists? Do we stop? Do we do something to the existing VM? Or what if the creation of the VM takes a long time? What happens if the script fails halfway through? Can we just run it again? All of this reasoning about special cases, potential failure and long-running asynchronous operations is abstracted away, if you use a declarative style. In the declarative style you just describe a desired state and leave it to your Infrastructure as Code technology to figure out the steps required to get to that state.</p>
@@ -155,22 +155,22 @@ $ cli create k8s
 <p>The first concept is what Terraform calls a “Provider”. Since it supports many different infrastructure providers and each of them is maintained and managed by its own community, users need to be able to plug different providers into their setup. A typical provider could be AWS, Azure, CloudFlare or even Kubernetes. These contain and abstract the domain specific knowledge necessary to communicate with the respective infrastructure provider and how to translate different operations on different resources into API calls towards the respective provider. So, for example, the AWS provider contains knowledge about how to provision a VM in AWS, how to configure and change it but also how to delete if the respective resource in Terraform gets deleted.</p>
 <p>The modular provider setup is a big part of the success of Terraform since it makes it an incredibly versatile and powerful tool which can be used by different communities and even combine infrastructure from different providers into one single code base for end users.</p>
 <p>As an illustration, here is the provider section from the Terraform module which we use to deploy our own website.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a6e22e">terraform</span> {
-  <span style="color:#a6e22e">required_providers</span> {
-    <span style="color:#a6e22e">aws</span> = {
-      <span style="color:#a6e22e">source</span>  = <span style="color:#e6db74">&#34;hashicorp/aws&#34;</span>
-      <span style="color:#a6e22e">version</span> = <span style="color:#e6db74">&#34;~&gt; 3.0&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">terraform</span> {
+  <span style="color:#66d9ef">required_providers</span> {
+    aws <span style="color:#f92672">=</span> {
+      source  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hashicorp/aws&#34;</span>
+      version <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;~&gt; 3.0&#34;</span>
     }
   }
 }
-<span style="color:#66d9ef">
-</span><span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
-  <span style="color:#a6e22e">region</span> = <span style="color:#e6db74">&#34;eu-central-1&#34;</span>
+
+<span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
+  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eu-central-1&#34;</span>
 }
-<span style="color:#66d9ef">
-</span><span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
-  <span style="color:#a6e22e">alias</span>  = <span style="color:#e6db74">&#34;us_east&#34;</span>
-  <span style="color:#a6e22e">region</span> = <span style="color:#e6db74">&#34;us-east-1&#34;</span>
+
+<span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
+  alias  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us_east&#34;</span>
+  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-east-1&#34;</span>
 }
 </code></pre></div><h2 id="modules">Modules</h2>
 <p><img src="./terraform-modules.png" alt=""></p>
@@ -312,29 +312,29 @@ Scan duration: 13s
 <p><a href="https://www.packer.io/">Packer</a> is a tool that greatly simplifies the creation of immutable infrastructure. It allows us to define our VM images just like we do it with a Dockerfile for container images. So we have a configuration file which contains a base image and the steps that should be applied to it. Packer then takes these instructions, creates a new image that contains our application and all of its dependencies and then publishes that image to the infrastructure provider’s image registry. This process allows us to follow all the good practices of shipping images which we are used to from using containers. Like shipping them with all the needed libraries and binaries and not changing them at runtime. But this time we apply them to VM images and treat our VMs kind of like containers in that regard.</p>
 <p>Obviously, this has many advantages. It expedites the startup time of our VMs because we don’t need to install hundreds of tools and packages. It makes our images and applications more portable and testable because we can release the same image to AWS, Google Cloud and also to our local Virtualbox. These processes should also further improve the stability of our environments and VMs because no undocumented changes are allowed and all steps needed to get to our final images are documented in our Packer file. Let’s see how it works.</p>
 <p>First we would specify a Packer template for the image we want to build. Below you can see an example of an image which will be based <code>ubuntu-xenial-16.04</code> and which has NGINX installed in it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-terraform" data-lang="terraform"><span style="color:#a6e22e">source</span> <span style="color:#e6db74">&#34;amazon-ebs&#34;</span> <span style="color:#e6db74">&#34;ubuntu&#34;</span> {
-  <span style="color:#a6e22e">ami_name</span>      = <span style="color:#e6db74">&#34;learn-packer-linux-aws&#34;</span>
-  <span style="color:#a6e22e">instance_type</span> = <span style="color:#e6db74">&#34;t2.micro&#34;</span>
-  <span style="color:#a6e22e">region</span>        = <span style="color:#e6db74">&#34;us-west-2&#34;</span>
-  <span style="color:#a6e22e">source_ami_filter</span> {
-    <span style="color:#a6e22e">filters</span> = {
-      <span style="color:#a6e22e">name</span>                = <span style="color:#e6db74">&#34;ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*&#34;</span>
-      <span style="color:#a6e22e">root</span><span style="color:#f92672">-</span><span style="color:#a6e22e">device</span><span style="color:#f92672">-</span><span style="color:#a6e22e">type</span>    = <span style="color:#e6db74">&#34;ebs&#34;</span>
-      <span style="color:#a6e22e">virtualization</span><span style="color:#f92672">-</span><span style="color:#a6e22e">type</span> = <span style="color:#e6db74">&#34;hvm&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">source</span> <span style="color:#e6db74">&#34;amazon-ebs&#34; &#34;ubuntu&#34;</span> {
+  ami_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer-linux-aws&#34;</span>
+  instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;t2.micro&#34;</span>
+  region        <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-west-2&#34;</span>
+  <span style="color:#66d9ef">source_ami_filter</span> {
+    filters <span style="color:#f92672">=</span> {
+      name                <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*&#34;</span>
+      root-device-type    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebs&#34;</span>
+      virtualization-type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hvm&#34;</span>
     }
-    <span style="color:#a6e22e">most_recent</span> = <span style="color:#66d9ef">true</span>
-    <span style="color:#a6e22e">owners</span>      = [<span style="color:#e6db74">&#34;099720109477&#34;</span>]
+    most_recent <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+    owners      <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;099720109477&#34;</span>]
   }
-  <span style="color:#a6e22e">ssh_username</span> = <span style="color:#e6db74">&#34;ubuntu&#34;</span>
+  ssh_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu&#34;</span>
 }
 
-<span style="color:#a6e22e">build</span> {
-  <span style="color:#a6e22e">name</span>    = <span style="color:#e6db74">&#34;learn-packer&#34;</span>
-  <span style="color:#a6e22e">sources</span> = [
+<span style="color:#66d9ef">build</span> {
+  name    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer&#34;</span>
+  sources <span style="color:#f92672">=</span> [
     <span style="color:#e6db74">&#34;source.amazon-ebs.ubuntu&#34;</span>
   ]
-<span style="color:#66d9ef">  provisioner</span> <span style="color:#e6db74">&#34;shell&#34;</span> {
-    <span style="color:#a6e22e">inline</span> = [
+  <span style="color:#66d9ef">provisioner</span> <span style="color:#e6db74">&#34;shell&#34;</span> {
+    inline <span style="color:#f92672">=</span> [
       <span style="color:#e6db74">&#34;echo Installing NGINX&#34;</span>,
       <span style="color:#e6db74">&#34;sudo apt update&#34;</span>,
       <span style="color:#e6db74">&#34;sudo apt install -y nginx&#34;</span>,
@@ -425,7 +425,7 @@ Scan duration: 13s
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-12-09 08:50:57.280353 &#43;0100 CET m=&#43;0.210743251">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-12-09 12:03:47.97171 &#43;0100 CET m=&#43;0.256035501">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
