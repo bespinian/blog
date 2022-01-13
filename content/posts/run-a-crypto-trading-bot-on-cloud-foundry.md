@@ -64,7 +64,7 @@ if (process.env.VCAP_SERVICES) {
 
 This will ensure that the config is read automatically from the environment, if the `VCAP_SERVICES` variable is there.
 
-Furthermore, we'll make it possible to configure the traded product and the strategy to use through environment variables. For that, chage the following lines:
+Furthermore, we'll make it possible to configure the traded product and the strategy to use through environment variables. For that, change the following lines:
 
 ```javascript
 // default selector. only used if omitting [selector] argument from a command.
@@ -118,4 +118,4 @@ Now, all that's left is to run `cf push` to deploy your bot. After a successful 
 $ cf logs zenbot --recent
 ```
 
-See [Reading the Console Output](https://github.com/carlos8f/zenbot#reading-the-console-output) for instructions about how to interpret these logs. Esentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)
+See [Reading the Console Output](https://github.com/carlos8f/zenbot#reading-the-console-output) for instructions about how to interpret these logs. Essentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)

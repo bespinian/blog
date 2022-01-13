@@ -166,7 +166,7 @@ We used to always <span style="color:#66d9ef">return</span> <span style="color:#
 <p>So let us assume that you have implemented a new feature on a feature branch according to Gitflow.</p>
 <p>First, we want to look at some good practices when submitting a pull request for your feature branch. Following these practices will make your reviewer’s life easier which in turn will help you get the most out of their review.</p>
 <h4 id="rebase">Rebase</h4>
-<p>The first good practice you should follow is making sure that your feature branch is up to date with the latest changes on the target branch. After all, you want to make sure that your change works on the current version of develop and not just on a version from way back in time when you branched off your feature branch. Furthemore, you don’t want to place the burden of closing this potential gap on your reviewers. So, according to what we discussed earlier you would now rebase your feature branch on the latest develop branch, meaning that you sequentially apply all commits that have happened on develop since the point in time when you created the feature branch. Let us consider an example. Assume that we are working on a Git repository which contains information on the planets of the Solar System and that our repository initially looks as follows:</p>
+<p>The first good practice you should follow is making sure that your feature branch is up to date with the latest changes on the target branch. After all, you want to make sure that your change works on the current version of develop and not just on a version from way back in time when you branched off your feature branch. Furthermore, you don’t want to place the burden of closing this potential gap on your reviewers. So, according to what we discussed earlier you would now rebase your feature branch on the latest develop branch, meaning that you sequentially apply all commits that have happened on develop since the point in time when you created the feature branch. Let us consider an example. Assume that we are working on a Git repository which contains information on the planets of the Solar System and that our repository initially looks as follows:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* 2119e4e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
 * cc9e0d4 Add information on planet Uranus
 * 4a30b63 Removed some wrong information about planet Saturn
@@ -427,7 +427,7 @@ Add information on the planet Saturn
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-12-09 12:03:47.977043 &#43;0100 CET m=&#43;0.261367876">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-01-13 11:42:58.319586547 &#43;0100 CET m=&#43;0.534893086">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

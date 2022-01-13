@@ -129,7 +129,7 @@ if (!doNotTrack) {
 <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">is_array</span>($trustedHosts)) {
     $trustedHosts <span style="color:#f92672">=</span> <span style="color:#66d9ef">array</span>();
 }
-</code></pre></div><p>We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the <code>config/global.ini.php</code> file and change the setting of <code>force_ssl</code> fo <code>1</code>:</p>
+</code></pre></div><p>We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the <code>config/global.ini.php</code> file and change the setting of <code>force_ssl</code> to <code>1</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#a6e22e">force_ssl</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 </code></pre></div><h2 id="routing">Routing</h2>
 <p>Next, we&rsquo;ll improve some more of the defaults Piwik uses during the set up wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file <code>plugins/Installation/FormFirstWebsiteSetup.php</code> and replace the following lines of the <code>init</code> method:</p>
@@ -263,7 +263,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-12-09 12:03:47.991584 &#43;0100 CET m=&#43;0.275909876">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-01-13 11:42:58.320462157 &#43;0100 CET m=&#43;0.535768694">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

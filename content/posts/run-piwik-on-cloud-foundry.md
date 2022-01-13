@@ -105,7 +105,7 @@ if (!is_array($trustedHosts)) {
 }
 ```
 
-We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the `config/global.ini.php` file and change the setting of `force_ssl` fo `1`:
+We want Piwik to enforce the use of HTTPS in favor of HTTP. To activate that, open the `config/global.ini.php` file and change the setting of `force_ssl` to `1`:
 
 ```php
 force_ssl = 1
