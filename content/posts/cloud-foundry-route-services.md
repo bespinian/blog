@@ -47,7 +47,7 @@ Next we will create the route service as a user-provided service. This will then
 $ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
 ```
 
-You should aways use `https` for this URL to make the link between the CF router and your route service more secure.
+You should always use `https` for this URL to make the link between the CF router and your route service more secure.
 
 ### Bind Service to Route
 

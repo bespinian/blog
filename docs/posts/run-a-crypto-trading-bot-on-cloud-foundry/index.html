@@ -98,7 +98,7 @@ if (!doNotTrack) {
   <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">passphrase</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">passphrase</span>;
 }
 </code></pre></div><p>This will ensure that the config is read automatically from the environment, if the <code>VCAP_SERVICES</code> variable is there.</p>
-<p>Furthermore, we&rsquo;ll make it possible to configure the traded product and the strategy to use through environment variables. For that, chage the following lines:</p>
+<p>Furthermore, we&rsquo;ll make it possible to configure the traded product and the strategy to use through environment variables. For that, change the following lines:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
 <span style="color:#75715e">// name of default trade strategy
@@ -129,7 +129,7 @@ $ ./zenbot.sh list-strategies
 <h2 id="push">Push</h2>
 <p>Now, all that&rsquo;s left is to run <code>cf push</code> to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf logs zenbot --recent
-</code></pre></div><p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Esentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
+</code></pre></div><p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Essentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
 
 
 		<div
@@ -213,7 +213,7 @@ $ ./zenbot.sh list-strategies
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-12-09 12:03:47.972605 &#43;0100 CET m=&#43;0.256930251">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-01-13 11:42:58.305894776 &#43;0100 CET m=&#43;0.521201313">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

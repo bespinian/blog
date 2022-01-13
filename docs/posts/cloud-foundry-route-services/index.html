@@ -83,7 +83,7 @@ if (!doNotTrack) {
 <h3 id="create-user-provided-service">Create User-Provided Service</h3>
 <p>Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as <code>-r</code> (don&rsquo;t forget to adjust the hostname of the URL to the one you have chosen for your &ldquo;rate-limiter&rdquo; app):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
-</code></pre></div><p>You should aways use <code>https</code> for this URL to make the link between the CF router and your route service more secure.</p>
+</code></pre></div><p>You should always use <code>https</code> for this URL to make the link between the CF router and your route service more secure.</p>
 <h3 id="bind-service-to-route">Bind Service to Route</h3>
 <p>As a last step, we bind the newly created service to the route bound to the app we want to apply the rate limiter to (don&rsquo;t forget to replace the hostname with your own):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf bind-route-service scapp.io rate-limiter-service --hostname myapp
@@ -182,7 +182,7 @@ $ cf restage rate-limiter
             </figure>
 			
 			<span>
-			&copy; <time datetime="2021-12-09 12:03:47.945787 &#43;0100 CET m=&#43;0.230111584">2021</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-01-13 11:42:58.288405853 &#43;0100 CET m=&#43;0.503712426">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
