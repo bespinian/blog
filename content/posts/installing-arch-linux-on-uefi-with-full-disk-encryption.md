@@ -161,7 +161,7 @@ fi
 
 ## Lock Root User (to be extra secure)
 
-1. Run `sudo passwd -l root` to lock out the root user
+1. Run `sudo passwd --lock root` to lock out the root user
 
 ## Install a Firewall
 
