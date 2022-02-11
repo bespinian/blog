@@ -65,9 +65,9 @@ if (!doNotTrack) {
 		
 
 		<p>Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the <code>cf push</code> command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That&rsquo;s where a CI/CD server comes in handy. It tests, builds and deploys your code every time you <code>git push</code> to any git repo.</p>
-<p><a href="https://github.com/strider-cd/strider">Strider</a> is an open source CI/CD server based on <a href="https://nodejs.org">Node.js</a> and <a href="https://mongodb.org">MongoDB</a>. It integrates well with git and its hosted solutions (e.g. <a href="https://github.com">Github</a>, <a href="https://bitbucket.org">Bitbucket</a> or <a href="https://gitlab.com">Gitlab</a>) and features a number of plugins to suit almost all your needs. The idea is, to have Strider &ldquo;watch&rdquo; your git repos and, on change, go through the following stages:</p>
+<p><a href="https://github.com/strider-cd/strider">Strider</a> is an open source CI/CD server based on <a href="https://nodejs.org">Node.js</a> and <a href="https://mongodb.org">MongoDB</a>. It integrates well with git and its hosted solutions (e.g., <a href="https://github.com">GitHub</a>, <a href="https://bitbucket.org">Bitbucket</a> or <a href="https://gitlab.com">GitLab</a>) and features a number of plugins to suit almost all your needs. The idea is, to have Strider &ldquo;watch&rdquo; your git repos and, on change, go through the following stages:</p>
 <ol>
-<li>Setup an environment to test your code</li>
+<li>Set up an environment to test your code</li>
 <li>Run your tests</li>
 <li>Build/compile your code upon successful tests</li>
 <li>Deploy your code upon successful build/compilation</li>
@@ -93,13 +93,13 @@ if (!doNotTrack) {
   <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">SMTP_USER</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">appEnv</span>.<span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#34;mailgun&#34;</span>).<span style="color:#a6e22e">credentials</span>.<span style="color:#a6e22e">username</span>;
   <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">SMTP_PASS</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">appEnv</span>.<span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#34;mailgun&#34;</span>).<span style="color:#a6e22e">credentials</span>.<span style="color:#a6e22e">password</span>;
 }
-</code></pre></div><p>This will ensure that Strider connects to a Cloud Foundry service called <code>strider-db</code>. In our case this needs to be a MongoDB for Strider to work with. Furthermore it connects to a Cloud Foundry service called <code>mailgun</code> which we will need to create later and which will allow us to send emails from Strider.</p>
+</code></pre></div><p>This will ensure that Strider connects to a Cloud Foundry service called <code>strider-db</code>. In our case, this needs to be a MongoDB for Strider to work with. Furthermore, it connects to a Cloud Foundry service called <code>mailgun</code> which we will need to create later and which will allow us to send emails from Strider.</p>
 <h3 id="create-mongodb">Create MongoDB</h3>
 <p>Create a MongoDB service in Cloud Foundry with the command</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service mongodb small strider-db
 </code></pre></div><p>(may differ depending on your Cloud Foundry provider) in the space where you want to deploy your Strider instance to.</p>
 <h3 id="create-email-server">Create Email Server</h3>
-<p>Now it&rsquo;s time to create an email server so Strider can send out invitations or notifications via email. Visit the <a href="https://www.mailgun.com">Mailgun website</a> and create an account. This will provide you with a sandbox domain and some credentials:</p>
+<p>Now it&rsquo;s time to create an email server, so Strider can send out invitations or notifications via email. Visit the <a href="https://www.mailgun.com">Mailgun website</a> and create an account. This will provide you with a sandbox domain and some credentials:</p>
 <p><img src="/images/mailgun.png" alt="Mailgun Credentials"></p>
 <p>Now we&rsquo;ll have to insert these credentials into Cloud Foundry using a User Provided Service. You can do so by running the command</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service mailgun -p <span style="color:#e6db74">&#39;{ &#34;hostname&#34;: &#34;smtp.mailgun.org&#34;, &#34;username&#34;: &#34;&lt;your-mailgun-smtp-login&gt;&#34;, &#34;password&#34;: &#34;&lt;your-mailgun-password&gt;&#34; }&#39;</span>
@@ -118,12 +118,12 @@ if (!doNotTrack) {
       - <span style="color:#ae81ff">mailgun</span>
     <span style="color:#f92672">env</span>:
       <span style="color:#f92672">NODE_ENV</span>: <span style="color:#ae81ff">production</span>
-</code></pre></div><p>This will provide the setup instructions for Cloud Foundry to properly run your application. It creates an app with 2048MB of memory, so charges may apply (depending on your provider).</p>
+</code></pre></div><p>This will provide the setup instructions for Cloud Foundry to properly run your application. It creates an app with 2048 MB of memory, so charges may apply (depending on your provider).</p>
 <h3 id="cf-push">cf push</h3>
 <p>That&rsquo;s it. You are now ready to run your Strider instance in Cloud Foundry. Just run <code>cf push</code> to deploy it in the cloud.</p>
 <p>It&rsquo;s possible that the route you are trying to use is already taken by another app. If so, simply change the <code>host</code> property in <code>manifest.yml</code> to something which isn&rsquo;t taken yet.</p>
 <h2 id="create-your-admin-user">Create Your Admin User</h2>
-<p>Now that our app is running in the cloud, we just have one problem left: We cannot access it&hellip; With Strider, you usually use its CLI to create a first admin user. Unfortunately though, it is not easy for us to access said command line interface from within the app container. So we will insert our admin user directly into the database using the Swisscom <a href="http://docs.developer.swisscom.com/service-connector/index.html">Service Connector</a> plugin. Visit the link and follow the instructions to install it.</p>
+<p>Now that our app is running in the cloud, we just have one problem left: We cannot access it&hellip; With Strider, you usually use its CLI to create a first admin user. Unfortunately, though, it is not easy for us to access said command line interface from within the app container. So we will insert our admin user directly into the database using the Swisscom <a href="http://docs.developer.swisscom.com/service-connector/index.html">Service Connector</a> plugin. Visit the link and follow the instructions to install it.</p>
 <p>To connect to your MongoDB and insert the admin user, we&rsquo;ll need to create a set of credentials to manually connect to the database first. To do so, type</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service-key strider-db mykey
 </code></pre></div><p>Then retrieve the credentials using</p>
@@ -139,7 +139,7 @@ if (!doNotTrack) {
 The password behind the given hash and salt is <code>passw0rd</code>.
 <strong>You should change it immediately after your first login.</strong></p>
 <h2 id="cicd-for-nodejs-apps">CI/CD For Node.js Apps</h2>
-<p>Using the GUI, you can now add your Github or Bitbucket account and add a first repo. It&rsquo;s easiest to use a Node.js app but Strider also has plugins for Ruby, Python and .NET. It can possibly also run and build other apps (e.g. Java or Go) but I haven&rsquo;t tried that yet. For Node.js apps, add them to Strider in the GUI and add a branch (e.g. <code>master</code>) which it should be listening for changes on. Then add the three plugins for &ldquo;Node.js&rdquo;, &ldquo;Environment&rdquo; and &ldquo;Custom Scripts&rdquo;. We use the Node.js one to install our preferred version of Node.js and run the tests of our app (using <code>npm test</code>). In the Custom Scripts plugin&rsquo;s settings we can define our script to deploy to Cloud Foundry.</p>
+<p>Using the GUI, you can now add your GitHub or Bitbucket account and add a first repo. It&rsquo;s easiest to use a Node.js app, but Strider also has plugins for Ruby, Python and .NET. It can possibly also run and build other apps (e.g., Java or Go) but I haven&rsquo;t tried that yet. For Node.js apps, add them to Strider in the GUI and add a branch (e.g., <code>master</code>) which it should be listening for changes on. Then add the three plugins for &ldquo;Node.js&rdquo;, &ldquo;Environment&rdquo; and &ldquo;Custom Scripts&rdquo;. We use the Node.js one to install our preferred version of Node.js and run the tests of our app (using <code>npm test</code>). In the Custom Scripts plugin&rsquo;s settings, we can define our script to deploy to Cloud Foundry.</p>
 <h3 id="run-deployment-script">Run Deployment Script</h3>
 <p>Add the following script to the &ldquo;Deployment&rdquo; stage of the plugin:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Install Cloud Foundry CLI</span>
@@ -152,11 +152,11 @@ cf target -o <span style="color:#e6db74">&#34;</span><span style="color:#e6db74"
 
 <span style="color:#75715e"># Push App</span>
 cf push
-</code></pre></div><p>This script will simply push our app using the credentials we provide it with the &ldquo;Environment&rdquo; plugin and the latest Cloud Foundry CLI. For a more advanced deployment script, you can refer to my <a href="https://gist.github.com/cloudlena/3eb3c0e2e5e3558d56d1">Blue-Green-Deployment script</a> on Github.</p>
+</code></pre></div><p>This script will simply push our app using the credentials we provide it with the &ldquo;Environment&rdquo; plugin and the latest Cloud Foundry CLI. For a more advanced deployment script, you can refer to my <a href="https://gist.github.com/cloudlena/3eb3c0e2e5e3558d56d1">Blue-Green-Deployment script</a> on GitHub.</p>
 <h3 id="add-environment-variables">Add Environment Variables</h3>
 <p>To provide these variables, add them to the settings of the &ldquo;Environment&rdquo; plugin. We&rsquo;ll need the following ones:</p>
 <ul>
-<li><code>CF_API</code> - The API endpoint of your Cloud Foundry installation (e.g. <code>https://api.lyra-836.appcloud.swisscom.com</code> for the Swisscom App Cloud)</li>
+<li><code>CF_API</code> - The API endpoint of your Cloud Foundry installation (e.g., <code>https://api.lyra-836.appcloud.swisscom.com</code> for the Swisscom App Cloud)</li>
 <li><code>CF_USERNAME</code> - Your Cloud Foundry username</li>
 <li><code>CF_PASSWORD</code> - Your Cloud Foundry password</li>
 <li><code>CF_ORG</code> - The Cloud Foundry organization you want to deploy your app to</li>
@@ -246,7 +246,7 @@ cf push
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-02-11 11:58:01.535731601 &#43;0100 CET m=&#43;0.534226058">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-02-11 17:10:47.349810936 &#43;0100 CET m=&#43;0.163288281">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

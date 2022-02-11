@@ -60,7 +60,7 @@ http_request_duration_seconds_count{app="awesome-node", instance="10.244.2.130:8
 
 ### Libraries for Node.js
 
-There are a number of libraries available for Node.js that export some basic metrics for many Node.js webservers.
+There are a number of libraries available for Node.js that export some basic metrics for many Node.js web servers.
 
 In this example we're going to use the [Express Prometheus Bundle](https://github.com/jochen-schweizer/express-prom-bundle), which also supports Koa, and exposes metrics very suitably for the Prometheus data model and query language.
 
@@ -70,7 +70,7 @@ The Express Prometheus Bundle automatically exports a number of useful metrics r
 
 In this example, we're working with bespinian's Express based [Awesome Node](https://github.com/bespinian/awesome-node) example application. It's deployed into a namespace called `awesome-node`, exports metrics using the Express Prometheus Bundle and is running 3 replicas.
 
-If your application already exposes metrics and is set up in your Kubernetes cluster, follow along and implement the dashboard as we go. Otherwise it may be a good exercise to deploy the Awesome Node application and set up the sample dashboard using the data it generates.
+If your application already exposes metrics and is set up in your Kubernetes cluster, follow along and implement the dashboard as we go. Otherwise, it may be a good exercise to deploy the Awesome Node application and set up the sample dashboard using the data it generates.
 
 ## Requests Per Second
 
@@ -101,13 +101,13 @@ In this graph, we used the counter metric type, which is monotonically increasin
 
 Unlike counters, gauges are metrics that can also decrease in value. As such they are very intuitive to use and do not require derivation or the use of the `rate()` function.
 
-Examples for gauges could be temperature or CPU load. However, measuring CPU load using gauges may not be advised, since the gauge only represents a snapshot at sampling time and does not take into account any variation between two samples. Therefore tools like Prometheus Node Exporter export CPU usage in seconds as a counter type metric.
+Examples for gauges could be temperature or CPU load. However, measuring CPU load using gauges may not be advised, since the gauge only represents a snapshot at sampling time and does not take into account any variation between two samples. Therefore, tools like Prometheus Node Exporter export CPU usage in seconds as a counter type metric.
 
 ## Request Performance
 
 Our application's metrics endpoint exports `http_request_duration_seconds_bucket` metrics with different values `n` for the `le` label, which indicates, how many requests were shorter than `n` seconds. These buckets together with the metrics `http_request_duration_seconds_sum` and `http_request_duration_seconds_count` form a so-called histogram metric.
 
-We need to note that the buckets in a histogram metric are not exclusive. A request that took 0.7 seconds is counted once in each of the buckets `le: 1.5`, `le: 10` and `le: +Inf`. This simplifies calculating ratios and percentages, but requires a subtraction to get information about how many requests were e.g. between 1.5 and 10 seconds.
+We need to note that the buckets in a histogram metric are not exclusive. A request that took 0.7 seconds is counted once in each of the buckets `le: 1.5`, `le: 10` and `le: +Inf`. This simplifies calculating ratios and percentages, but requires a subtraction to get information about how many requests were e.g., between 1.5 and 10 seconds.
 
 This histogram allows us to monitor whether our application is performing well and within its service level objectives. We will now look into different ways of visualizing the histogram data. Depending on your use case you may choose one or the other.
 
@@ -147,7 +147,7 @@ Another interesting way to visualize histograms are heatmaps and Grafana's heatm
 
 ![Heatmap showing request rate per bucket over 40 minutes](./heatmap.png)
 
-As you can see on this heatmap, the amount of long requests is clearly shown in the upper parts of the heatmap with a more intense colour indicating more requests in that bucket.
+As you can see on this heatmap, the amount of long requests is clearly shown in the upper parts of the heatmap with a more intense color indicating more requests in that bucket.
 Optimally, only the bottom 1-3 rows should be colored at all, with few exceptions.
 
 The query to produce this heatmap is quite simple:
@@ -182,13 +182,13 @@ The last example should have helped you get familiar with the histogram metric t
 
 We now turn to the summary metric type which concludes the 4 basic metric types in Prometheus.
 
-A summary metric is similar to a histogram, as it is also a composite of multiple single metrics, but it is different, in that it calculates a set of quantiles (e.g. the 50th, 90th, 95th and 99th percentiles) exactly. This type of metric is more complex to calculate for export but is the best way to get exact quantiles, when you need them.
+A summary metric is similar to a histogram, as it is also a composite of multiple single metrics, but it is different, in that it calculates a set of quantiles (e.g., the 50th, 90th, 95th and 99th percentiles) exactly. This type of metric is more complex to calculate for export but is the best way to get exact quantiles, when you need them.
 
 Prometheus also allows you to calculate quantiles from histograms using the [histogram_quantile() function](https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile), but this function uses interpolation to calculate the quantiles and therefore is not exact.
 
 ## Monitoring Your Service Level Objectives
 
-A service level objective is often stated by requiring that a percentage of requests over a certain time period are shorter than a specific threshold, for example "99 percent of requests must be served in under 0.3 seconds over any 24 hour period". Usually the time period is measured in days (as in the example), weeks, or months. In our example, the percentage of requests shorter than 0.3 seconds over 24 hours would be called a service level indicator (SLI), and we want to show it on our dashboard using the following query.
+A service level objective is often stated by requiring that a percentage of requests over a certain time period are shorter than a specific threshold, for example "99 percent of requests must be served in under 0.3 seconds over any 24-hour period". Usually the time period is measured in days (as in the example), weeks, or months. In our example, the percentage of requests shorter than 0.3 seconds over 24 hours would be called a service level indicator (SLI), and we want to show it on our dashboard using the following query.
 
 ```promql
 (sum by (app) (increase(http_request_duration_seconds_bucket{app="awesome-node", le="0.3"}[1d])) / sum by (app) (increase(http_request_duration_seconds_count{app="awesome-node"}[1d]))) * 100

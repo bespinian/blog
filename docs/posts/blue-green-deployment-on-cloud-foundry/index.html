@@ -65,7 +65,7 @@ if (!doNotTrack) {
 		
 
 		<p>Imagine you have one of your apps in production and want to <code>cf push</code> an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving <code>404</code>s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&rsquo;t even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.</p>
-<p>To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called &ldquo;Blue-Green Deployment&rdquo;. I won&rsquo;t go into the depths of this concept because you can read all about it in the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">Cloud Foundry documentation</a>. Generally, it allows you to have two instances of your application running at the same time while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.</p>
+<p>To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called &ldquo;Blue-Green Deployment&rdquo;. I won&rsquo;t go into the depths of this concept because you can read all about it in the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">Cloud Foundry documentation</a>. Generally, it allows you to have two instances of your application running at the same time, while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.</p>
 <p>Cloud Foundry doesn&rsquo;t provide this functionality out of the box. That&rsquo;s why I wrote a simple shell script to do this blue-green deployment for you.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>
@@ -146,16 +146,16 @@ cf delete -f -r <span style="color:#e6db74">&#34;</span><span style="color:#e6db
 
 <span style="color:#75715e"># Rename Green to old app name</span>
 cf rename <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</code></pre></div><p>The script tries to guess some variables from your <code>manifest.yml</code> file but you&rsquo;ll still need to set some environment variables for a successful deployment:</p>
+</code></pre></div><p>The script tries to guess some variables from your <code>manifest.yml</code> file, but you&rsquo;ll still need to set some environment variables for a successful deployment:</p>
 <ul>
-<li><code>CF_API</code>: The API endpoint of the CF instance you want to use (e.g. <code>https://api.lyra-836.appcloud.swisscom.com</code>)</li>
+<li><code>CF_API</code>: The API endpoint of the CF instance you want to use (e.g., <code>https://api.lyra-836.appcloud.swisscom.com</code>)</li>
 <li><code>CF_SHARED_DOMAIN</code>: The shared domain you want to use for temporary routes used to smoke test your app</li>
 <li><code>CF_USERNAME</code>: Your Cloud Foundry username</li>
 <li><code>CF_PASSWORD</code>: Your Cloud Foundry password</li>
 <li><code>CF_ORG</code>: The Cloud Foundry org you want to deploy to</li>
 <li><code>CF_SPACE</code>: The Cloud Foundry space you want to deploy to</li>
 </ul>
-<p>As soon as you&rsquo;ve set all of these variables, you can simply execute the script and it will do a verbose blue-green deployment for you. The script will deploy the new version of your app and check for it to get healthy. You can change the <code>expected_response</code> parameter to something else like <code>401</code> if your app doesn&rsquo;t return a <code>200</code> status code without authentication.</p>
+<p>As soon as you&rsquo;ve set all of these variables, you can simply execute the script, and it will do a verbose blue-green deployment for you. The script will deploy the new version of your app and check for it to get healthy. You can change the <code>expected_response</code> parameter to something else, like <code>401</code> if your app doesn&rsquo;t return a <code>200</code> status code without authentication.</p>
 <h2 id="caveats">Caveats</h2>
 <ul>
 <li>The script currently doesn&rsquo;t work if your app does not use a route.</li>
@@ -251,7 +251,7 @@ cf rename <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-02-11 11:58:01.522879981 &#43;0100 CET m=&#43;0.521374452">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-02-11 17:10:47.250277538 &#43;0100 CET m=&#43;0.063754845">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

@@ -7,9 +7,9 @@ date: 2021-10-15
 
 This blog post is the first part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at [VSHN](https://www.vshn.ch/).
 
-In this first part we will look at Git and what is important when using it in a team. The second part will be about Infrastructure as Code, a handy concept which helps to unify environments and be aware of the exact changes made to different parts of your infrastructure. In the third and last part, we will combine these ideas and delve into the concept of GitOps. Following these principles can help your team to improve the communication, investigate issues more easily and work more efficiently. Be aware though, that there are several caveats when adapting these concepts. That’s why we will also look into some common pitfalls and speak about our past experience getting teams started with these tools.
+In this first part we will look at Git and what is important when using it in a team. The second part will be about Infrastructure as Code, a handy concept which helps to unify environments and be aware of the exact changes made to different parts of your infrastructure. In the third and last part, we will combine these ideas and delve into the concept of GitOps. Following these principles can help your team to improve the communication, investigate issues more easily and work more efficiently. Be aware though, that there are several caveats when adapting these concepts. That’s why we will also look into some common pitfalls and speak about our experience getting teams started with these tools.
 
-If you have questions, feel free to post them as comments on this blog post. If you would rather sit back and enjoy this part as a webinar, then you may head over to [the recording on Youtube](https://www.youtube.com/watch?v=jGEDq4gz3zA).
+If you have questions, feel free to post them as comments on this blog post. If you would rather sit back and enjoy this part as a webinar, then you may head over to [the recording on YouTube](https://www.youtube.com/watch?v=jGEDq4gz3zA).
 
 ## What is Git?
 
@@ -21,9 +21,9 @@ We may take this for granted but think about how finicky working with code in a 
 
 ## Commit Messages
 
-As you may already know, in Git developers make changes to source code in the form of so called commits. A commit is a small set of changes to one or multiple files and contains information about the author and the time the changes were made.
+As you may already know, in Git developers make changes to source code in the form of so-called commits. A commit is a small set of changes to one or multiple files and contains information about the author and the time the changes were made.
 
-In order to be able to understand these changes, developers are asked to document their commits with small pieces of text called “commit messages”. The quality of these is a vital part of the health of our code base. Making good commit messages helps our team mates and future selves to understand the purpose of changes and specific ways of implementation. If done well, they provide crucial information at a glance and are structured in a way that lets us browse and even search the history of changes of our code base.
+In order to be able to understand these changes, developers are asked to document their commits with small pieces of text called “commit messages”. The quality of these is a vital part of the health of our code base. Making good commit messages helps our teammates and future selves to understand the purpose of changes and specific ways of implementation. If done well, they provide crucial information at a glance and are structured in a way that lets us browse and even search the history of changes of our code base.
 
 ### Bad Commit Messages
 
@@ -47,11 +47,11 @@ is clearly not much more helpful than not having a message at all.
 Extended the flux capacitor and added a left-trim feature to the tractor beam and implemented the emergency self-destruct button.
 ```
 
-Another indicator of a bad message is a very long commit message that contains the word “and” one or even multiple times. First of all, long messages are not easy to read and comprehend. Secondly, they strongly suggest that too many unrelated changes were crammed into a single commit. Such commits are hard to understand and manage and should be omitted. It is much easier to understand a set of small changes with a clear history documented in their individual messages than a huge commit which contains unrelated changes.
+Another indicator of a bad message is a very long commit message that contains the word “and” one or even multiple times. First, long messages are not easy to read and comprehend. Secondly, they strongly suggest that too many unrelated changes were crammed into a single commit. Such commits are hard to understand and manage and should be omitted. It is much easier to understand a set of small changes with a clear history documented in their individual messages than a huge commit which contains unrelated changes.
 
 ### Good Commit Messages
 
-Good commit messages on the other hand are clear and concise. They describe what the changes of the commit do in a human readable way and do not contain any superfluous punctuation or words. Good examples are
+Good commit messages on the other hand are clear and concise. They describe what the changes of the commit do in a human-readable way and do not contain any superfluous punctuation or words. Good examples are
 
 ```shell
 Upgrade lodash dependency
@@ -99,7 +99,7 @@ The third good practice is to capitalize the subject line of a Git commit messag
 
 #### Do not end the subject line with punctuation
 
-The fourth guideline is that using punctuation in a commit messages unnecessarily makes it longer. Mostly commit messages are not proper sentences and don’t deserve a period at the end anyways.
+The fourth guideline is that using punctuation in a commit messages unnecessarily makes it longer. Mostly commit messages are not proper sentences and don’t deserve a period at the end anyway.
 
 #### Use the imperative mood in the subject line
 
@@ -113,11 +113,11 @@ Number six: The body should be wrapped at around 72 characters. The reason being
 
 #### Use the body to explain what and why versus how
 
-The last and seventh good practice is to use the body to further explain the what and why of our changes. It should help a reader understand what changes where made and the reasoning behind the changes. It should not explain the code itself and tell the reader how the changes were made or how a certain problem was solved. That’s what code comments or actually intuitively written code is for.
+The last and seventh good practice is to use the body to further explain the what and why of our changes. It should help a reader understand what changes were made and the reasoning behind the changes. It should not explain the code itself and tell the reader how the changes were made or how a certain problem was solved. That’s what code comments or actually intuitively written code is for.
 
 ## Branching Strategies
 
-Another important part to using Git are branches. You have probably used them maybe to hold a specific feature that is not ready yet or just to try something out. When working in a team, it is important to adhere to a branching strategy everyone agrees upon. Depending on the size of your team and the complexity of the application it develops and releases, different ways of using Git can make sense. In the following, we will have a look at two of the most common branching strategies and when they make sense.
+Another important part to using Git are branches. You have probably used them maybe to hold a specific feature that is not ready yet or just to try something out. When working in a team, it is essential to adhere to a branching strategy everyone agrees upon. Depending on the size of your team and the complexity of the application it develops and releases, different ways of using Git can make sense. In the following, we will have a look at two of the most common branching strategies and when they make sense.
 
 ### Gitflow
 
@@ -125,7 +125,7 @@ Another important part to using Git are branches. You have probably used them ma
 
 The first strategy is called “Gitflow”. It allows to easily collaborate and work on multiple features at a time.
 
-The core of Gitflow is the so called “develop” branch, indicated here in purple, which is where all the work happens. To create a new feature, developers create a feature branch, marked in green in the picture, off the `develop` branch. They create one or multiple commits on that feature branch until they are happy with their changes and think the feature is fully implemented and tested. As soon as that is done, they create a so called pull request. That means, they open up their changes for review by their peers before they finally merge everything back into the `develop` branch. This means that the `develop` branch should always be in a healthy and deployable state and that feature branches are short-lived because they get deleted once the feature is merged.
+The core of Gitflow is the so-called “develop” branch, indicated here in purple, which is where all the work happens. To create a new feature, developers create a feature branch, marked in green in the picture, off the `develop` branch. They create one or multiple commits on that feature branch until they are happy with their changes and think the feature is fully implemented and tested. As soon as that is done, they create a so-called pull request. That means, they open up their changes for review by their peers before they finally merge everything back into the `develop` branch. This means that the `develop` branch should always be in a healthy and deployable state and that feature branches are short-lived because they get deleted once the feature is merged.
 
 The second important branch in Gitflow is the `master` or `main` branch, highlighted in blue, which contains only code that has already been released. It ideally contains one commit per release which is tagged with the respective release number and should always remain stable and releasable.
 
@@ -147,7 +147,7 @@ Create a new empty directory and enter it. Then, initialize the project
 git flow init
 ```
 
-The tool then asks about our team’s naming convention of certain branches but usually it is good to stick with the defaults. An exception here is the `master` branch. There has been a change of mind in the last couple of months to rename the `master` branch to `main` because the term “master” is politically a bit heavy. For the rest, we can just accept the defaults.
+The tool then asks about our team’s naming convention of certain branches, but usually it is good to stick with the defaults. An exception here is the `master` branch. There has been a change of mind in the last couple of months to rename the `master` branch to `main` because the term “master” is politically a bit heavy. For the rest, we can just accept the defaults.
 
 #### Start a feature
 
@@ -197,7 +197,7 @@ Looking at our commit log now, shows us that we have a clean history with easily
 
 Next, we will look at another branching strategy called “GitHub Flow”. In contrast to Gitflow, it only contains a single main branch (mostly called `master` or `main`) which everything branches off. The main branch is used as the working tree to branch feature branches off. The releasing of software is also done on that single branch. This enforces a strictly linear development process because one can only go forward and not cherry-pick specific changes from one branch to another.
 
-While this may be seen as a restriction by some developers, it can also be a great advantage because it makes it clearer what is released where and which sets of features belong together and into a release. People can view at a glance what features are included in which release and know how the individual releases differ. This makes the workflow simpler and less error prone but also a bit less flexible. It is therefore more suited for smaller, more agile teams and projects.
+While this may be seen as a restriction by some developers, it can also be a great advantage because it makes it clearer what is released where and which sets of features belong together and into a release. People can view at a glance what features are included in which release and know how the individual releases differ. This makes the workflow simpler and less error-prone but also a bit less flexible. It is therefore more suited for smaller, more agile teams and projects.
 
 ### Merging
 
@@ -217,11 +217,11 @@ Merging has the following properties to keep in mind when comparing it to rebasi
 
 The other way of bringing changes from the `topic` branch back to `master` is using the mechanism of rebasing. Let’s use the same example setting as before which you can see in the top half of the picture. Rebasing the `topic` branch on the `master` branch means that we replay all commits from the `master` branch on the `topic` branch. In the case of our example this would mean applying commit F on the `topic` branch and then applying commit G. As we replay each individual commit, merging can either be done by Git automatically or a conflict arises which has to be resolved by a human. The end result of rebasing the `topic` branch on the `master` branch is that the `topic` branch now contains the commits F and G plus the commits A, B and C potentially modified during merge conflict resolution, which is why we call them A’, B’ and C’ in the picture.
 
-Rebasing has the following advantages: Since the commits from the source branch are sequentially reapplied to the target branch the resulting commit history becomes a lot cleaner and easier for humans to read and understand. When rebasing there are no merge commits cluttering up your history talking about branches which no longer exist.
+Rebasing has the following advantages: Since the commits from the source branch are sequentially reapplied to the target branch the resulting commit history becomes a lot cleaner and easier for humans to read and understand. When rebasing, there are no merge commits cluttering up your history talking about branches that no longer exist.
 
 ## Pull requests
 
-Next we will have a look at pull requests, sometimes also referred to as merge requests, depending on which platform you are hosting your Git repos on. Indeed pull requests are not part of Git itself, but they are featured in all major Git platforms like GitHub, GitLab or Bitbucket. Pull requests are an important tool for collaborating on Git repos and for properly implementing the branching strategies described earlier.
+Next we will have a look at pull requests, sometimes also referred to as merge requests, depending on which platform you are hosting your Git repos on. Indeed, pull requests are not part of Git itself, but they are featured in all major Git platforms like GitHub, GitLab or Bitbucket. Pull requests are an important tool for collaborating on Git repos and for properly implementing the branching strategies described earlier.
 
 ### Submitting
 
@@ -231,7 +231,7 @@ First, we want to look at some good practices when submitting a pull request for
 
 #### Rebase
 
-The first good practice you should follow is making sure that your feature branch is up to date with the latest changes on the target branch. After all, you want to make sure that your change works on the current version of develop and not just on a version from way back in time when you branched off your feature branch. Furthermore, you don’t want to place the burden of closing this potential gap on your reviewers. So, according to what we discussed earlier you would now rebase your feature branch on the latest develop branch, meaning that you sequentially apply all commits that have happened on develop since the point in time when you created the feature branch. Let us consider an example. Assume that we are working on a Git repository which contains information on the planets of the Solar System and that our repository initially looks as follows:
+The first good practice you should follow is making sure that your feature branch is up-to-date with the latest changes on the target branch. After all, you want to make sure that your change works on the current version of develop and not just on a version from way back in time when you branched off your feature branch. Furthermore, you don’t want to place the burden of closing this potential gap on your reviewers. So, according to what we discussed earlier you would now rebase your feature branch on the latest develop branch, meaning that you sequentially apply all commits that have happened on develop since the point in time when you created the feature branch. Let us consider an example. Assume that we are working on a Git repository which contains information on the planets of the Solar System and that our repository initially looks as follows:
 
 ```shell
 * 2119e4e (HEAD -> feature/saturn-to-neptune, origin/feature/saturn-to-neptune) Add information on planet Neptune
@@ -295,7 +295,7 @@ Force pushing is OK in this case, because we are working on the feature branch o
 * a1b8fc5 Add information on planet Mercury
 ```
 
-So, we now have a nice and linear history on our feature branch and we are almost ready to submit the feature branch for review.
+So, we now have a nice and linear history on our feature branch, and we are almost ready to submit the feature branch for review.
 
 #### Review the diff
 
@@ -319,7 +319,7 @@ It seems that we took at few steps back and forth when making those changes, but
 git rebase -i --root
 ```
 
-We specify the option `--root` to tell Git to show us the whole history for rebasing. This opens our favorite text editor with the Git history and allows us to mark certain commits with an `s` for squashing:
+We specify the option `--root` to tell Git to show us the whole history for rebasing. This opens our favorite text editor with the Git history and allows us to mark certain commits with a `s` for squashing:
 
 ```shell
 pick a1b8fc5 Add information on planet Mercury
@@ -362,7 +362,7 @@ pick 1d32960 Add information on planet Neptune
 #
 ```
 
-In this case we have chosen to squash the commits `21fdccb` and `6d5b293` into `1abfa9f`. After exiting this dialog, Git asks us what to do with the commit messages of the commits we are about to squash:
+In this case we have decided to squash the commits `21fdccb` and `6d5b293` into `1abfa9f`. After exiting this dialog, Git asks us what to do with the commit messages of the commits we are about to squash:
 
 ```shell
 # This is a combination of 3 commits.
@@ -437,7 +437,7 @@ This will make our repository look entirely clean, ready for our reviewers:
 
 #### Leave a clear and concise title and description
 
-The last good practice is a very simple one. Write a clear and concise title and description, so that your reviewers immediately know the context in which you are proposing the changes. In a sense the same rules that we have seen for single commit messages also apply here: say in a human-readable form why you are doing something. Additionally, it sometimes makes sense to add instructions for the reviewers which will guide them in reading and understanding your changes, i.e. things like “you should start by looking at the changes in awesome.go and work your way in from there”.
+The last good practice is a very simple one. Write a clear and concise title and description, so that your reviewers immediately know the context in which you are proposing the changes. In a sense the same rules that we have seen for single commit messages also apply here: say in a human-readable form why you are doing something. Additionally, it sometimes makes sense to add instructions for the reviewers which will guide them in reading and understanding your changes, i.e., things like “you should start by looking at the changes in awesome.go and work your way in from there”.
 
 ### Reviewing
 
@@ -451,7 +451,7 @@ Apart from having a mental sketch of the expected solution there are a number of
 
 #### Be constructive
 
-The first one is pretty obvious: be constructive! For every problem you spot, you should not just point out that problem, but you should have a better solution ready to propose to the author. Also, you should always remember that you are reviewing code and not the person who wrote it. Hence, your comments should address weaknesses in the code not in the author.
+The first one is pretty obvious: be constructive! For every issue you spot, you should not just point out that problem, but you should have a better solution ready to propose to the author. Also, you should always remember that you are reviewing code and not the person who wrote it. Hence, your comments should address weaknesses in the code not in the author.
 
 #### Be more than a linter
 
@@ -459,7 +459,7 @@ The second guideline is: don’t just be a linter! The whole point of reviews is
 
 #### Also consider missing code and test cases
 
-The third guideline is: also review what isn’t there! It often comes naturally to just look at the code changes which the author of a pull request is proposing. However, that is usually not enough. Instead you will also have to think about what is missing. This is where your mental sketch again comes in handy. Are there any changes which you would have expected but you are not seeing? What about tests? Are there any test cases that the author has forgotten, indicating that some boundary conditions were not considered?
+The third guideline is: also review what isn’t there! It often comes naturally to just look at the code changes which the author of a pull request is proposing. However, that is usually not enough. Instead, you will also have to think about what is missing. This is where your mental sketch again comes in handy. Are there any changes which you would have expected, but you are not seeing? What about tests? Are there any test cases that the author has forgotten, indicating that some boundary conditions were not considered?
 
 #### Perform large reviews interactively
 
@@ -467,24 +467,24 @@ The last guideline is that reviews are performed interactively between the autho
 
 ## Git Hooks
 
-Until now we have only described best practices as conventions. In this last part we will have a look at Git Hooks, which enable you to automate and technically enforce certain of these conventions.
+Until now, we have only described best practices as conventions. In this last part we will have a look at Git Hooks, which enable you to automate and technically enforce certain of these conventions.
 
 ### Use Cases
 
 ![](./git-hook-use-cases.png)
 
-Git Hooks are custom scripts which run at certain points in time during the development process. They are defined by scripts which are placed in the .git/hooks directory of your repo. Indeed, if you set up a new Git repo using the git init command, then some example scripts will be automatically created for you in that directory. There are two types of hooks, client-side and server-side hooks.
+Git Hooks are custom scripts which run at certain points in time during the development process. They are defined by scripts which are placed in the .git/hooks directory of your repo. Indeed, if you set up a new Git repo using the `git init` command, then some example scripts will be automatically created for you in that directory. There are two types of hooks, client-side and server-side hooks.
 
 Client-side hooks run on your machine. By nature client-side hooks are used for checking things in code changes before these changes are allowed to propagate to a remote repository.
 
 There are two client-side hooks which we explicitly recommend. The first one is called pre-commit. It enables you to run checks on your repository before a commit is accepted. This is the ideal place to run your linters and your tests so that no change can ever reach your repository which is not correctly following code formatting rules or which is breaking tests. Checking these things automatically will offload them from the pull request reviewer and allow them focus on more important things.
 
-The second client-side hook we recommend is called commit-msg. As its name suggests, it enables you to run custom code for checking the format of the commit message. Using the commit-msg hook you can easily enforce the the commit message guidelines we mentioned earlier.
+The second client-side hook we recommend is called commit-msg. As its name suggests, it enables you to run custom code for checking the format of the commit message. Using the commit-msg hook you can easily enforce the commit message guidelines we mentioned earlier.
 
-Server-side hooks run on a Git server. They can be used to check changes which are pushed to that server and possibly reject them. There are two server-side hooks which we want to highlight. The first one is pre-receive which can be used to validate changes and reject them from being pushed to the repo, if necessary. For example you could use pre-receive to check that no one is merging their own feature branches to develop or is using history changing operations like force pushing on the `master` branch.
+Server-side hooks run on a Git server. They can be used to check changes which are pushed to that server and possibly reject them. There are two server-side hooks which we want to highlight. The first one is pre-receive which can be used to validate changes and reject them from being pushed to the repo, if necessary. For example, you could use pre-receive to check that no one is merging their own feature branches to develop or is using history changing operations like force pushing on the `master` branch.
 
 The second server-side hook is post-receive. This hook can be used to react to changes reaching a certain branch. For example, you might want to close a ticket whenever a feature branch is merged to develop.
 
-Now, you might be wondering why we are not mentioning any hooks concerning pull requests. Wouldn’t it be nice to have something like a pre-pullrequest hook to attach logic to pull request creation or pull request approval? Indeed it would, and some Git platforms are offering features in this direction. However, it is important to note that these are platform specific and not part of Git, as are pull requests themselves.
+Now, you might be wondering why we are not mentioning any hooks concerning pull requests. Wouldn’t it be nice to have something like a `pre-pullrequest` hook to attach logic to pull request creation or pull request approval? Indeed, it would, and some Git platforms are offering features in this direction. However, it is important to note that these are platform specific and not part of Git, as are pull requests themselves.
 
-This brings us to end of the first part of this GitOps blog series. We hope you enjoyed it and we also hope that you will also enjoy the second part which will be about “Infrastructure as Code”. This next part is coming soon!
+This brings us to end of the first part of this GitOps blog series. We hope you enjoyed it, and we also hope that you will also enjoy the second part which will be about “Infrastructure as Code”. This next part is coming soon!

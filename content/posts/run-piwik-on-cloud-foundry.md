@@ -60,9 +60,9 @@ Then we need to instruct Piwik to connect to our database provided as a Cloud Fo
 ?>
 ```
 
-This code runs before Piwik starts so it allows us to overwrite the default variables that are used to connect to the database. Again, you'll have to adjust the keyword `mariadbent` in the code if the SQL service is called differently with your CF provider.
+This code runs before Piwik starts, so it allows us to overwrite the default variables that are used to connect to the database. Again, you'll have to adjust the keyword `mariadbent` in the code if the SQL service is called differently with your CF provider.
 
-When Piwik is started for the first time, it shows a configuration wizard where the user has to provide the database credentials. We can overwrite the defaults for these values with the ones coming from the service environment variables so you can just click "next" in this wizard and don't have to look them up every time. To do so, open the file `plugins/Installation/FormDatabaseSetup.php` and navigate to the definition of the `init` method. There, replace the following lines:
+When Piwik is started for the first time, it shows a configuration wizard where the user has to provide the database credentials. We can overwrite the defaults for these values with the ones coming from the service environment variables, so you can just click "next" in this wizard and don't have to look them up every time. To do so, open the file `plugins/Installation/FormDatabaseSetup.php` and navigate to the definition of the `init` method. There, replace the following lines:
 
 ```php
 // default values
@@ -89,7 +89,7 @@ $this->addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 
 ## Security
 
-Next we have to add our site's URL that we also retrieve from the CF environment in `bootstrap.php` as a trusted host to Piwik. Open the file `plugins/Installation/Controller.php` and navigate to definition of the `addTrustedHosts` method. There, replace the following line
+Next, we have to add our site's URL that we also retrieve from the CF environment in `bootstrap.php` as a trusted host to Piwik. Open the file `plugins/Installation/Controller.php` and navigate to definition of the `addTrustedHosts` method. There, replace the following line
 
 ```php
 $trustedHosts = array();
@@ -113,7 +113,7 @@ force_ssl = 1
 
 ## Routing
 
-Next, we'll improve some more of the defaults Piwik uses during the set up wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file `plugins/Installation/FormFirstWebsiteSetup.php` and replace the following lines of the `init` method:
+Next, we'll improve some more of the defaults Piwik uses during the setup wizard. These changes will suggest that Piwik tracks itself using its analytics as a first site. Open the file `plugins/Installation/FormFirstWebsiteSetup.php` and replace the following lines of the `init` method:
 
 ```php
 // default values
@@ -134,7 +134,7 @@ $this->addDataSource(new HTML_QuickForm2_DataSource_Array(array(
 
 ## Composer
 
-Since Piwik already comes with its dependencies installed, we don't want [Composer](https://getcomposer.org/) to run again in Cloud Foundry. The PHP buildpack won't run Composer if it doesn't find any files that would indicate that. So let's ignore the Composer files when pushing. Add a `.cfignore` file to the root of your project and paste the following line into it:
+Since Piwik already comes with its dependencies installed, we don't want [Composer](https://getcomposer.org/) to run again in Cloud Foundry. The PHP Buildpack won't run Composer if it doesn't find any files that would indicate that. So let's ignore the Composer files when pushing. Add a `.cfignore` file to the root of your project and paste the following line into it:
 
 ```txt
 /composer.*
@@ -142,7 +142,7 @@ Since Piwik already comes with its dependencies installed, we don't want [Compos
 
 ## Buildpack Configuration
 
-The PHP buildpack allows us to configure any PHP app using a dedicated file. Create a folder `.bp-config` at the root of your project and inside, add a file called `options.json`. This file sets the version of PHP to use, which extensions to install and many more options. You can read more about it [here](http://docs.cloudfoundry.org/buildpacks/php/gsg-php-config.html). Paste the following content into our new file to install the needed PHP extensions and to use the latest PHP version:
+The PHP Buildpack allows us to configure any PHP app using a dedicated file. Create a folder `.bp-config` at the root of your project and inside, add a file called `options.json`. This file sets the version of PHP to use, which extensions to install, and many more options. You can read more about it [here](http://docs.cloudfoundry.org/buildpacks/php/gsg-php-config.html). Paste the following content into our new file to install the needed PHP extensions and to use the latest PHP version:
 
 ```json
 {
@@ -188,6 +188,6 @@ Now it's time to deploy our app to Cloud Foundry. Since we have already configur
 $ cf push
 ```
 
-When we navigate to our Piwik instance, we are presented with the configuration wizard. Since we have set all the correct defaults above, you can just click "next" on most of the steps. Piwik will complain about the file integrity check reporting some errors but we can safely ignore that sinc we were the ones modifying the files. After the wizard, you should have a fully functioning Piwik installation running on Cloud Foundry. Yay!
+When we navigate to our Piwik instance, we are presented with the configuration wizard. Since we have set all the correct defaults above, you can just click "next" on most of the steps. Piwik will complain about the file integrity check reporting some errors, but we can safely ignore that since we were the ones modifying the files. After the wizard, you should have a fully functioning Piwik installation running on Cloud Foundry. Yay!
 
 This tutorial is based on a very similar but outdated one of the [Bluemix Blog](https://www.ibm.com/blogs/bluemix/2014/07/getting-started-piwik-ibm-bluemix/).

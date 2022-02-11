@@ -5,7 +5,7 @@ comments: true
 date: 2021-03-12
 ---
 
-This is a step by step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling. It is havily based on the [Arch Linux wiki's installation guide](https://wiki.archlinux.org/index.php/Installation_guide) so if you're ever stuck, just refer to it and the rest of the awesome Arch wiki.
+This is a step-by-step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the [Arch Linux wiki's installation guide](https://wiki.archlinux.org/index.php/Installation_guide), so if you're ever stuck, just refer to it and the rest of the awesome Arch wiki.
 
 ## Download ISO
 
@@ -15,7 +15,7 @@ This is a step by step guide to installing Arch Linux on [UEFI](https://en.wikip
 
 You can skip this step if you just want to run Arch Linux in a VM. In that case, just run the ISO from your favorite VM management tool like [QEMU](https://www.qemu.org/).
 
-1. Insert an USB stick into your computer
+1. Insert a USB stick into your computer
 1. Run `lsblk` to find the correct disk
 1. Run `sudo umount /dev/sdx` or whatever the USB stick is
 1. Run `sudo dd bs=4M if=path/to/input.iso of=/dev/sdx oflag=sync status=progress` to write the ISO to the USB stick. Don't forget to replace the two paths with the correct ones.
@@ -25,11 +25,11 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Check for UEFI support
 
-1. Run `ls /sys/firmware/efi/efivars` to check if that directory exists. If it doesn't, your system does not support UEFI and this guide is not for you and you should refer to the official [Arch Linux Installation Guide](https://wiki.archlinux.org/index.php/Installation_guide) instead.
+1. Run `ls /sys/firmware/efi/efivars` to check if that directory exists. If it doesn't, your system does not support UEFI and this guide is not for you, and you should refer to the official [Arch Linux Installation Guide](https://wiki.archlinux.org/index.php/Installation_guide) instead.
 
 ## Establish Connectivity
 
-1. Connect the computer via ethernet (recommended) or run `iwctl` to log into WiFi
+1. Connect the computer via Ethernet (recommended) or run `iwctl` to log into Wi-Fi
 1. Check for internet connectivity with `ping archlinux.org`
 1. Make sure the clock is synced with `timedatectl set-ntp true`
 
@@ -126,7 +126,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 1. Run `exit` to return to the outer shell
 1. Run `reboot` to get out of the setup
 
-## Connect to WiFi (only needed if there's no ethernet connection)
+## Connect to Wi-Fi (only needed if there's no Ethernet connection)
 
 1. Run `nmcli d wifi list` to list the available networks
 1. Run `nmcli d wifi connect MY_WIFI password MY_PASSWORD` to connect to one of them
@@ -134,7 +134,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 ## Add User
 
 1. Run `EDITOR=nvim visudo` and uncomment `%wheel ALL=(ALL) NOPASSWD: ALL` to allow members of the `wheel` group to run privileged commands
-1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user name should be) to create the user
+1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user's name should be) to create the user
 1. Run `passwd lena` to set your password
 1. Run `exit` and log back in with your new user
 
@@ -156,8 +156,8 @@ fi
 
 ## Set Up Bluetooth
 
-1. Run `sudo pacman -S bluez bluez-utils` to install the bluetooth utilities
-1. Run `sudo systemctl enable bluetooth.service --now` to start bluetooth
+1. Run `sudo pacman -S bluez bluez-utils` to install the Bluetooth utilities
+1. Run `sudo systemctl enable bluetooth.service --now` to start Bluetooth
 
 ## Lock Root User (to be extra secure)
 
@@ -190,7 +190,7 @@ fi
 2. Run `sudo nvim /etc/xdg/reflector/reflector.conf` and change the file to your liking
 3. Run `sudo systemctl enable reflector.timer --now` to enable running reflector regularly
 
-## Reduce Swappiness (only makes sense if you have more than 4GB of RAM)
+## Reduce Swappiness (only makes sense if you have more than 4 GB of RAM)
 
 1. Run `echo 'vm.swappiness=10' | sudo tee /etc/sysctl.d/99-swappiness.conf` to reduce the swappiness permanently
 

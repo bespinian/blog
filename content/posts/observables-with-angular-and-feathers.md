@@ -5,13 +5,13 @@ comments: true
 date: 2016-03-14
 ---
 
-[Feathers](http://feathersjs.com) is a modern API framework for Node.js. It exposes its backend services as a REST API or as a websocket API. To consume the exposed websockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the [Angular CLI](https://github.com/angular/angular-cli) for your app.
+[Feathers](http://feathersjs.com) is a modern API framework for Node.js. It exposes its backend services as a REST API or as a WebSocket API. To consume the exposed WebSockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the [Angular CLI](https://github.com/angular/angular-cli) for your app.
 
-In my example, I'll use a simple todo service and a component that lists those todos.
+In my example, I'll use a simple to-do service and a component that lists those to-dos.
 
 ## Import libraries
 
-As a first step we'll need to add the two libraries `socket.io-client` and `feathers-client` to our project. This can easily be done using npm:
+As a first step, we'll need to add the two libraries `socket.io-client` and `feathers-client` to our project. This can easily be done using npm:
 
 ```shell
 $ npm install --save socket.io-client feathers-client
@@ -41,7 +41,7 @@ export abstract class ApiService {
 
 ## Create data model
 
-Next, we create a class to represent our todo's data model:
+Next, we create a class to represent our to-do's data model:
 
 ```typescript
 // src/app/todos/todo.ts
@@ -190,4 +190,4 @@ export class TodosComponent implements OnDestroy, OnInit {
 }
 ```
 
-Our component `TodosComponent` now has a property `todos` which contains the todos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a todo in the Feathers API is removed or added.
+Our component `TodosComponent` now has a property `todos` which contains the to-dos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a to-do in the Feathers API is removed or added.

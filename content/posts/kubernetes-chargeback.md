@@ -7,7 +7,7 @@ date: 2021-04-09
 
 The cloud promises transparency into the cost of our applications and technical services. However, Kubernetes, even when managed by one of the big cloud service providers, usually gets charged as a black box, and is often used by dozens or hundreds of applications in your organization.
 
-This post outlines the necessary steps to approach cost transparency for your Kubernetes clusters from an organizational perspective, proposes a high level technical design to start with and addresses some of the more common challenges and pitfalls.
+This post outlines the necessary steps to approach cost transparency for your Kubernetes clusters from an organizational perspective, proposes a high level technical design to start with, and addresses some of the more common challenges and pitfalls.
 
 ## Goals
 
@@ -28,13 +28,13 @@ You want to achieve these goals, while retaining the benefits Kubernetes brings 
 
 Since Kubernetes does not track any information about cost or even persistently store the resource usage of our workloads, we need a system that records each workload and which resources it consumes for how long (Price x Quantity). Additionally, we want to ensure workloads are attributable to a person, team, project or cost center in our organization, if we want to effectively make chargebacks or support business decisions.
 
-Storing this information in a suitable database allows us to create the desired reports, dashboards, alerts and chargebacks into our organization.
+Storing this information in a suitable database allows us to create the desired reports, dashboards, alerts, and chargebacks into our organization.
 
-## Proposed Toolchain
+## Proposed Tool Chain
 
 There are some companies providing tools to enable transparency.
 
-You may have much of the required tools already available in your Kubernetes clusters. In fact, a powerful toolchain enabling dynamic cost transparency queries and reports uses Prometheus at the core, which is often deployed with Kubernetes clusters for monitoring purposes already. Prometheus is a time-series database and allows efficient ingestion, storing and querying of time series data, such as resource usage data which is scraped on a fixed interval like once a minute.
+You may have much of the required tools already available in your Kubernetes clusters. In fact, a powerful tool chain enabling dynamic cost transparency queries and reports uses Prometheus at the core, which is often deployed with Kubernetes clusters for monitoring purposes already. Prometheus is a time-series database and allows efficient ingestion, storing and querying of time series data, such as resource usage data which is scraped on a fixed interval like once a minute.
 
 The Prometheus ecosystem also contains the following tools which serve our use case well and are often installed with it.
 
@@ -51,7 +51,7 @@ It runs on your cluster, offers basic reports and dashboards and makes some reco
 
 ## Introducing A Cost Management Solution In Your Organization
 
-While the proposed toolchain fulfills the technical needs to gain insight, I want to discuss the path for introducing a cost management solution in your organization.
+While the proposed tool chain fulfills the technical needs to gain insight, I want to discuss the path for introducing a cost management solution in your organization.
 
 ### Starting To Extract The Data
 
@@ -59,11 +59,11 @@ As mentioned before, Kubernetes does not persist any of the data required for co
 
 ### Create First Reports
 
-Once resource usage data is available for a short time period, a week is a good start, you'll be able to create first reports and start identifying some of the bigger resource consumers, which you may approach to ensure their consumption is expedient for your business.
+Once resource usage data is available for a short time period, a week is a good start, you'll be able to create first reports and start identifying some bigger resource consumers, which you may approach to ensure their consumption is expedient for your business.
 
 ### Workload Attribution
 
-At this point you may notice that many of the workloads do not clearly belong to a specific team, organizational unit, project or cost center. You'll have to find this information in your organization and then **tag** these resources, e.g. using Kubernetes annotations, in order to automatically attribute costs to the right cost center in the future.
+At this point you may notice that many of the workloads do not clearly belong to a specific team, organizational unit, project or cost center. You'll have to find this information in your organization and then **tag** these resources, e.g., using Kubernetes annotations, in order to automatically attribute costs to the right cost center in the future.
 
 Additionally, you should define a process or framework for future resources to be tagged with that information from the start.
 
@@ -75,11 +75,11 @@ A great way to create this transparency is to create interactive dashboards usin
 
 ### Chargebacks
 
-Eventually you may want to automatically chargeback with your organizations internal billing processes. Based on the workload attribution it is now possible to create consistently structured billing reports on a monthly or yearly basis or an API and feed it into your internal billing processes.
+Eventually you may want to automatically charge back with your organizations internal billing processes. Based on the workload attribution it is now possible to create consistently structured billing reports on a monthly or yearly basis or an API and feed it into your internal billing processes.
 
 ### Forecasting / Budgeting
 
-Many organizations desire to forecast the cost of projects or applications into the future, which is now possible, based on the data you have. However, since scaling and ad-hoc deployments are a desired feature, which you want developers to make use of, forecast accuracy is often limited.
+Many organizations desire to forecast the cost of projects, or applications into the future, which is now possible, based on the data you have. However, since scaling and ad-hoc deployments are a desired feature, which you want developers to make use of, forecast accuracy is often limited.
 
 Introducing budgets per application, which have to be clearly communicated to the responsible teams, may help you track your forecast accuracy and highlight and even prevent potential cost overruns early.
 
@@ -101,12 +101,12 @@ Using reserved instances is therefore highly recommended, but introduces more co
 
 > #### Provisioning Is A Best Effort Operation
 >
-> Provisioning new infrastructure on your cloud or on-premise provider is usually a best effort operation for most cloud resources and there have been some rare occasions where virtual machines of specific types could not be provisioned in certain regions:
+> Provisioning new infrastructure on your cloud or on-premise provider is usually a best-effort operation for most cloud resources and there have been some rare occasions where virtual machines of specific types could not be provisioned in certain regions:
 >
 > - [AWS London users suffer "insufficient capacity" problems with T2 Micro Instances (2017)](https://www.computerweekly.com/news/450415571/AWS-London-users-suffer-insufficient-capacity-problems-with-T2-Micro-Instances)
 > - [European users reporting they're hitting Azure capacity constraints (2020 / COVID)](https://www.zdnet.com/article/european-users-reporting-theyre-hitting-azure-capacity-constraints/)
 
-I recommend defining reserved and burst capacity for your resources and billing them differently. Reserved capacity should always be immediately available to a resource, even if the specific resource (e.g. a namespace) is not using all of it, while burst capacity may take a little longer to provision and in rare cases not be provisioned at all. The main advantage being, that assuming reserved capacity of the workloads is relatively stable, you can confidently provision reserved instances on your cloud provider, but that implies that reserved capacity cannot be reduced. If it's no longer required for one workload, it would have to be shifted.
+I recommend defining reserved and burst capacity for your resources and billing them differently. Reserved capacity should always be immediately available to a resource, even if the specific resource (e.g., a namespace) is not using all of it, while burst capacity may take a little longer to provision and in rare cases not be provisioned at all. The main advantage being, that assuming reserved capacity of the workloads is relatively stable, you can confidently provision reserved instances on your cloud provider, but that implies that reserved capacity cannot be reduced. If it's no longer required for one workload, it would have to be shifted.
 
 Defining reserved and burst capacity per namespace is best practice, since it's easy to track and the burst capacity as the upper limit can be automatically enforced using Kubernetes [resource quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/).
 
@@ -147,7 +147,7 @@ Defining a process for creating namespaces, where attribution of the resources c
 
 You may encounter namespaces that contain resources that should be attributed to different cost centers or organizational units. This is generally discouraged and where possible should be changed.
 
-However, there are good reasons for shared namespaces. A few teams may run infrastructure together supporting their development process, such as build servers or artifact management repositories. This practice allows them to synergize the management of these components. Some of these components use a lot of resources regardless of load and sharing them reduces the cost on the whole organization. While there are many options to split the cost (new cost centers, defining a split using annotations on the namespace), just billing to one of the cost centers is recommended, unless these shared namespaces turn out to be a major cost driver in your cluster.
+However, there are good reasons for shared namespaces. A few teams may run infrastructure together supporting their development process, such as build servers or artifact management repositories. This practice allows them to synergize the management of these components. Some of these components use a lot of resources regardless of load, and sharing them reduces the cost on the whole organization. While there are many options to split the cost (new cost centers, defining a split using annotations on the namespace), just billing to one of the cost centers is recommended, unless these shared namespaces turn out to be a major cost driver in your cluster.
 
 In some cases, shared namespace may also highlight a rigid cost center structure or slow and complicated processes around it or the creation of namespaces, causing namespaces to be shared or even reused instead of decommissioned. Simplifying these tasks could reduce the desire to create shared namespaces or reuse them.
 
@@ -157,9 +157,9 @@ Additionally, you'll have namespaces that contain resources necessary for Kubern
 
 ### Non-Production Environments
 
-Development and testing environments are often responsible for a significant amount of your cost, especially when they are used the same way as with traditional virtual machines or bare-metal hardware, where you often had dedicated instances running for each of those environments at all times. The reasons for having long-running non-production environments were usually, that provisioning such an environment would traditionally take days or weeks and that sharing compute resources was difficult and impractical.
+Development and testing environments are often responsible for a significant amount of your cost, especially when they are used the same way as with traditional virtual machines or bare-metal hardware, where you often had dedicated instances running for each of those environments at all times. The reasons for having long-running non-production environments were, usually, that provisioning such an environment would traditionally take days or weeks and that sharing compute resources was difficult and impractical.
 
-Kubernetes forces your system and software engineers to package applications in a way that they can be provisioned very quickly and managing compute resources is one of Kubernetes' core features. Accordingly, you can encourage them, to spin up non-production environments only when needed and implement auto-shutdowns where possible. In cases where a non-production environment needs to be running continuously, it often makes sense to reduce its memory and CPU allocation or run with a fewer instances than usual, scaling up for load-testing and deployment tests only when needed.
+Kubernetes forces your system and software engineers to package applications in a way that they can be provisioned very quickly, and managing compute resources is one of Kubernetes' core features. Accordingly, you can encourage them, to spin up non-production environments only when needed and implement auto-shutdowns where possible. In cases where a non-production environment needs to be running continuously, it often makes sense to reduce its memory and CPU allocation or run with fewer instances than usual, scaling up for load-testing and deployment tests only when needed.
 
 ### Rightsizing Your Workloads
 
@@ -173,7 +173,7 @@ Prometheus allows you to find resource usage by percentiles, which are a good in
 >
 > As opposed to CPU, memory is an incompressible resource. This means that Kubernetes cannot take away memory from a process other than killing it completely, which is not the case when the CPU is congested.
 >
-> This means, that you should set requests and limits differently for memory than for CPU. For example, if your process uses 500 MB memory at the 99th percentile, you must set memory requests to a value higher than 500 MB (e.g. 750 MB), to avoid having it killed regularly.
+> This means, that you should set requests and limits differently for memory than for CPU. For example, if your process uses 500 MB memory at the 99th percentile, you must set memory requests to a value higher than 500 MB (e.g., 750 MB), to avoid having it killed regularly.
 
 ### Encourage Automatic Scaling
 

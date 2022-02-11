@@ -9,7 +9,7 @@ This blog runs on [Ghost](https://github.com/TryGhost/Ghost). It's a pretty ligh
 
 ## Create Services
 
-To run Ghost, we'll need two services: a database and an email server. First, let's create the database. I'm using the [Swisscom Application Cloud](https://developer.swisscom.com/) here but you can use any Cloud Foundry provider. We'll create a small MariaDB service which works like MySQL and therefore can be used by Ghost. Execute the following command to create it:
+To run Ghost, we'll need two services: a database and an email server. First, let's create the database. I'm using the [Swisscom Application Cloud](https://developer.swisscom.com/) here, but you can use any Cloud Foundry provider. We'll create a small MariaDB service which works like MySQL and therefore can be used by Ghost. Execute the following command to create it:
 
 ```bash
 $ cf create-service mariadbent usage blog-db
@@ -29,7 +29,7 @@ Getting the Ghost source code is quite easy. Just visit their [releases](https:/
 
 ## Create Entrypoint Script
 
-Ghost needs to be configured through a configuration file. We'll call ours `config.producton.json` since it's supposed to be suitable for a production blog. This file tells Ghost where to look for its database, which email server to use and how it's supposed to run the blog in general.
+Ghost needs to be configured through a configuration file. We'll call ours `config.producton.json` since it's supposed to be suitable for a production blog. This file tells Ghost where to look for its database, which email server to use, and how it's supposed to run the blog in general.
 
 In Cloud Foundry, services are configured dynamically, which isn't possible in a simple JSON file. We'll work around this by creating a Bash script to read out the environment and create the config file on the fly. Create a new file called `entrypoint-cf.sh` in the root folder of your app and paste the following content into it:
 
@@ -104,7 +104,7 @@ Then, make the script executable by running the following command:
 $ chmod +x entrypoint-cf.sh
 ```
 
-This script gets all the necessary environment variables and uses `jq` (which comes pre-installed in the Node.js Buildpack) to create a config JSON string which is then written into a `config.production.json` file. The script then executes a database migration (if necessary) and starts the app itself.
+This script gets all the necessary environment variables and uses `jq` (which comes pre-installed in the Node.js Buildpack) to create a config JSON string, which is then written into a `config.production.json` file. The script then executes a database migration (if necessary) and starts the app itself.
 
 Now, all we'll need to do is tell Cloud Foundry to run this script to start the app instead of calling `npm start` directly (which is the default for Node.js apps). We can do this in the `manifest.yml` file, which is where Cloud Foundry gets its instructions of how to run an app. Create a new file called `manifest.yml` in the root directory of the app and paste the following content in there:
 
@@ -271,6 +271,6 @@ Blog Footer:
 </script>
 ```
 
-If want to use a different theme (the one above is called "androidstudio"), you'll have to copy the minified CSS from your theme into the `<style>` tags of the header and then add `!important` to all the colors so they don't get overwritten by Ghost's theme.
+If you want to use a different theme (the one above is called `androidstudio`), you'll have to copy the minified CSS from your theme into the `<style>` tags of the header and then add `!important` to all the colors, so they don't get overwritten by Ghost's theme.
 
 This will load and initialize highlight.js. Hit "Save" to update your blog and enjoy colorful syntax highlighting!

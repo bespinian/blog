@@ -7,11 +7,11 @@ date: 2017-03-17
 
 [S3](https://aws.amazon.com/s3/) is a great concept to store static files and larger [BLOBs](https://en.wikipedia.org/wiki/Binary_large_object). Let's look into how we can use it in Cloud Foundry.
 
-S3 was originally created by [Amazon Web Services](https://aws.amazon.com/) but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don't, you can create your own by creating a [user-provided service](https://docs.cloudfoundry.org/devguide/services/user-provided.html) and adding the respective S3 credentials (e.g. from AWS).
+S3 was originally created by [Amazon Web Services](https://aws.amazon.com/), but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don't, you can create your own by creating a [user-provided service](https://docs.cloudfoundry.org/devguide/services/user-provided.html) and adding the respective S3 credentials (e.g., from AWS).
 
-This tutorial uses the [Swisscom Application Cloud S3 Dynamic Storage](https://docs.developer.swisscom.com/service-offerings/dynamic.html) but you can also use any other S3 provider.
+This tutorial uses the [Swisscom Application Cloud S3 Dynamic Storage](https://docs.developer.swisscom.com/service-offerings/dynamic.html), but you can also use any other S3 provider.
 
-To create an S3 service, run the following command:
+To create an S3 service, run the following command
 
 ```shell
 $ cf create-service dynstrg usage my-storage
@@ -35,7 +35,7 @@ The credentials from this key will be used in the next steps.
 
 ## Create S3 Bucket
 
-Now that we have our S3 service, we need to create a bucket to hold our data. I suggest to use the [s3cmd](https://github.com/s3tools/s3cmd) CLI tool for that. You can either download it from the [releases](https://github.com/s3tools/s3cmd/releases) page or by using [Homebrew](http://brew.sh/) if you're on macOS. As soon as you have it installed, configure it using the following command:
+Now that we have our S3 service, we need to create a bucket to hold our data. I suggest using the [s3cmd](https://github.com/s3tools/s3cmd) CLI tool for that. You can either download it from the [releases](https://github.com/s3tools/s3cmd/releases) page or by using [Homebrew](http://brew.sh/) if you're on macOS. As soon as you have it installed, configure it using the following command:
 
 ```shell
 $ s3cmd --configure
