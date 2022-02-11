@@ -64,7 +64,7 @@ if (!doNotTrack) {
 
 		
 
-		<p>This is a step by step guide to installing Arch Linux on <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a> with full disk encryption. It deliberately contains no unnecessary words or bling. It is havily based on the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux wiki&rsquo;s installation guide</a> so if you&rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.</p>
+		<p>This is a step-by-step guide to installing Arch Linux on <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a> with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux wiki&rsquo;s installation guide</a>, so if you&rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.</p>
 <h2 id="download-iso">Download ISO</h2>
 <ol>
 <li>Download the latest ISO from the <a href="https://archlinux.org/download/">Arch Linux website</a></li>
@@ -72,7 +72,7 @@ if (!doNotTrack) {
 <h2 id="create-bootable-usb-stick">Create Bootable USB Stick</h2>
 <p>You can skip this step if you just want to run Arch Linux in a VM. In that case, just run the ISO from your favorite VM management tool like <a href="https://www.qemu.org/">QEMU</a>.</p>
 <ol>
-<li>Insert an USB stick into your computer</li>
+<li>Insert a USB stick into your computer</li>
 <li>Run <code>lsblk</code> to find the correct disk</li>
 <li>Run <code>sudo umount /dev/sdx</code> or whatever the USB stick is</li>
 <li>Run <code>sudo dd bs=4M if=path/to/input.iso of=/dev/sdx oflag=sync status=progress</code> to write the ISO to the USB stick. Don&rsquo;t forget to replace the two paths with the correct ones.</li>
@@ -81,11 +81,11 @@ if (!doNotTrack) {
 <p>As soon as you can see the Arch Linux prompt, you are ready for the next step.</p>
 <h2 id="check-for-uefi-support">Check for UEFI support</h2>
 <ol>
-<li>Run <code>ls /sys/firmware/efi/efivars</code> to check if that directory exists. If it doesn&rsquo;t, your system does not support UEFI and this guide is not for you and you should refer to the official <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux Installation Guide</a> instead.</li>
+<li>Run <code>ls /sys/firmware/efi/efivars</code> to check if that directory exists. If it doesn&rsquo;t, your system does not support UEFI and this guide is not for you, and you should refer to the official <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux Installation Guide</a> instead.</li>
 </ol>
 <h2 id="establish-connectivity">Establish Connectivity</h2>
 <ol>
-<li>Connect the computer via ethernet (recommended) or run <code>iwctl</code> to log into WiFi</li>
+<li>Connect the computer via Ethernet (recommended) or run <code>iwctl</code> to log into Wi-Fi</li>
 <li>Check for internet connectivity with <code>ping archlinux.org</code></li>
 <li>Make sure the clock is synced with <code>timedatectl set-ntp true</code></li>
 </ol>
@@ -178,7 +178,7 @@ if (!doNotTrack) {
 <li>Run <code>exit</code> to return to the outer shell</li>
 <li>Run <code>reboot</code> to get out of the setup</li>
 </ol>
-<h2 id="connect-to-wifi-only-needed-if-theres-no-ethernet-connection">Connect to WiFi (only needed if there&rsquo;s no ethernet connection)</h2>
+<h2 id="connect-to-wi-fi-only-needed-if-theres-no-ethernet-connection">Connect to Wi-Fi (only needed if there&rsquo;s no Ethernet connection)</h2>
 <ol>
 <li>Run <code>nmcli d wifi list</code> to list the available networks</li>
 <li>Run <code>nmcli d wifi connect MY_WIFI password MY_PASSWORD</code> to connect to one of them</li>
@@ -186,7 +186,7 @@ if (!doNotTrack) {
 <h2 id="add-user">Add User</h2>
 <ol>
 <li>Run <code>EDITOR=nvim visudo</code> and uncomment <code>%wheel ALL=(ALL) NOPASSWD: ALL</code> to allow members of the <code>wheel</code> group to run privileged commands</li>
-<li>Run <code>useradd --create-home --groups wheel,video lena</code> (or whatever your user name should be) to create the user</li>
+<li>Run <code>useradd --create-home --groups wheel,video lena</code> (or whatever your user&rsquo;s name should be) to create the user</li>
 <li>Run <code>passwd lena</code> to set your password</li>
 <li>Run <code>exit</code> and log back in with your new user</li>
 </ol>
@@ -205,8 +205,8 @@ if (!doNotTrack) {
 </ol>
 <h2 id="set-up-bluetooth">Set Up Bluetooth</h2>
 <ol>
-<li>Run <code>sudo pacman -S bluez bluez-utils</code> to install the bluetooth utilities</li>
-<li>Run <code>sudo systemctl enable bluetooth.service --now</code> to start bluetooth</li>
+<li>Run <code>sudo pacman -S bluez bluez-utils</code> to install the Bluetooth utilities</li>
+<li>Run <code>sudo systemctl enable bluetooth.service --now</code> to start Bluetooth</li>
 </ol>
 <h2 id="lock-root-user-to-be-extra-secure">Lock Root User (to be extra secure)</h2>
 <ol>
@@ -239,7 +239,7 @@ if (!doNotTrack) {
 <li>Run <code>sudo nvim /etc/xdg/reflector/reflector.conf</code> and change the file to your liking</li>
 <li>Run <code>sudo systemctl enable reflector.timer --now</code> to enable running reflector regularly</li>
 </ol>
-<h2 id="reduce-swappiness-only-makes-sense-if-you-have-more-than-4gb-of-ram">Reduce Swappiness (only makes sense if you have more than 4GB of RAM)</h2>
+<h2 id="reduce-swappiness-only-makes-sense-if-you-have-more-than-4-gb-of-ram">Reduce Swappiness (only makes sense if you have more than 4 GB of RAM)</h2>
 <ol>
 <li>Run <code>echo 'vm.swappiness=10' | sudo tee /etc/sysctl.d/99-swappiness.conf</code> to reduce the swappiness permanently</li>
 </ol>
@@ -331,7 +331,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-02-11 11:58:01.532451942 &#43;0100 CET m=&#43;0.530946395">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-02-11 17:10:47.257000099 &#43;0100 CET m=&#43;0.070477383">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

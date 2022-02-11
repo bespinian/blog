@@ -11,7 +11,7 @@ In Cloud Foundry, we use [services](https://docs.cloudfoundry.org/devguide/servi
 
 The service broker shown in this diagram is not used for user-provided services.
 
-[Route services](https://docs.cloudfoundry.org/devguide/services/route-binding.html), on the other hand, work on a different level. They are not bound to an app but instead directly to a route. This allows them to act as an "interceptor" and either reject certain requests or modify them before they even reach the app. This is ideal to provide external authentication, rate limiting or logging on a route level. The image below shows the exact place of a route service in respect to the client and our application.
+[Route services](https://docs.cloudfoundry.org/devguide/services/route-binding.html), on the other hand, work on a different level. They are not bound to an app, but instead directly to a route. This allows them to act as an "interceptor" and either reject certain requests or modify them before they even reach the app. This is ideal to provide external authentication, rate limiting or logging on a route level. The image below shows the exact place of a route service in respect to the client and our application.
 
 ![Route Services](https://s12.postimg.org/tlc386ivh/route_services.png)
 
@@ -23,7 +23,7 @@ Verifying with the image above, the router sends the request through an extra lo
 
 ## Your First Route Service
 
-In this tutorial we will use a [user-provided service](https://docs.cloudfoundry.org/devguide/services/user-provided.html) to serve as a rate limiter for one (or more) of our applications. User-provided services can also be used as route services. During the creation of a user-provided service, you can use the `-r` flag to set a URL to which the requests will be forwarded. We will then create an app (the actual rate limiter) which will be waiting for requests coming in at said URL.
+In this tutorial, we will use a [user-provided service](https://docs.cloudfoundry.org/devguide/services/user-provided.html) to serve as a rate limiter for one (or more) of our applications. User-provided services can also be used as route services. During the creation of a user-provided service, you can use the `-r` flag to set a URL to which the requests will be forwarded. We will then create an app (the actual rate limiter) which will be waiting for requests coming in at said URL.
 
 You can use any [Cloud Foundry provider](https://www.cloudfoundry.org/use/cloud-foundry-certified/) for this tutorial. I am using the [Swisscom Application Cloud](https://developer.swisscom.com) as an example.
 
@@ -66,7 +66,7 @@ $ cf set-env rate-limiter RATE_LIMIT 1
 $ cf restage rate-limiter
 ```
 
-The next step is to put some load onto the app. I'm using [loadtest](https://www.npmjs.com/package/loadtest) but you can use any tool like [ab](https://en.wikipedia.org/wiki/ApacheBench) or [Goad](https://goad.io/#demo). Again, don't forget to replace the hostname with the one you have chosen for your app.
+The next step is to put some load onto the app. I'm using [loadtest](https://www.npmjs.com/package/loadtest), but you can use any tool like [ab](https://en.wikipedia.org/wiki/ApacheBench) or [Goad](https://goad.io/#demo). Again, don't forget to replace the hostname with the one you have chosen for your app.
 
 ```shell
 $ loadtest --rps 1000 https://myapp.scapp.io

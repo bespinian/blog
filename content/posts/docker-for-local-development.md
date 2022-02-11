@@ -5,7 +5,7 @@ comments: true
 date: 2017-06-08
 ---
 
-I'm using [Docker](https://www.docker.com/). Daily. It has become a very valuable part of my toolchain because it allows me to quickly set up any backend my applications might need to run and tear it down the second I don't need it anymore. Gone are the days when you had to have all kinds of databases and other services installed just to be able to run your apps locally. With Docker you can do all of that and isolate it from your machine.
+I'm using [Docker](https://www.docker.com/). Daily. It has become a very valuable part of my tool chain because it allows me to quickly set up any backend my applications might need to run and tear it down the second I don't need it anymore. Gone are the days when you had to have all kinds of databases and other services installed just to be able to run your apps locally. With Docker, you can do all of that and isolate it from your machine.
 
 Most backend systems are accessible through HTTP and through a specific port. You can use that to your advantage and have many services, each running in its own Docker container and exposing the respective port to your local host.
 
@@ -17,7 +17,7 @@ If you don't have Docker installed yet, I suggest you do so now and come back af
 $ brew cask install docker
 ```
 
-Installing Docker on Windows can be done with [Docker for Windows](https://www.docker.com/docker-windows) and installing it on Linux is as easy as it gets: Just use your local package manager.
+Installing Docker on Windows can be done with [Docker for Windows](https://www.docker.com/docker-windows), and installing it on Linux is as easy as it gets: Just use your local package manager.
 
 ## Run Services
 
@@ -27,7 +27,7 @@ Now let's get to actually running the services. The magic formula here is the fo
 $ docker run -d -p <port>:<port> <service>
 ```
 
-Replace `<port>` with the default port of your service and `<service>` with its name and you got yourself a running instance. The `-d` flag specifies, that you want to run the Docker container in [detached mode](https://docs.docker.com/engine/reference/run/#detached--d) which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:
+Replace `<port>` with the default port of your service and `<service>` with its name, and you got yourself a running instance. The `-d` flag specifies, that you want to run the Docker container in [detached mode](https://docs.docker.com/engine/reference/run/#detached--d), which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:
 
 ```shell
 # MongoDB
@@ -50,13 +50,13 @@ $ docker run -d -p 3306:3306 -e 'MYSQL_ALLOW_EMPTY_PASSWORD=yes' mysql
 
 In this case, we are using the `-e` flag to set an additional environment variable required by the MySQL image.
 
-I'm sure you get the idea after seeing these examples. Bare in mind though that you can apply these commands to almost any service which can run in a container. You can now connect to the containerized services from your application just like they were running on your local machine. This is because the `-p` flag tells the containers to forward their internal ports to your local ones.
+I'm sure you get the idea after seeing these examples. Bear in mind though that you can apply these commands to almost any service which can run in a container. You can now connect to the containerized services from your application just like they were running on your local machine. This is because the `-p` flag tells the containers to forward their internal ports to your local ones.
 
 For example, if you have a MongoDB container running which forwards its port `27017` to your local port `27017`, you can easily connect to the database in the container with the `mongo` shell just like if the DB was running locally.
 
 ## Docker Shortcuts
 
-While using Docker, I've discovered a couple of handy shortcut commands which allow to clean up unused services so they don't clutter your computer anymore. Another advantage of this is that you can cleanly and easily flush your databases and other persistent services to make sure you're testing a clean state.
+While using Docker, I've discovered a couple of handy shortcut commands which allow cleaning up unused services, so they don't clutter your computer anymore. Another advantage of this is that you can cleanly and easily flush your databases and other persistent services to make sure you're testing a clean state.
 
 A first important shortcut is that you can always abbreviate any container ID to its first couple of letters (as long as it's the only such entity which has an ID starting with these letters). So instead of using the full ID and typing `docker stop 4f263b9aad2d`, I could simply type `docker stop 4f` (as long as this container is the only running one which has an ID starting with "4f").
 

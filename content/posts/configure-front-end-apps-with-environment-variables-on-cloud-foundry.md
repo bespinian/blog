@@ -5,7 +5,7 @@ comments: true
 date: 2016-11-20
 ---
 
-The [12 factor manifest](https://12factor.net/) tells us in point III that apps should retrieve their config from environment variables to **strictly separate config from code**. "Config" meaning everything that is likely to vary between deployments (staging, production, developer environments, etc). Cloud Foundry allows us to do that very easily using either the `manifest.yml` file or the `cf set-env` command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the [staticfile buildpack](https://github.com/cloudfoundry/staticfile-buildpack)? These apps are, by definition, static so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an [Angular](https://angular.io/) or [React](https://facebook.github.io/react/) app, we cannot use these variables.
+The [12 factor manifest](https://12factor.net/) tells us in point III that apps should retrieve their config from environment variables to **strictly separate config from code**. "Config" meaning everything that is likely to vary between deployments (staging, production, developer environments, etc.). Cloud Foundry allows us to do that very easily using either the `manifest.yml` file or the `cf set-env` command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the [Staticfile Buildpack](https://github.com/cloudfoundry/staticfile-buildpack)? These apps are, by definition, static, so they cannot read out any environment variables. Therefore, if we use this buildpack to deploy an [Angular](https://angular.io/) or [React](https://facebook.github.io/react/) app, we cannot use these variables.
 
 Luckily, our [nginx](https://www.nginx.com/) (the technology which the staticfile buildpack uses) server can do so. This gave us the idea to expose the configuration through an HTTP endpoint. The `nginx.conf` file is parsed by Ruby before it's being used by the buildpack to set up your nginx. So you can use the environment variables to configure a JSON endpoint to expose the configuration to your front end app.
 
@@ -24,7 +24,7 @@ location /app-config {
 
 This will add an endpoint `/app-config` which exposes your configuration as JSON if the environment variable `APP_CONFIG` exists. If it doesn't exist, the endpoint won't be exposed at all.
 
-If you don't have a custom `nginx.conf` yet, you can use this sample one which already includes the above code:
+If you don't have a custom `nginx.conf` yet, you can use this sample one, which already includes the above code:
 
 ```nginx
 worker_processes 1;
@@ -84,7 +84,7 @@ http {
 }
 ```
 
-This config will work with the staticfile buildpack but disables some optional configurations of it. To add these back, you'll have to adjust the above code accordingly.
+This config will work with the staticfile buildpack, but disables some optional configurations of it. To add these back, you'll have to adjust the above code accordingly.
 
 Now push your app with `cf push` and set the `APP_CONFIG` environment variable to some JSON string with the following command:
 
@@ -103,10 +103,10 @@ If you visit the `/app-config` endpoint of your app, it should return the specif
 
 ## Use Cases
 
-You can use this method to configure different environments your app might be running in. E.g. you might use a different API server for your integration environment than for your production environment.
+You can use this method to configure different environments your app might be running in. E.g., you might use a different API server for your integration environment than for your production environment.
 
 Alternatively, you could use it to toggle feature flags dynamically to do [A/B testing](https://en.wikipedia.org/wiki/A/B_testing) or a [canary release](https://martinfowler.com/bliki/CanaryRelease.html).
 
-I'm sure there are many more use cases but the main thing is, that this method allows you to have the single build job and then deploy that build to many different environments.
+I'm sure there are many more use cases, but the main thing is, that this method allows you to have the single build job and then deploy that build to many environments.
 
-Many thanks to [@mkretz](https://github.com/mkretz) for the inspiration for this post!
+Many thanks to [Mathis Kretz](https://github.com/mkretz) for the inspiration for this post!

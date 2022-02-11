@@ -5,11 +5,11 @@ comments: true
 date: 2017-08-24
 ---
 
-If you work a lot with [Docker](https://www.docker.com/), you are probably used to the concept of having a [Docker Registry](https://docs.docker.com/registry/) which allows you to store your images in a safe place. There's a public registry that you can use for free at [Docker Store](https://store.docker.com/). But what if you don't want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.
+If you work a lot with [Docker](https://www.docker.com/), you are probably used to the concept of having a [Docker Registry](https://docs.docker.com/registry/), which allows you to store your images in a safe place. There's a public registry that you can use for free at [Docker Store](https://store.docker.com/). But what if you don't want your images to be publicly available? What if you want to have your images in a safe place that you control? The solution is to deploy a private Docker registry. Doing so on Cloud Foundry is fairly easy.
 
 ## Create Registry Binary
 
-First we need to create the registry's binary to upload it to Cloud Foundry using the [Binary Buildpack](https://github.com/cloudfoundry/binary-buildpack). For that, you need to have [Docker](https://docs.docker.com/engine/installation/) installed. Run a `git clone` on the [Docker Distribution repo on GitHub](https://github.com/docker/distribution):
+First, we need to create the registry's binary to upload it to Cloud Foundry using the [Binary Buildpack](https://github.com/cloudfoundry/binary-buildpack). For that, you need to have [Docker](https://docs.docker.com/engine/installation/) installed. Run a `git clone` on the [Docker Distribution repo on GitHub](https://github.com/docker/distribution):
 
 ```shell
 $ git clone https://github.com/docker/distribution.git
@@ -33,7 +33,7 @@ This will be your working directory for this tutorial.
 
 ## Create S3 Service
 
-By default, the registry stores the pushed Docker images on the local filesystem. Since apps should be stateless according to the [twelve-factor app manifest](https://12factor.net/processes), we will change this behavior to use an S3 backend instead. Please follow [this tutorial](/manage-buckets-on-cloud-foundry-s3-services/) on my blog to create an S3 service with bucket and name the service "registry-storage".
+By default, the registry stores the pushed Docker images on the local file system. Since apps should be stateless according to the [twelve-factor app manifest](https://12factor.net/processes), we will change this behavior to use an S3 backend instead. Please follow [this tutorial](/manage-buckets-on-cloud-foundry-s3-services/) on my blog to create an S3 service with bucket and name the service "registry-storage".
 
 ## Create Redis Cache
 
@@ -67,7 +67,7 @@ applications:
       REGISTRY_HTTP_SECRET: xxx
 ```
 
-Don't forget to change `my-bucket` to your own bucket name and the `host` to some hostname that isn't taken yet. Furthermore, you'll need to generate some random string and use it as the `REGISTRY_HTTP_SECRET`.
+Don't forget to change `my-bucket` to your own bucket name, and the `host` to some hostname that isn't taken yet. Furthermore, you'll need to generate some random string and use it as the `REGISTRY_HTTP_SECRET`.
 
 ## Create Entrypoint Script
 
