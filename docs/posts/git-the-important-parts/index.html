@@ -76,26 +76,26 @@ if (!doNotTrack) {
 <p>In order to be able to understand these changes, developers are asked to document their commits with small pieces of text called “commit messages”. The quality of these is a vital part of the health of our code base. Making good commit messages helps our teammates and future selves to understand the purpose of changes and specific ways of implementation. If done well, they provide crucial information at a glance and are structured in a way that lets us browse and even search the history of changes of our code base.</p>
 <h3 id="bad-commit-messages">Bad Commit Messages</h3>
 <p>First, let’s have a look at some bad commit messages and why they are bad. Then, we will look into how to improve them.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#e6db74">&#34;&#34;</span>
-</code></pre></div><p>The worst commit message is obviously an inexistent one. Not adding a message to our commit is luckily considered bad practice by most engineers. It gives someone who browses our changes no context at all and leaves them to figure out the effect and purpose of our changes by themselves. It also does not make developers think about their changes and why they are making them in a certain way. This process is important because it helps developers make more conscious and focused changes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span></code></pre></div><p>The worst commit message is obviously an inexistent one. Not adding a message to our commit is luckily considered bad practice by most engineers. It gives someone who browses our changes no context at all and leaves them to figure out the effect and purpose of our changes by themselves. It also does not make developers think about their changes and why they are making them in a certain way. This process is important because it helps developers make more conscious and focused changes.</p>
 <p>A meaningless commit message like</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">did some stuff, now it works.
-</code></pre></div><p>is clearly not much more helpful than not having a message at all.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Extended the flux capacitor and added a left-trim feature to the tractor beam and implemented the emergency self-destruct button.
-</code></pre></div><p>Another indicator of a bad message is a very long commit message that contains the word “and” one or even multiple times. First, long messages are not easy to read and comprehend. Secondly, they strongly suggest that too many unrelated changes were crammed into a single commit. Such commits are hard to understand and manage and should be omitted. It is much easier to understand a set of small changes with a clear history documented in their individual messages than a huge commit which contains unrelated changes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>did some stuff, now it works.
+</span></span></code></pre></div><p>is clearly not much more helpful than not having a message at all.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Extended the flux capacitor and added a left-trim feature to the tractor beam and implemented the emergency self-destruct button.
+</span></span></code></pre></div><p>Another indicator of a bad message is a very long commit message that contains the word “and” one or even multiple times. First, long messages are not easy to read and comprehend. Secondly, they strongly suggest that too many unrelated changes were crammed into a single commit. Such commits are hard to understand and manage and should be omitted. It is much easier to understand a set of small changes with a clear history documented in their individual messages than a huge commit which contains unrelated changes.</p>
 <h3 id="good-commit-messages">Good Commit Messages</h3>
 <p>Good commit messages on the other hand are clear and concise. They describe what the changes of the commit do in a human-readable way and do not contain any superfluous punctuation or words. Good examples are</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Upgrade lodash dependency
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Fix typo in README
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Return correct error codes <span style="color:#66d9ef">for</span> all errors
-</code></pre></div><p>These examples can easily be read and understood without knowing the whole context of the application.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Upgrade lodash dependency
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Fix typo in README
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Return correct error codes <span style="color:#66d9ef">for</span> all errors
+</span></span></code></pre></div><p>These examples can easily be read and understood without knowing the whole context of the application.</p>
 <p>So, in summary, the most important rule about good commit messages is to write them at all and to write them in a concise format that can easily be understood by others and our future self.</p>
 <h3 id="commit-message-body">Commit Message Body</h3>
 <p>So far, we have only covered the subject of a commit message which is the first line. Most people use only the subject line to describe their change, which is sufficient for almost any commit. If, however, a commit is a bit more involved or the changes and the rationale behind it cannot be easily understood, it can be helpful to explain the commit in a more verbose form. That’s what the body of a commit message is for. Here you can see an example of a commit message containing a concise subject line and a body that explains it further.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Return correct error codes <span style="color:#66d9ef">for</span> all errors
-
-We used to always <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">500</span> error codes from our HTTP API. This is not according to the HTTP specification. Because of that, this commit changes the API to <span style="color:#66d9ef">return</span> correct 4XX and 5XX error codes respectively.
-</code></pre></div><p>The body is separated from the first line by a blank one and is written in proper language to make it easily readable for our peers. It is mostly used to explain why a commit was made. If necessary, it can also be used to explain the changes themselves in a more explicit way if they cannot be understood intuitively.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Return correct error codes <span style="color:#66d9ef">for</span> all errors
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>We used to always <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">500</span> error codes from our HTTP API. This is not according to the HTTP specification. Because of that, this commit changes the API to <span style="color:#66d9ef">return</span> correct 4XX and 5XX error codes respectively.
+</span></span></code></pre></div><p>The body is separated from the first line by a blank one and is written in proper language to make it easily readable for our peers. It is mostly used to explain why a commit was made. If necessary, it can also be used to explain the changes themselves in a more explicit way if they cannot be understood intuitively.</p>
 <h3 id="commit-message-guidelines">Commit Message Guidelines</h3>
 <p>In order to write proper commit messages, there are a few guidelines to follow. This helps us to standardize the formatting of commits within our team and to follow the guidelines Git itself abides to when making commits, for example when it creates a merge commit.</p>
 <h4 id="separate-the-subject-from-the-body-with-a-blank-line">Separate the subject from the body with a blank line</h4>
@@ -127,24 +127,24 @@ We used to always <span style="color:#66d9ef">return</span> <span style="color:#
 <p>A big advantage of Gitflow is that there is quite a lot of tooling around it. One of them is the <a href="https://github.com/nvie/gitflow">Gitflow plugin</a> for the Git CLI which adds handy commands for working with Gitflow. Here is an example of how we would work with the Gitflow Plugin:</p>
 <h4 id="initialize-the-project">Initialize the project</h4>
 <p>Create a new empty directory and enter it. Then, initialize the project</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git flow init
-</code></pre></div><p>The tool then asks about our team’s naming convention of certain branches, but usually it is good to stick with the defaults. An exception here is the <code>master</code> branch. There has been a change of mind in the last couple of months to rename the <code>master</code> branch to <code>main</code> because the term “master” is politically a bit heavy. For the rest, we can just accept the defaults.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git flow init
+</span></span></code></pre></div><p>The tool then asks about our team’s naming convention of certain branches, but usually it is good to stick with the defaults. An exception here is the <code>master</code> branch. There has been a change of mind in the last couple of months to rename the <code>master</code> branch to <code>main</code> because the term “master” is politically a bit heavy. For the rest, we can just accept the defaults.</p>
 <h4 id="start-a-feature">Start a feature</h4>
 <p>To start a feature, Gitflow uses the command</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git flow feature start kitten
-</code></pre></div><p>where <code>kitten</code> is the name of the feature. The tool then tells us what it did. It automatically created a new feature branch for us and switched to it. Here, we can make our changes. As an example, we can create a file called <code>kitten.txt</code> which contains the kitten’s name and commit that. By the way, if you don’t provide the <code>-m</code> flag when creating a commit, Git will open your favorite text editor to create the message which is quite handy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git flow feature start kitten
+</span></span></code></pre></div><p>where <code>kitten</code> is the name of the feature. The tool then tells us what it did. It automatically created a new feature branch for us and switched to it. Here, we can make our changes. As an example, we can create a file called <code>kitten.txt</code> which contains the kitten’s name and commit that. By the way, if you don’t provide the <code>-m</code> flag when creating a commit, Git will open your favorite text editor to create the message which is quite handy.</p>
 <h4 id="complete-the-feature">Complete the feature</h4>
 <p>In order to complete our kitten feature, we just type</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git flow feature finish
-</code></pre></div><p>and the tool automatically merges the feature branch back into develop and switches to it. Obviously, we skipped the step of a pull request here because we are such badass engineers and never make mistakes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git flow feature finish
+</span></span></code></pre></div><p>and the tool automatically merges the feature branch back into develop and switches to it. Obviously, we skipped the step of a pull request here because we are such badass engineers and never make mistakes.</p>
 <h4 id="create-a-release">Create a release</h4>
 <p>Now that the kitten has been added, we want to release that feature. To do so, we type</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git flow release start 1.0.0
-</code></pre></div><p>where <code>1.0.0</code> is the version number of our release. Again, the tool switches to the newly created release branch. Here we can make changes to prepare the release. For example create a version file that contains the current version number. Now we’ll commit that.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git flow release start 1.0.0
+</span></span></code></pre></div><p>where <code>1.0.0</code> is the version number of our release. Again, the tool switches to the newly created release branch. Here we can make changes to prepare the release. For example create a version file that contains the current version number. Now we’ll commit that.</p>
 <h4 id="finish-the-release">Finish the release</h4>
 <p>Next, we tell the tool that our release is ready by typing</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git flow release finish
-</code></pre></div><p>The tool then prompts us to change the commit messages and to add a description to our release tag. As soon as we are done, the changes get merged back into the develop branch and also the main branch with the respective tag.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git flow release finish
+</span></span></code></pre></div><p>The tool then prompts us to change the commit messages and to add a description to our release tag. As soon as we are done, the changes get merged back into the develop branch and also the main branch with the respective tag.</p>
 <p>Looking at our commit log now, shows us that we have a clean history with easily readable commit messages and even one that contains a body describing the release it produced. So, in sum we have a nicely automated process for doing Gitflow!</p>
 <h3 id="github-flow">GitHub Flow</h3>
 <p><img src="./github-flow.png" alt=""></p>
@@ -167,157 +167,157 @@ We used to always <span style="color:#66d9ef">return</span> <span style="color:#
 <p>First, we want to look at some good practices when submitting a pull request for your feature branch. Following these practices will make your reviewer’s life easier which in turn will help you get the most out of their review.</p>
 <h4 id="rebase">Rebase</h4>
 <p>The first good practice you should follow is making sure that your feature branch is up-to-date with the latest changes on the target branch. After all, you want to make sure that your change works on the current version of develop and not just on a version from way back in time when you branched off your feature branch. Furthermore, you don’t want to place the burden of closing this potential gap on your reviewers. So, according to what we discussed earlier you would now rebase your feature branch on the latest develop branch, meaning that you sequentially apply all commits that have happened on develop since the point in time when you created the feature branch. Let us consider an example. Assume that we are working on a Git repository which contains information on the planets of the Solar System and that our repository initially looks as follows:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* 2119e4e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-* cc9e0d4 Add information on planet Uranus
-* 4a30b63 Removed some wrong information about planet Saturn
-* dae16ab Add some more information on Saturn that I had forgotten before
-* a44fd69 Add information on the planet Saturn
-| * bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
-| * d11edf4 Add information on the planet Mars
-|/
-* d212069 Add information on the planet Earth
-* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
-* a1b8fc5 Add information on planet Mercury
-</code></pre></div><p>We can see the feature branch <code>saturn-to-neptune</code> which we are working on and which branches off from <code>develop</code> at the commit which adds information on the planet Earth. In the meantime someone else has added information on the planets Mars and Jupiter on the <code>develop</code> branch. So, before submitting our feature branch for review, we need to bring it up to date with those two additional commits on <code>develop</code>. This we achieve by rebasing our feature branch on <code>develop</code> by executing</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase develop
-</code></pre></div><p>while on the feature branch. At this point Git will prompt us to resolve any merge conflicts that might arise from integrating those two commits on our feature branch. If we are lucky, there are none. After potential merge conflicts are resolved, our repository will look as follows:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* 1d32960 <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-* f646f96 Add information on planet Uranus
-* 21fdccb Removed some wrong information about planet Saturn
-* 6d5b293 Add some more information on Saturn that I had forgotten before
-* 1abfa9f Add information on the planet Saturn
-* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
-* d11edf4 Add information on the planet Mars
-| * 2119e4e <span style="color:#f92672">(</span>origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-| * cc9e0d4 Add information on planet Uranus
-| * 4a30b63 Removed some wrong information about planet Saturn
-| * dae16ab Add some more information on Saturn that I had forgotten before
-| * a44fd69 Add information on the planet Saturn
-|/
-* d212069 Add information on the planet Earth
-* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
-* a1b8fc5 Add information on planet Mercury
-</code></pre></div><p>We can see that the local copy of our feature branch is now updated with the two additional commits from <code>develop</code> adding information on Mars and Jupiter. However, the remote copy of the feature branch does not yet contain these commits. We can correct this by force pushing our changes to the feature branch:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push --force-with-lease
-</code></pre></div><p>Force pushing is OK in this case, because we are working on the feature branch on our own, so we are not interfering with other potential changes. This will make our repository look as follows:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* 1d32960 <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-* f646f96 Add information on planet Uranus
-* 21fdccb Removed some wrong information about planet Saturn
-* 6d5b293 Add some more information on Saturn that I had forgotten before
-* 1abfa9f Add information on the planet Saturn
-* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
-* d11edf4 Add information on the planet Mars
-* d212069 Add information on the planet Earth
-* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
-* a1b8fc5 Add information on planet Mercury
-</code></pre></div><p>So, we now have a nice and linear history on our feature branch, and we are almost ready to submit the feature branch for review.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* 2119e4e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>* cc9e0d4 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>* 4a30b63 Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>* dae16ab Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>* a44fd69 Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>| * bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>| * d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>|/
+</span></span><span style="display:flex;"><span>* d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
+</span></span><span style="display:flex;"><span>* a1b8fc5 Add information on planet Mercury
+</span></span></code></pre></div><p>We can see the feature branch <code>saturn-to-neptune</code> which we are working on and which branches off from <code>develop</code> at the commit which adds information on the planet Earth. In the meantime someone else has added information on the planets Mars and Jupiter on the <code>develop</code> branch. So, before submitting our feature branch for review, we need to bring it up to date with those two additional commits on <code>develop</code>. This we achieve by rebasing our feature branch on <code>develop</code> by executing</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git rebase develop
+</span></span></code></pre></div><p>while on the feature branch. At this point Git will prompt us to resolve any merge conflicts that might arise from integrating those two commits on our feature branch. If we are lucky, there are none. After potential merge conflicts are resolved, our repository will look as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* 1d32960 <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>* f646f96 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>* 21fdccb Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>* 6d5b293 Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>* 1abfa9f Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>* d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>| * 2119e4e <span style="color:#f92672">(</span>origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>| * cc9e0d4 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>| * 4a30b63 Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>| * dae16ab Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>| * a44fd69 Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>|/
+</span></span><span style="display:flex;"><span>* d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
+</span></span><span style="display:flex;"><span>* a1b8fc5 Add information on planet Mercury
+</span></span></code></pre></div><p>We can see that the local copy of our feature branch is now updated with the two additional commits from <code>develop</code> adding information on Mars and Jupiter. However, the remote copy of the feature branch does not yet contain these commits. We can correct this by force pushing our changes to the feature branch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git push --force-with-lease
+</span></span></code></pre></div><p>Force pushing is OK in this case, because we are working on the feature branch on our own, so we are not interfering with other potential changes. This will make our repository look as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* 1d32960 <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>* f646f96 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>* 21fdccb Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>* 6d5b293 Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>* 1abfa9f Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>* d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>* d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
+</span></span><span style="display:flex;"><span>* a1b8fc5 Add information on planet Mercury
+</span></span></code></pre></div><p>So, we now have a nice and linear history on our feature branch, and we are almost ready to submit the feature branch for review.</p>
 <h4 id="review-the-diff">Review the diff</h4>
 <p>The next good practice to follow before submitting a merge request is to review the diff which results from your changes. When doing so, you should check that you are only submitting changes which concern the feature you are building. You should take care not to mix these changes with unrelated ones, say dependency updates or code formatting which will make it harder for reviewers to understand what’s going on. If it is not possible to separate the relevant from the unrelated changes this is a clear sign, that you are overloading your pull request.</p>
 <h4 id="clean-up-the-commit-history">Clean up the commit history</h4>
 <p>Another good practice is cleaning up the commit history of the feature branch. Your reviewers should be able to use the commit history to help them understand the reason for specific changes. Therefore, your feature branch should not contain commits which resulted from trial and error and from changes which are made irrelevant by later commits. But how can we clean up the commit history in hindsight? Once again the rebase command comes in handy, this time rebasing the feature branch on itself.</p>
 <p>Considering our example again, we see that the commit history on our feature branch currently contains three commits concerning the planet Saturn:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* 21fdccb Removed some wrong information about planet Saturn
-* 6d5b293 Add some more information on Saturn that I had forgotten before
-* 1abfa9f Add information on the planet Saturn
-</code></pre></div><p>It seems that we took at few steps back and forth when making those changes, but those steps are irrelevant for the reviewer, so we want to squash them all into just one commit. We do this using the following command for starting an interactive rebase on the feature branch:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase -i --root
-</code></pre></div><p>We specify the option <code>--root</code> to tell Git to show us the whole history for rebasing. This opens our favorite text editor with the Git history and allows us to mark certain commits with a <code>s</code> for squashing:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pick a1b8fc5 Add information on planet Mercury
-pick 9af8451 Add information on the planet Venus
-pick d212069 Add information on the planet Earth
-pick d11edf4 Add information on the planet Mars
-pick bc91108 Add information on the planet Jupiter
-pick 1abfa9f Add information on the planet Saturn
-s 6d5b293 Add some more information on Saturn that I had forgotten before
-s 21fdccb Removed some wrong information about planet Saturn
-pick f646f96 Add information on planet Uranus
-pick 1d32960 Add information on planet Neptune
-
-<span style="color:#75715e"># Rebase 1d32960 onto f87a562 (10 commands)</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># Commands:</span>
-<span style="color:#75715e"># p, pick &lt;commit&gt; = use commit</span>
-<span style="color:#75715e"># r, reword &lt;commit&gt; = use commit, but edit the commit message</span>
-<span style="color:#75715e"># e, edit &lt;commit&gt; = use commit, but stop for amending</span>
-<span style="color:#75715e"># s, squash &lt;commit&gt; = use commit, but meld into previous commit</span>
-<span style="color:#75715e"># f, fixup [-C | -c] &lt;commit&gt; = like &#34;squash&#34; but keep only the previous</span>
-<span style="color:#75715e">#                    commit&#39;s log message, unless -C is used, in which case</span>
-<span style="color:#75715e">#                    keep only this commit&#39;s message; -c is same as -C but</span>
-<span style="color:#75715e">#                    opens the editor</span>
-<span style="color:#75715e"># x, exec &lt;command&gt; = run command (the rest of the line) using shell</span>
-<span style="color:#75715e"># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)</span>
-<span style="color:#75715e"># d, drop &lt;commit&gt; = remove commit</span>
-<span style="color:#75715e"># l, label &lt;label&gt; = label current HEAD with a name</span>
-<span style="color:#75715e"># t, reset &lt;label&gt; = reset HEAD to a label</span>
-<span style="color:#75715e"># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]</span>
-<span style="color:#75715e"># .       create a merge commit using the original merge commit&#39;s</span>
-<span style="color:#75715e"># .       message (or the oneline, if no original merge commit was</span>
-<span style="color:#75715e"># .       specified); use -c &lt;commit&gt; to reword the commit message</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># These lines can be re-ordered; they are executed from top to bottom.</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># If you remove a line here THAT COMMIT WILL BE LOST.</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># However, if you remove everything, the rebase will be aborted.</span>
-<span style="color:#75715e">#</span>
-</code></pre></div><p>In this case we have decided to squash the commits <code>21fdccb</code> and <code>6d5b293</code> into <code>1abfa9f</code>. After exiting this dialog, Git asks us what to do with the commit messages of the commits we are about to squash:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># This is a combination of 3 commits.</span>
-<span style="color:#75715e"># This is the 1st commit message:</span>
-
-Add information on the planet Saturn
-
-<span style="color:#75715e"># This is the commit message #2:</span>
-
-<span style="color:#75715e"># Add some more information on Saturn that I had forgotten before</span>
-
-<span style="color:#75715e"># This is the commit message #3:</span>
-
-<span style="color:#75715e"># Removed some wrong information about planet Saturn</span>
-
-<span style="color:#75715e"># Please enter the commit message for your changes. Lines starting</span>
-<span style="color:#75715e"># with &#39;#&#39; will be ignored, and an empty message aborts the commit.</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># Date:      Fri Mar 5 22:25:09 2021 +0100</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># interactive rebase in progress; onto f87a562</span>
-<span style="color:#75715e"># Last commands done (8 commands done):</span>
-<span style="color:#75715e">#    squash 6d5b293 Add some more information on Saturn that I had forgotten before</span>
-<span style="color:#75715e">#    squash 21fdccb Removed some wrong information about planet Saturn</span>
-<span style="color:#75715e"># Next commands to do (2 remaining commands):</span>
-<span style="color:#75715e">#    pick f646f96 Add information on planet Uranus</span>
-<span style="color:#75715e">#    pick 1d32960 Add information on planet Neptune</span>
-<span style="color:#75715e"># You are currently rebasing branch &#39;feature/saturn-to-neptune&#39; on &#39;f87a562&#39;.</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># Changes to be committed:</span>
-<span style="color:#75715e">#       new file:   saturn.txt</span>
-<span style="color:#75715e">#</span>
-</code></pre></div><p>In this case we have chosen to just discard the messages of the commits which are being squashed by commenting them in the editor dialog. After confirming the dialog we see that our repo is now in the following state:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* d61b82e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-* 548ee1a Add information on planet Uranus
-* d6db434 Add information on the planet Saturn
-| * 1d32960 <span style="color:#f92672">(</span>origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-| * f646f96 Add information on planet Uranus
-| * 21fdccb Removed some wrong information about planet Saturn
-| * 6d5b293 Add some more information on Saturn that I had forgotten before
-| * 1abfa9f Add information on the planet Saturn
-|/
-* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
-* d11edf4 Add information on the planet Mars
-* d212069 Add information on the planet Earth
-* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
-* a1b8fc5 Add information on planet Mercury
-</code></pre></div><p>So, the history on the local copy of our feature branch now looks clean. As a last step, we propagate this to the remote copy of the feature branch by force pushing again:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push --force-with-lease
-</code></pre></div><p>This will make our repository look entirely clean, ready for our reviewers:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">* d61b82e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
-* 548ee1a Add information on planet Uranus
-* d6db434 Add information on the planet Saturn
-* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
-* d11edf4 Add information on the planet Mars
-* d212069 Add information on the planet Earth
-* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
-* a1b8fc5 Add information on planet Mercury
-</code></pre></div><h4 id="leave-a-clear-and-concise-title-and-description">Leave a clear and concise title and description</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* 21fdccb Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>* 6d5b293 Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>* 1abfa9f Add information on the planet Saturn
+</span></span></code></pre></div><p>It seems that we took at few steps back and forth when making those changes, but those steps are irrelevant for the reviewer, so we want to squash them all into just one commit. We do this using the following command for starting an interactive rebase on the feature branch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git rebase -i --root
+</span></span></code></pre></div><p>We specify the option <code>--root</code> to tell Git to show us the whole history for rebasing. This opens our favorite text editor with the Git history and allows us to mark certain commits with a <code>s</code> for squashing:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>pick a1b8fc5 Add information on planet Mercury
+</span></span><span style="display:flex;"><span>pick 9af8451 Add information on the planet Venus
+</span></span><span style="display:flex;"><span>pick d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>pick d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>pick bc91108 Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>pick 1abfa9f Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>s 6d5b293 Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>s 21fdccb Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>pick f646f96 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>pick 1d32960 Add information on planet Neptune
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Rebase 1d32960 onto f87a562 (10 commands)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Commands:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># p, pick &lt;commit&gt; = use commit</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># r, reword &lt;commit&gt; = use commit, but edit the commit message</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># e, edit &lt;commit&gt; = use commit, but stop for amending</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># s, squash &lt;commit&gt; = use commit, but meld into previous commit</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># f, fixup [-C | -c] &lt;commit&gt; = like &#34;squash&#34; but keep only the previous</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                    commit&#39;s log message, unless -C is used, in which case</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                    keep only this commit&#39;s message; -c is same as -C but</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                    opens the editor</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># x, exec &lt;command&gt; = run command (the rest of the line) using shell</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># d, drop &lt;commit&gt; = remove commit</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># l, label &lt;label&gt; = label current HEAD with a name</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># t, reset &lt;label&gt; = reset HEAD to a label</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># .       create a merge commit using the original merge commit&#39;s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># .       message (or the oneline, if no original merge commit was</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># .       specified); use -c &lt;commit&gt; to reword the commit message</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># These lines can be re-ordered; they are executed from top to bottom.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If you remove a line here THAT COMMIT WILL BE LOST.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># However, if you remove everything, the rebase will be aborted.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span></code></pre></div><p>In this case we have decided to squash the commits <code>21fdccb</code> and <code>6d5b293</code> into <code>1abfa9f</code>. After exiting this dialog, Git asks us what to do with the commit messages of the commits we are about to squash:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># This is a combination of 3 commits.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the 1st commit message:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the commit message #2:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Add some more information on Saturn that I had forgotten before</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the commit message #3:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Removed some wrong information about planet Saturn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Please enter the commit message for your changes. Lines starting</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># with &#39;#&#39; will be ignored, and an empty message aborts the commit.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Date:      Fri Mar 5 22:25:09 2021 +0100</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># interactive rebase in progress; onto f87a562</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Last commands done (8 commands done):</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    squash 6d5b293 Add some more information on Saturn that I had forgotten before</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    squash 21fdccb Removed some wrong information about planet Saturn</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Next commands to do (2 remaining commands):</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    pick f646f96 Add information on planet Uranus</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    pick 1d32960 Add information on planet Neptune</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># You are currently rebasing branch &#39;feature/saturn-to-neptune&#39; on &#39;f87a562&#39;.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Changes to be committed:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       new file:   saturn.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span></code></pre></div><p>In this case we have chosen to just discard the messages of the commits which are being squashed by commenting them in the editor dialog. After confirming the dialog we see that our repo is now in the following state:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* d61b82e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>* 548ee1a Add information on planet Uranus
+</span></span><span style="display:flex;"><span>* d6db434 Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>| * 1d32960 <span style="color:#f92672">(</span>origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>| * f646f96 Add information on planet Uranus
+</span></span><span style="display:flex;"><span>| * 21fdccb Removed some wrong information about planet Saturn
+</span></span><span style="display:flex;"><span>| * 6d5b293 Add some more information on Saturn that I had forgotten before
+</span></span><span style="display:flex;"><span>| * 1abfa9f Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>|/
+</span></span><span style="display:flex;"><span>* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>* d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>* d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
+</span></span><span style="display:flex;"><span>* a1b8fc5 Add information on planet Mercury
+</span></span></code></pre></div><p>So, the history on the local copy of our feature branch now looks clean. As a last step, we propagate this to the remote copy of the feature branch by force pushing again:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git push --force-with-lease
+</span></span></code></pre></div><p>This will make our repository look entirely clean, ready for our reviewers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>* d61b82e <span style="color:#f92672">(</span>HEAD -&gt; feature/saturn-to-neptune, origin/feature/saturn-to-neptune<span style="color:#f92672">)</span> Add information on planet Neptune
+</span></span><span style="display:flex;"><span>* 548ee1a Add information on planet Uranus
+</span></span><span style="display:flex;"><span>* d6db434 Add information on the planet Saturn
+</span></span><span style="display:flex;"><span>* bc91108 <span style="color:#f92672">(</span>origin/develop, develop<span style="color:#f92672">)</span> Add information on the planet Jupiter
+</span></span><span style="display:flex;"><span>* d11edf4 Add information on the planet Mars
+</span></span><span style="display:flex;"><span>* d212069 Add information on the planet Earth
+</span></span><span style="display:flex;"><span>* 9af8451 <span style="color:#f92672">(</span>origin/main, main<span style="color:#f92672">)</span> Add information on the planet Venus
+</span></span><span style="display:flex;"><span>* a1b8fc5 Add information on planet Mercury
+</span></span></code></pre></div><h4 id="leave-a-clear-and-concise-title-and-description">Leave a clear and concise title and description</h4>
 <p>The last good practice is a very simple one. Write a clear and concise title and description, so that your reviewers immediately know the context in which you are proposing the changes. In a sense the same rules that we have seen for single commit messages also apply here: say in a human-readable form why you are doing something. Additionally, it sometimes makes sense to add instructions for the reviewers which will guide them in reading and understanding your changes, i.e., things like “you should start by looking at the changes in awesome.go and work your way in from there”.</p>
 <h3 id="reviewing">Reviewing</h3>
 <p>So, now that we know how to submit a pull request, let’s have a look at how to review one.</p>
@@ -406,7 +406,7 @@ Add information on the planet Saturn
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -427,7 +427,7 @@ Add information on the planet Saturn
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-02-11 17:10:47.265391959 &#43;0100 CET m=&#43;0.078869246">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-03-02 13:14:56.089070245 &#43;0100 CET m=&#43;0.088708110">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
