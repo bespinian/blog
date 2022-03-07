@@ -134,7 +134,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 ## Add User
 
 1. Run `EDITOR=nvim visudo` and uncomment `%wheel ALL=(ALL) NOPASSWD: ALL` to allow members of the `wheel` group to run privileged commands
-1. Run `useradd --create-home --groups wheel,video lena` (or whatever your user's name should be) to create the user
+1. Run `useradd --create-home --groups wheel lena` (or whatever your user's name should be) to create the user
 1. Run `passwd lena` to set your password
 1. Run `exit` and log back in with your new user
 
@@ -166,7 +166,7 @@ fi
 ## Install a Firewall
 
 1. Run `sudo pacman -S nftables` to install the firewall
-1. Run `sudo nvim /etc/nftables.conf` to edit the config to our liking and remove the part about allowing incoming SSH connections if you don't need that
+1. Run `sudo nvim /etc/nftables.conf` to edit the config to our liking (e.g., according to the [Arch Wiki](https://wiki.archlinux.org/title/nftables#Workstation))
 1. Run `sudo systemctl enable nftables.service --now` to enable the firewall
 
 ## Enable Time Synchronization
