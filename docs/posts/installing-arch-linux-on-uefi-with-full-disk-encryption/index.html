@@ -186,7 +186,7 @@ if (!doNotTrack) {
 <h2 id="add-user">Add User</h2>
 <ol>
 <li>Run <code>EDITOR=nvim visudo</code> and uncomment <code>%wheel ALL=(ALL) NOPASSWD: ALL</code> to allow members of the <code>wheel</code> group to run privileged commands</li>
-<li>Run <code>useradd --create-home --groups wheel,video lena</code> (or whatever your user&rsquo;s name should be) to create the user</li>
+<li>Run <code>useradd --create-home --groups wheel lena</code> (or whatever your user&rsquo;s name should be) to create the user</li>
 <li>Run <code>passwd lena</code> to set your password</li>
 <li>Run <code>exit</code> and log back in with your new user</li>
 </ol>
@@ -215,7 +215,7 @@ if (!doNotTrack) {
 <h2 id="install-a-firewall">Install a Firewall</h2>
 <ol>
 <li>Run <code>sudo pacman -S nftables</code> to install the firewall</li>
-<li>Run <code>sudo nvim /etc/nftables.conf</code> to edit the config to our liking and remove the part about allowing incoming SSH connections if you don&rsquo;t need that</li>
+<li>Run <code>sudo nvim /etc/nftables.conf</code> to edit the config to our liking (e.g., according to the <a href="https://wiki.archlinux.org/title/nftables#Workstation">Arch Wiki</a>)</li>
 <li>Run <code>sudo systemctl enable nftables.service --now</code> to enable the firewall</li>
 </ol>
 <h2 id="enable-time-synchronization">Enable Time Synchronization</h2>
@@ -331,7 +331,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-03-02 13:14:56.082358405 &#43;0100 CET m=&#43;0.081996272">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-03-07 23:54:21.137486102 &#43;0100 CET m=&#43;0.198327013">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
