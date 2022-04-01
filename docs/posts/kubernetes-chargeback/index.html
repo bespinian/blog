@@ -113,7 +113,7 @@ if (!doNotTrack) {
 <p>Introducing budgets per application, which have to be clearly communicated to the responsible teams, may help you track your forecast accuracy and highlight and even prevent potential cost overruns early.</p>
 <h3 id="continuous-optimization">Continuous Optimization</h3>
 <p>Kubernetes clusters and the workloads running on them are constantly changing. You should invest some time to continuously review whether your processes and billing model still match reality and whether your billing model is being exploited.</p>
-<p>Optimizing Kubernetes workloads&rsquo; resource efficiency across your organization is complicated and requires a significant amount of know-how, since many obvious actions have potentially negative side effects on performance or even availability of the applications. Fostering an exchange around this optimization within your organization can help teams use resources more efficiently, while avoiding these side effects.</p>
+<p>Optimizing Kubernetes workloads' resource efficiency across your organization is complicated and requires a significant amount of know-how, since many obvious actions have potentially negative side effects on performance or even availability of the applications. Fostering an exchange around this optimization within your organization can help teams use resources more efficiently, while avoiding these side effects.</p>
 <h2 id="common-challenges-and-issues">Common Challenges and Issues</h2>
 <h3 id="reserved-used-and-burst-capacity">Reserved, Used, And Burst Capacity</h3>
 <p>There are some challenges around CPU and memory still. In shared clusters, you may want to ensure the provisioned capacity matches the required capacity closely. If the infrastructure layer of your Kubernetes cluster allows very quick scaling, this may be more easily achievable even while the required capacity changes.</p>
@@ -160,7 +160,7 @@ if (!doNotTrack) {
 <h2 id="most-common-optimization-opportunities">Most Common Optimization Opportunities</h2>
 <h3 id="non-production-environments">Non-Production Environments</h3>
 <p>Development and testing environments are often responsible for a significant amount of your cost, especially when they are used the same way as with traditional virtual machines or bare-metal hardware, where you often had dedicated instances running for each of those environments at all times. The reasons for having long-running non-production environments were, usually, that provisioning such an environment would traditionally take days or weeks and that sharing compute resources was difficult and impractical.</p>
-<p>Kubernetes forces your system and software engineers to package applications in a way that they can be provisioned very quickly, and managing compute resources is one of Kubernetes&rsquo; core features. Accordingly, you can encourage them, to spin up non-production environments only when needed and implement auto-shutdowns where possible. In cases where a non-production environment needs to be running continuously, it often makes sense to reduce its memory and CPU allocation or run with fewer instances than usual, scaling up for load-testing and deployment tests only when needed.</p>
+<p>Kubernetes forces your system and software engineers to package applications in a way that they can be provisioned very quickly, and managing compute resources is one of Kubernetes' core features. Accordingly, you can encourage them, to spin up non-production environments only when needed and implement auto-shutdowns where possible. In cases where a non-production environment needs to be running continuously, it often makes sense to reduce its memory and CPU allocation or run with fewer instances than usual, scaling up for load-testing and deployment tests only when needed.</p>
 <h3 id="rightsizing-your-workloads">Rightsizing Your Workloads</h3>
 <p>Kubernetes requests and limits are a way of giving a pod or container a guaranteed amount of resources and an upper burst limit. These values are often arbitrarily set and not based on experience or empirical evidence from load tests. For example, you may encounter pods with a whole CPU assigned in their requests when they rarely even burst to 10% of that. Rightsizing these workloads may free up a lot of resources and therefore reduce cost significantly.</p>
 <p>The proposed tools allow you to compare the resources effectively used by workloads to what amount is dedicated to them and pass this information on to the development teams.</p>
@@ -239,7 +239,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    window.disqus_config = function () {
+    var disqus_config = function () {
     
     
     
@@ -260,7 +260,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-03-15 13:21:23.499497219 &#43;0100 CET m=&#43;0.049541425">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-22 11:43:15.435651948 &#43;0200 CEST m=&#43;0.078428852">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
