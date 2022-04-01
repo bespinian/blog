@@ -147,10 +147,10 @@ if (!doNotTrack) {
 <li>Run <code>echo 'arch' &gt; /etc/hostname</code> (or whatever your hostname should be)</li>
 <li>Run <code>nvim /etc/hosts</code> and insert the following lines:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>127.0.0.1     localhost
-</span></span><span style="display:flex;"><span>::1           localhost
-</span></span><span style="display:flex;"><span>127.0.1.1     arch.localdomain        arch
-</span></span></code></pre></div><p>for the last line: change <code>arch</code> to whatever hostname you picked in the last step</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">127.0.0.1     localhost
+::1           localhost
+127.0.1.1     arch.localdomain        arch
+</code></pre></div><p>for the last line: change <code>arch</code> to whatever hostname you picked in the last step</p>
 <h2 id="set-root-password">Set Root Password</h2>
 <ol>
 <li>Run <code>passwd</code> and set your root password</li>
@@ -195,11 +195,11 @@ if (!doNotTrack) {
 <li>Run <code>sudo pacman -S sway swayidle swaylock</code> to install Sway</li>
 <li>Add the following to <code>~/.zlogin</code> or whatever shell you are using:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Start window manager</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>tty<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/dev/tty1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>  exec sway
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
-</span></span></code></pre></div><h2 id="set-up-sound">Set Up Sound</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Start window manager</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>tty<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/dev/tty1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  exec sway
+<span style="color:#66d9ef">fi</span>
+</code></pre></div><h2 id="set-up-sound">Set Up Sound</h2>
 <ol>
 <li>Run <code>sudo pacman -S pipewire pipewire-pulse</code> to install Pipewire</li>
 </ol>
@@ -310,7 +310,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    window.disqus_config = function () {
+    var disqus_config = function () {
     
     
     
@@ -331,7 +331,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-03-15 13:21:23.518486308 &#43;0100 CET m=&#43;0.068530515">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-22 11:43:15.434299952 &#43;0200 CEST m=&#43;0.077076856">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

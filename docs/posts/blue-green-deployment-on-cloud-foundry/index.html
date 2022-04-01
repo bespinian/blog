@@ -67,86 +67,86 @@ if (!doNotTrack) {
 		<p>Imagine you have one of your apps in production and want to <code>cf push</code> an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving <code>404</code>s when trying to access your application. Now, what if the new version of your app has an error in it and doesn&rsquo;t even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.</p>
 <p>To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called &ldquo;Blue-Green Deployment&rdquo;. I won&rsquo;t go into the depths of this concept because you can read all about it in the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">Cloud Foundry documentation</a>. Generally, it allows you to have two instances of your application running at the same time, while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.</p>
 <p>Cloud Foundry doesn&rsquo;t provide this functionality out of the box. That&rsquo;s why I wrote a simple shell script to do this blue-green deployment for you.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Your ENV variables (Should be set externally, e.g. export CF_USERNAME=&#34;myUsername123&#34;)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_API=</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_SHARED_DOMAIN=</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_USERNAME=</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_PASSWORD=</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_ORG=</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF_SPACE=</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>max_health_checks<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
-</span></span><span style="display:flex;"><span>expected_response<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;200&#34;</span>
-</span></span><span style="display:flex;"><span>temp_suffix<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-temp&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Read from manifest.yml</span>
-</span></span><span style="display:flex;"><span>app_name<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; name:&#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>domain<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; domain: &#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>hostname<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; host: &#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set default values</span>
-</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain:=<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SHARED_DOMAIN<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>: <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname:=<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set up temporary app</span>
-</span></span><span style="display:flex;"><span>temp_app_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}${</span>temp_suffix<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>temp_domain<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SHARED_DOMAIN<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>temp_hostname<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}${</span>temp_suffix<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># CF Login</span>
-</span></span><span style="display:flex;"><span>cf api <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_API<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>cf login <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_USERNAME<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_PASSWORD<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>cf target -o <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_ORG<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -s <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SPACE<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Push Green</span>
-</span></span><span style="display:flex;"><span>cf push <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> --no-route
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Map temporary route to Green</span>
-</span></span><span style="display:flex;"><span>cf map-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Wait for Green to be ready to serve</span>
-</span></span><span style="display:flex;"><span>iterations<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -lt <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span>
-</span></span><span style="display:flex;"><span>  response<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl -sIL -w <span style="color:#e6db74">&#34;%{http_code}&#34;</span> -o /dev/null <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>    printf <span style="color:#e6db74">&#34;\n%s&#34;</span> <span style="color:#e6db74">&#34;Got expected </span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response&#34;</span>
-</span></span><span style="display:flex;"><span>    break
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>    iterations<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span> iterations <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">))</span>
-</span></span><span style="display:flex;"><span>    sleep <span style="color:#ae81ff">3</span> <span style="color:#f92672">&amp;&amp;</span> printf <span style="color:#e6db74">&#34;\n%s&#34;</span> <span style="color:#e6db74">&#34;Waiting for </span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response... Got </span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>  printf <span style="color:#e6db74">&#34;\n%s\n\n&#34;</span> <span style="color:#e6db74">&#34;Couldn&#39;t get </span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response. Reverting...&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Delete temporary route</span>
-</span></span><span style="display:flex;"><span>  cf delete-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -f
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Stop temporary app</span>
-</span></span><span style="display:flex;"><span>  cf stop <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exit <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Load balance route between Blue and Green</span>
-</span></span><span style="display:flex;"><span>cf map-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove Blue from load balancing</span>
-</span></span><span style="display:flex;"><span>cf unmap-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Delete temporary route</span>
-</span></span><span style="display:flex;"><span>cf delete-route -f <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Delete old app</span>
-</span></span><span style="display:flex;"><span>cf delete -f -r <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Rename Green to old app name</span>
-</span></span><span style="display:flex;"><span>cf rename <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span></code></pre></div><p>The script tries to guess some variables from your <code>manifest.yml</code> file, but you&rsquo;ll still need to set some environment variables for a successful deployment:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># Your ENV variables (Should be set externally, e.g. export CF_USERNAME=&#34;myUsername123&#34;)</span>
+<span style="color:#75715e"># CF_API=</span>
+<span style="color:#75715e"># CF_SHARED_DOMAIN=</span>
+<span style="color:#75715e"># CF_USERNAME=</span>
+<span style="color:#75715e"># CF_PASSWORD=</span>
+<span style="color:#75715e"># CF_ORG=</span>
+<span style="color:#75715e"># CF_SPACE=</span>
+
+max_health_checks<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+expected_response<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;200&#34;</span>
+temp_suffix<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-temp&#34;</span>
+
+<span style="color:#75715e"># Read from manifest.yml</span>
+app_name<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; name:&#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
+domain<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; domain: &#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
+hostname<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep <span style="color:#e6db74">&#34; host: &#34;</span> manifest.yml | sed <span style="color:#e6db74">&#39;s/.*://;s/ //g&#39;</span><span style="color:#66d9ef">)</span>
+
+<span style="color:#75715e"># Set default values</span>
+: <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain:=<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SHARED_DOMAIN<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+: <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname:=<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Set up temporary app</span>
+temp_app_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}${</span>temp_suffix<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+temp_domain<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SHARED_DOMAIN<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+temp_hostname<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}${</span>temp_suffix<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># CF Login</span>
+cf api <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_API<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+cf login <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_USERNAME<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_PASSWORD<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+cf target -o <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_ORG<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -s <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CF_SPACE<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Push Green</span>
+cf push <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> --no-route
+
+<span style="color:#75715e"># Map temporary route to Green</span>
+cf map-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Wait for Green to be ready to serve</span>
+iterations<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">while</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -lt <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>
+<span style="color:#66d9ef">do</span>
+  response<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl -sIL -w <span style="color:#e6db74">&#34;%{http_code}&#34;</span> -o /dev/null <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+    printf <span style="color:#e6db74">&#34;\n%s&#34;</span> <span style="color:#e6db74">&#34;Got expected </span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response&#34;</span>
+    break
+  <span style="color:#66d9ef">else</span>
+    iterations<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span> iterations <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">))</span>
+    sleep <span style="color:#ae81ff">3</span> <span style="color:#f92672">&amp;&amp;</span> printf <span style="color:#e6db74">&#34;\n%s&#34;</span> <span style="color:#e6db74">&#34;Waiting for </span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response... Got </span><span style="color:#e6db74">${</span>response<span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
+  <span style="color:#66d9ef">fi</span>
+<span style="color:#66d9ef">done</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>iterations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>max_health_checks<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+  printf <span style="color:#e6db74">&#34;\n%s\n\n&#34;</span> <span style="color:#e6db74">&#34;Couldn&#39;t get </span><span style="color:#e6db74">${</span>expected_response<span style="color:#e6db74">}</span><span style="color:#e6db74"> response. Reverting...&#34;</span>
+
+  <span style="color:#75715e"># Delete temporary route</span>
+  cf delete-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -f
+
+  <span style="color:#75715e"># Stop temporary app</span>
+  cf stop <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+  exit <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">fi</span>
+
+<span style="color:#75715e"># Load balance route between Blue and Green</span>
+cf map-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Remove Blue from load balancing</span>
+cf unmap-route <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Delete temporary route</span>
+cf delete-route -f <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_domain<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -n <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_hostname<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Delete old app</span>
+cf delete -f -r <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Rename Green to old app name</span>
+cf rename <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>temp_app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>app_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>The script tries to guess some variables from your <code>manifest.yml</code> file, but you&rsquo;ll still need to set some environment variables for a successful deployment:</p>
 <ul>
 <li><code>CF_API</code>: The API endpoint of the CF instance you want to use (e.g., <code>https://api.lyra-836.appcloud.swisscom.com</code>)</li>
 <li><code>CF_SHARED_DOMAIN</code>: The shared domain you want to use for temporary routes used to smoke test your app</li>
@@ -230,7 +230,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    window.disqus_config = function () {
+    var disqus_config = function () {
     
     
     
@@ -251,7 +251,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-03-15 13:21:23.497785794 &#43;0100 CET m=&#43;0.047830017">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-22 11:43:15.408514722 &#43;0200 CEST m=&#43;0.051291630">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

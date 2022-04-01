@@ -3,12 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.bespinian.io/</loc>
-    <lastmod>2021-12-09T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://blog.bespinian.io/posts/infrastructure-as-code/</loc>
-    <lastmod>2021-12-09T00:00:00+00:00</lastmod>
+    <loc>https://blog.bespinian.io/posts/observability-in-the-cloud/</loc>
+    <lastmod>2022-04-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.bespinian.io/posts/</loc>
+    <lastmod>2022-04-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.bespinian.io/posts/infrastructure-as-code/</loc>
     <lastmod>2021-12-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.bespinian.io/posts/git-the-important-parts/</loc>

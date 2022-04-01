@@ -73,17 +73,17 @@ if (!doNotTrack) {
 <p>Or actually, let’s start off by looking at what we would not call Infrastructure as Code. While certainly being awesome in their own right, we would not consider as Infrastructure as Code tools like Ansible, Puppet and Chef which allow you to apply configurations to existing VMs. The reason for this is that these tools generally do not take care of the VM or resource creation step itself which, as you will see later, we consider an important part of Infrastructure as Code. That said, tools for VM configuration certainly have their place in DevOps, as we will also see when we have a closer look at Packer.</p>
 <p>Furthermore, we would also not consider imperative scripts which create VMs (and possibly install things on them) as Infrastructure as Code. This is because we consider declarativeness as an essential feature of Infrastructure as Code as you will also see later.</p>
 <h2 id="what-is-infrastructure-as-code">What is Infrastructure as Code?</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-hcl" data-lang="hcl"><span style="display:flex;"><span><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;vm_instance&#34; &#34;my_vm&#34;</span> {
-</span></span><span style="display:flex;"><span>    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;My VM&#34;</span>
-</span></span><span style="display:flex;"><span>    instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x-large&#34;</span>
-</span></span><span style="display:flex;"><span>    availability_zone <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">availability_zone</span>
-</span></span><span style="display:flex;"><span>    security_group_ids <span style="color:#f92672">=</span> [<span style="color:#66d9ef">security_group</span>.<span style="color:#66d9ef">my_sg</span>.<span style="color:#66d9ef">id</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    tags <span style="color:#f92672">=</span> {
-</span></span><span style="display:flex;"><span>        Name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;IaC-managed VM Instance&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>So what is Infrastructure as Code then? Similar to source code which, when unchanged, produces the same binary every time it is compiled, Infrastructure as Code mandates that the same model, given as code in a textual format, always generate the same environment. Furthermore, it generates the environment automatically without the need for manual configuration or installation steps.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;vm_instance&#34; &#34;my_vm&#34;</span> {
+    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;My VM&#34;</span>
+    instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x-large&#34;</span>
+    availability_zone <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">availability_zone</span>
+    security_group_ids <span style="color:#f92672">=</span> [<span style="color:#66d9ef">security_group</span>.<span style="color:#66d9ef">my_sg</span>.<span style="color:#66d9ef">id</span>]
+
+    tags <span style="color:#f92672">=</span> {
+        Name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;IaC-managed VM Instance&#34;</span>
+    }
+}
+</code></pre></div><p>So what is Infrastructure as Code then? Similar to source code which, when unchanged, produces the same binary every time it is compiled, Infrastructure as Code mandates that the same model, given as code in a textual format, always generate the same environment. Furthermore, it generates the environment automatically without the need for manual configuration or installation steps.</p>
 <p>Above you can see an example of a VM described declaratively, in this case in Terraform syntax. You will learn more about Terraform in this blog post. You can see that we specify a name and a type for the VM. Furthermore, we also state the availability zone in which this VM shall be created and a security group to which it will belong. The latter two parameters are not hard-coded in this particular declaration, but instead they are referencing other resources in the environment declaration. In the case of the availability zone we are referencing a variable declared elsewhere, and in the case of the security group we are referencing a security group declaration made as a separate resource.</p>
 <p>Having the possibility to reference resource definitions and their properties in other declarations is a very important aspect of an Infrastructure as Code solution, as it enables us to modularize our environment declarations and avoid repeating ourselves when building variations of our environment.</p>
 <h2 id="-and-why">&hellip; and why?</h2>
@@ -103,22 +103,22 @@ if (!doNotTrack) {
 <h2 id="imperative-versus-declarative">Imperative versus Declarative</h2>
 <p>The first important principle of Infrastructure as Code is being declarative. But what do we mean by that?</p>
 <p>When communicating with systems of machines, it is intuitive to procedurally describe the operations which we need to perform to get from one state to another. This is what we call the imperative style. When doing so, you are saying things like “First create a new VPC. Then create a new VM. Then create a new Kubernetes cluster. Then install Linux on the VM and so on.”</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cli create vpc
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>$ cli create vm ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>$ cli create k8s
-</span></span></code></pre></div><p>The opposite of imperative is declarative. A declarative representation of your infrastructure describes a desired state which you want your environment to be in. A declarative representation says things like “There is a VPC, there is a VM and there is a Kubernetes cluster.”. It does not say which steps need to be undertaken to get from the current state of your environment to this new desired state.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-hcl" data-lang="hcl"><span style="display:flex;"><span><span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vpc</span> {
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vm</span> {
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">k8s</span> {
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>So why do we prefer a declarative style over the imperative one when automating infrastructure? If we think more deeply about our imperative example, we see that there are lot of cases which our script needs to catch in order to function correctly. What if a VM with the same name already exists? Do we stop? Do we do something to the existing VM? Or what if the creation of the VM takes a long time? What happens if the script fails halfway through? Can we just run it again? All of this reasoning about special cases, potential failure and long-running asynchronous operations is abstracted away, if you use a declarative style. In the declarative style, you just describe a desired state and leave it to your Infrastructure as Code technology to figure out the steps required to get to that state.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cli create vpc
+
+$ cli create vm ...
+
+$ cli create k8s
+</code></pre></div><p>The opposite of imperative is declarative. A declarative representation of your infrastructure describes a desired state which you want your environment to be in. A declarative representation says things like “There is a VPC, there is a VM and there is a Kubernetes cluster.”. It does not say which steps need to be undertaken to get from the current state of your environment to this new desired state.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vpc</span> {
+...
+}
+<span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">vm</span> {
+...
+}
+<span style="color:#66d9ef">resource</span> <span style="color:#66d9ef">k8s</span> {
+...
+}
+</code></pre></div><p>So why do we prefer a declarative style over the imperative one when automating infrastructure? If we think more deeply about our imperative example, we see that there are lot of cases which our script needs to catch in order to function correctly. What if a VM with the same name already exists? Do we stop? Do we do something to the existing VM? Or what if the creation of the VM takes a long time? What happens if the script fails halfway through? Can we just run it again? All of this reasoning about special cases, potential failure and long-running asynchronous operations is abstracted away, if you use a declarative style. In the declarative style, you just describe a desired state and leave it to your Infrastructure as Code technology to figure out the steps required to get to that state.</p>
 <p>This makes declarative representations of infrastructure a lot cleaner and easier to reason about for operators. Another advantage of declarative representation is that it is always clear what the desired state is, even in a case where the state of your infrastructure changes due to a failure of one or more components. In such a case, an Infrastructure as Code technology will use this representation to bring your environment back to the desired state.</p>
 <p>Declarative representations have an obvious downside: they make the job of a particular Infrastructure as Code technology a lot more involved. Technologies which support it need to have a way of determining a given current state of your infrastructure, figuring out the delta to your desired state and the applying the right operations to close that gap. Later in this Episode we will introduce Terraform, which features just this kind of declarative representation.</p>
 <h2 id="idempotence">Idempotence</h2>
@@ -155,152 +155,152 @@ if (!doNotTrack) {
 <p>The first concept is what Terraform calls a “Provider”. Since it supports many infrastructure providers and each of them is maintained and managed by its own community, users need to be able to plug different providers into their setup. A typical provider could be AWS, Azure, Cloudflare or even Kubernetes. These contain and abstract the domain specific knowledge necessary to communicate with the respective infrastructure provider and how to translate different operations on different resources into API calls towards the respective provider. So, for example, the AWS provider contains knowledge about how to provision a VM in AWS, how to configure and change it but also how to delete if the respective resource in Terraform gets deleted.</p>
 <p>The modular provider setup is a big part of the success of Terraform, since it makes it an incredibly versatile and powerful tool which can be used by different communities and even combine infrastructure from different providers into one single code base for end users.</p>
 <p>As an illustration, here is the provider section from the Terraform module, which we use to deploy our own website.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-hcl" data-lang="hcl"><span style="display:flex;"><span><span style="color:#66d9ef">terraform</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">required_providers</span> {
-</span></span><span style="display:flex;"><span>    aws <span style="color:#f92672">=</span> {
-</span></span><span style="display:flex;"><span>      source  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hashicorp/aws&#34;</span>
-</span></span><span style="display:flex;"><span>      version <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;~&gt; 3.0&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
-</span></span><span style="display:flex;"><span>  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eu-central-1&#34;</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
-</span></span><span style="display:flex;"><span>  alias  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us_east&#34;</span>
-</span></span><span style="display:flex;"><span>  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-east-1&#34;</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="modules">Modules</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">terraform</span> {
+  <span style="color:#66d9ef">required_providers</span> {
+    aws <span style="color:#f92672">=</span> {
+      source  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hashicorp/aws&#34;</span>
+      version <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;~&gt; 3.0&#34;</span>
+    }
+  }
+}
+
+<span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
+  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eu-central-1&#34;</span>
+}
+
+<span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;aws&#34;</span> {
+  alias  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us_east&#34;</span>
+  region <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-east-1&#34;</span>
+}
+</code></pre></div><h2 id="modules">Modules</h2>
 <p><img src="./terraform-modules.png" alt=""></p>
 <p>Another important concept for Terraform are modules. As the name implies, they allow us to modularize our infrastructure and create layers of abstraction. A module is any set of Terraform resource definitions that belong together and are life cycled as one. For a good example take a look at <a href="https://github.com/cloudlena/terraform-spa">Lena&rsquo;s module for creating a single page application on AWS</a>. As this repo shows, modules allow us to make our code reusable. <a href="https://registry.terraform.io">Terraform has a huge registry of such modules</a> for many different providers, and it is recommended to use them wherever possible because they help us to write less code, follow best practices and automatically keep up to date with changes from the infrastructure provider.</p>
 <p>Another significant part of modules is that they allow us to test parts of our infrastructure. Testing infrastructure, you ask? More about that later.</p>
 <h2 id="state">State</h2>
 <p><img src="./terraform-state.png" alt=""></p>
 <p>In Terraform, the so-called state describes all the provisioned resources in our infrastructure and how they are configured in a simple and human-readable way. This means that we always have single file that describes the current state of all of our infrastructure and the configuration of each of its resources’ parameters. When changing something in the declaration of our modules or resources and then applying these changes, Terraform first makes the changes using the respective provider and therefore talking to the infrastructure provider’s API. Afterwards, it updates the state file to reflect the respective changes. Let’s have a look at such a state file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;version&#34;</span>: <span style="color:#ae81ff">4</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;terraform_version&#34;</span>: <span style="color:#e6db74">&#34;1.0.10&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;serial&#34;</span>: <span style="color:#ae81ff">99</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;lineage&#34;</span>: <span style="color:#e6db74">&#34;2c3e0ed3-a77b-46ac-1ae6-ec00c8c0e1e0&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;outputs&#34;</span>: {},
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;resources&#34;</span>: [
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;mode&#34;</span>: <span style="color:#e6db74">&#34;managed&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;aws_route53_record&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;email&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;provider&#34;</span>: <span style="color:#e6db74">&#34;provider[\&#34;registry.terraform.io/hashicorp/aws\&#34;]&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;instances&#34;</span>: [
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;schema_version&#34;</span>: <span style="color:#ae81ff">2</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;attributes&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;alias&#34;</span>: [],
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;allow_overwrite&#34;</span>: <span style="color:#66d9ef">null</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;failover_routing_policy&#34;</span>: [],
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;fqdn&#34;</span>: <span style="color:#e6db74">&#34;bespinian.io&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;geolocation_routing_policy&#34;</span>: [],
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;health_check_id&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;Z1UVPIZKL5KPK0_bespinian.io_MX&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;latency_routing_policy&#34;</span>: [],
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;multivalue_answer_routing_policy&#34;</span>: <span style="color:#66d9ef">null</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;bespinian.io&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">[...]</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#960050;background-color:#1e0010">[...]</span>
-</span></span><span style="display:flex;"><span>        },
-</span></span><span style="display:flex;"><span>        [<span style="color:#960050;background-color:#1e0010">...</span>]
-</span></span><span style="display:flex;"><span>      ]
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [<span style="color:#960050;background-color:#1e0010">...</span>]
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
-</span></span></code></pre></div><p>There are different places where we can store state files. The simplest one, you just saw. The state file can be checked into Git and be versioned with the application. However, this has two downsides: The state file can change after a deployment. So if we do CI/CD and our CD server changes something about the infrastructure, then the state file changes, and we have a dirty repository. The second downside is that it doesn’t really allow for multiple people or systems to apply Terraform configurations because they might have different state files locally which will eventually lead to problems. Therefore, it is advisable to store the state in a central location like an S3 bucket or even Terraform Cloud. Terraform supports many different state backends.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;version&#34;</span>: <span style="color:#ae81ff">4</span>,
+  <span style="color:#f92672">&#34;terraform_version&#34;</span>: <span style="color:#e6db74">&#34;1.0.10&#34;</span>,
+  <span style="color:#f92672">&#34;serial&#34;</span>: <span style="color:#ae81ff">99</span>,
+  <span style="color:#f92672">&#34;lineage&#34;</span>: <span style="color:#e6db74">&#34;2c3e0ed3-a77b-46ac-1ae6-ec00c8c0e1e0&#34;</span>,
+  <span style="color:#f92672">&#34;outputs&#34;</span>: {},
+  <span style="color:#f92672">&#34;resources&#34;</span>: [
+    {
+      <span style="color:#f92672">&#34;mode&#34;</span>: <span style="color:#e6db74">&#34;managed&#34;</span>,
+      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;aws_route53_record&#34;</span>,
+      <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;email&#34;</span>,
+      <span style="color:#f92672">&#34;provider&#34;</span>: <span style="color:#e6db74">&#34;provider[\&#34;registry.terraform.io/hashicorp/aws\&#34;]&#34;</span>,
+      <span style="color:#f92672">&#34;instances&#34;</span>: [
+        {
+          <span style="color:#f92672">&#34;schema_version&#34;</span>: <span style="color:#ae81ff">2</span>,
+          <span style="color:#f92672">&#34;attributes&#34;</span>: {
+            <span style="color:#f92672">&#34;alias&#34;</span>: [],
+            <span style="color:#f92672">&#34;allow_overwrite&#34;</span>: <span style="color:#66d9ef">null</span>,
+            <span style="color:#f92672">&#34;failover_routing_policy&#34;</span>: [],
+            <span style="color:#f92672">&#34;fqdn&#34;</span>: <span style="color:#e6db74">&#34;bespinian.io&#34;</span>,
+            <span style="color:#f92672">&#34;geolocation_routing_policy&#34;</span>: [],
+            <span style="color:#f92672">&#34;health_check_id&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+            <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;Z1UVPIZKL5KPK0_bespinian.io_MX&#34;</span>,
+            <span style="color:#f92672">&#34;latency_routing_policy&#34;</span>: [],
+            <span style="color:#f92672">&#34;multivalue_answer_routing_policy&#34;</span>: <span style="color:#66d9ef">null</span>,
+            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;bespinian.io&#34;</span>,
+            <span style="color:#960050;background-color:#1e0010">[...]</span>
+          },
+          <span style="color:#960050;background-color:#1e0010">[...]</span>
+        },
+        [<span style="color:#960050;background-color:#1e0010">...</span>]
+      ]
+    }
+    [<span style="color:#960050;background-color:#1e0010">...</span>]
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><p>There are different places where we can store state files. The simplest one, you just saw. The state file can be checked into Git and be versioned with the application. However, this has two downsides: The state file can change after a deployment. So if we do CI/CD and our CD server changes something about the infrastructure, then the state file changes, and we have a dirty repository. The second downside is that it doesn’t really allow for multiple people or systems to apply Terraform configurations because they might have different state files locally which will eventually lead to problems. Therefore, it is advisable to store the state in a central location like an S3 bucket or even Terraform Cloud. Terraform supports many different state backends.</p>
 <p>But what happens if people change resources manually without using Terraform or even if they create resources that are then not managed by Terraform? That is what we call drift. It means that the actual state of the provisioned infrastructure has drifted from the state stored in Terraform. This is a major issue with declarative systems and can only be mitigated by either trusting people not to do so or to preventing it by simply not giving them write permissions in important environments such as production. However, that is not always an option. There is a very useful tool called <a href="https://driftctl.com/">driftctl</a> which allows us to detect infrastructure drift and tells us which resources are not managed by Terraform or which ones have changed in their configuration state. Let’s see how it works.</p>
 <p>Let&rsquo;s again use the bespinian website as an example and let&rsquo;s navigate to the <a href="https://github.com/bespinian/bespinian.io/tree/main/infrastructure">infrastructure folder in that repo</a>. We can now run</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>driftctl scan
-</span></span></code></pre></div><p>and the <code>driftctl</code> tool will show us all the difference between the resources present in our AWS account and the resources declared in our Terraform module. Here is the output we get in this particular case:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Scanned states <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>Found resources not covered by IaC:
-</span></span><span style="display:flex;"><span>  aws_api_gateway_account:
-</span></span><span style="display:flex;"><span>    - api-gateway-account
-</span></span><span style="display:flex;"><span>  aws_iam_access_key:
-</span></span><span style="display:flex;"><span>    - AKIA33B5E5FBDSBJYYX2
-</span></span><span style="display:flex;"><span>        User: this
-</span></span><span style="display:flex;"><span>    - AKIA33B5E5FBEREZ7WF2
-</span></span><span style="display:flex;"><span>        User: github-action-bespinianio
-</span></span><span style="display:flex;"><span>    - AKIA33B5E5FBKDWXUF3B
-</span></span><span style="display:flex;"><span>        User: lena
-</span></span><span style="display:flex;"><span>  aws_iam_user:
-</span></span><span style="display:flex;"><span>    - gabriel
-</span></span><span style="display:flex;"><span>    - github-action-bespinianio
-</span></span><span style="display:flex;"><span>    - lena
-</span></span><span style="display:flex;"><span>    - this
-</span></span><span style="display:flex;"><span>  aws_route53_record:
-</span></span><span style="display:flex;"><span>    - Z1UVPIZKL5KPK0_blog.bespinian.io_CNAME
-</span></span><span style="display:flex;"><span>        Type: CNAME
-</span></span><span style="display:flex;"><span>Found <span style="color:#ae81ff">17</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span> - 47% coverage
-</span></span><span style="display:flex;"><span> - <span style="color:#ae81ff">8</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> managed by terraform
-</span></span><span style="display:flex;"><span> - <span style="color:#ae81ff">9</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> not managed by Terraform
-</span></span><span style="display:flex;"><span> - <span style="color:#ae81ff">0</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> found in a Terraform state but missing on the cloud provider
-</span></span><span style="display:flex;"><span>Scan duration: 13s
-</span></span></code></pre></div><p>We can see that <code>driftctl</code> has detected a couple of resources which were created in AWS without a corresponding resource in the Terraform module. Some of these are there intentionally, but others will indeed need cleaning up. On the other hand, all the resources managed by Terraform are in sync, so we are good in that respect.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">driftctl scan
+</code></pre></div><p>and the <code>driftctl</code> tool will show us all the difference between the resources present in our AWS account and the resources declared in our Terraform module. Here is the output we get in this particular case:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Scanned states <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
+Found resources not covered by IaC:
+  aws_api_gateway_account:
+    - api-gateway-account
+  aws_iam_access_key:
+    - AKIA33B5E5FBDSBJYYX2
+        User: this
+    - AKIA33B5E5FBEREZ7WF2
+        User: github-action-bespinianio
+    - AKIA33B5E5FBKDWXUF3B
+        User: lena
+  aws_iam_user:
+    - gabriel
+    - github-action-bespinianio
+    - lena
+    - this
+  aws_route53_record:
+    - Z1UVPIZKL5KPK0_blog.bespinian.io_CNAME
+        Type: CNAME
+Found <span style="color:#ae81ff">17</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>
+ - 47% coverage
+ - <span style="color:#ae81ff">8</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> managed by terraform
+ - <span style="color:#ae81ff">9</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> not managed by Terraform
+ - <span style="color:#ae81ff">0</span> resource<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> found in a Terraform state but missing on the cloud provider
+Scan duration: 13s
+</code></pre></div><p>We can see that <code>driftctl</code> has detected a couple of resources which were created in AWS without a corresponding resource in the Terraform module. Some of these are there intentionally, but others will indeed need cleaning up. On the other hand, all the resources managed by Terraform are in sync, so we are good in that respect.</p>
 <h2 id="a-typical-workflow">A typical workflow</h2>
 <p>Let’s put our knowledge to work and have a look at a typical workflow using Terraform.</p>
 <p>First, we initialize the repo, which tells Terraform to download the respective providers and modules. This is important to have a clean local state and be aware of the current remote state. The “upgrade” flag tells Terraform to look for dependencies that can be upgraded within the allowed limits. For example, we can restrict that providers are not upgraded beyond their major or minor version.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>terraform init -upgrade
-</span></span></code></pre></div><p>The second step is to do our actual changes. In this case, we use vim to edit one of the files to maybe add a new resource or change an existing one.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vim main.tf
-</span></span></code></pre></div><p>It can be useful to lint certain configurations in our Terraform definition. This can prevent application failures from happening in the first place and help you to follow Terraform and provider best practices. Two of the most popular linters are firstly <code>tflint</code> which is a general linter for Terraform code and AWS, Azure and GCP resources. A second very popular linter is called <code>tfsec</code> which is very much focused on security and preventing security holes in your infrastructure. It is therefore highly recommended to run these two regularly or even make them part of your CI/CD process.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>tflint; tfsec
-</span></span></code></pre></div><p>As a next step, we run the command</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>terraform plan
-</span></span></code></pre></div><p>which does a comparison of the current infrastructure state and what we are applying. It gives us a very nice diff of what would change if the new configuration were to be applied so that we can verify that none of the changes are unintended ones.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">terraform init -upgrade
+</code></pre></div><p>The second step is to do our actual changes. In this case, we use vim to edit one of the files to maybe add a new resource or change an existing one.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vim main.tf
+</code></pre></div><p>It can be useful to lint certain configurations in our Terraform definition. This can prevent application failures from happening in the first place and help you to follow Terraform and provider best practices. Two of the most popular linters are firstly <code>tflint</code> which is a general linter for Terraform code and AWS, Azure and GCP resources. A second very popular linter is called <code>tfsec</code> which is very much focused on security and preventing security holes in your infrastructure. It is therefore highly recommended to run these two regularly or even make them part of your CI/CD process.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tflint; tfsec
+</code></pre></div><p>As a next step, we run the command</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">terraform plan
+</code></pre></div><p>which does a comparison of the current infrastructure state and what we are applying. It gives us a very nice diff of what would change if the new configuration were to be applied so that we can verify that none of the changes are unintended ones.</p>
 <p>As a last step, we finally apply the planned changes by running</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>terraform apply
-</span></span></code></pre></div><p>This may take a while because it now actually talks to the infrastructure provider’s APIs to provision or change the resources as specified. Afterwards, our state is updated, and the configuration is applied.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">terraform apply
+</code></pre></div><p>This may take a while because it now actually talks to the infrastructure provider’s APIs to provision or change the resources as specified. Afterwards, our state is updated, and the configuration is applied.</p>
 <h2 id="automation">Automation</h2>
 <p>Obviously, it is pretty tedious and inconsistent having to apply all the changes done to our repo manually. Like any other deployment, we want to automate these steps and leave them up to a CI/CD server which runs in a consistent environment and reliably creates consistent deployments. Theoretically, this can be done with any old CI/CD system where the Terraform binary can be installed because it just needs to be able to read out our credentials and run <code>terraform apply</code>. However, there are useful modules for the most common systems which simplify this process even further. For example, there is a pretty versatile GitHub Action to use Terraform commands as can be seen below.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>- uses: hashicorp/setup-terraform@v1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- run: terraform init
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- run: terraform plan -no-color
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- run: terraform apply -auto-approve
-</span></span></code></pre></div><h2 id="testing">Testing</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">- uses: hashicorp/setup-terraform@v1
+
+- run: terraform init
+
+- run: terraform plan -no-color
+
+- run: terraform apply -auto-approve
+</code></pre></div><h2 id="testing">Testing</h2>
 <p><img src="./terratest.png" alt=""></p>
 <p>Since infrastructure can be modularized with Terraform, it makes sense to test these individual modules just like we write tests for the individual functions that make up our applications. Firstly to make sure they actually work. Secondly to verify that their interface is clean and provides everything one needs to use them properly. One tool to do so in an automated way is <a href="https://terratest.gruntwork.io/">Terratest</a>. It allows us to write simple Go code which calls Terraform under the hood. It temporarily creates the infrastructure contained in our module to see if the configuration is valid and then runs a couple of tests on it. As soon as all the tests are through, the infrastructure is automatically deprovisioned and deleted again.</p>
 <p>Let’s see how that looks in practice:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TestTerraformBasicExample</span>(<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testing</span>.<span style="color:#a6e22e">T</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Parallel</span>()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">testID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">ToLower</span>(<span style="color:#a6e22e">random</span>.<span style="color:#a6e22e">UniqueId</span>())
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">hostname</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;test-&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">testID</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">terraformOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">WithDefaultRetryableErrors</span>(<span style="color:#a6e22e">t</span>,
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Options</span>{
-</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">TerraformDir</span>: <span style="color:#e6db74">&#34;../examples/basic&#34;</span>,
-</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Vars</span>: <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">interface</span>{}{
-</span></span><span style="display:flex;"><span>                                <span style="color:#e6db74">&#34;hostname&#34;</span>:        <span style="color:#a6e22e">hostname</span>,
-</span></span><span style="display:flex;"><span>                                <span style="color:#e6db74">&#34;domain&#34;</span>:          <span style="color:#a6e22e">domain</span>,
-</span></span><span style="display:flex;"><span>                                <span style="color:#e6db74">&#34;resource_suffix&#34;</span>: <span style="color:#e6db74">&#34;-&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hostname</span>,
-</span></span><span style="display:flex;"><span>                        },
-</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">NoColor</span>: <span style="color:#66d9ef">true</span>,
-</span></span><span style="display:flex;"><span>                })
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Destroy</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">InitAndApply</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fqdn</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Output</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>, <span style="color:#e6db74">&#34;fqdn&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">expectedFQDN</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">hostname</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">domain</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">fqdn</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">expectedFQDN</span> {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Expected FQDN to be %s, got %s&#34;</span>, <span style="color:#a6e22e">expectedFQDN</span>, <span style="color:#a6e22e">fqdn</span>)
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>As you can see, tests in Terratest are written in Go. In this example we first set some options, then call <code>terraform init</code> and <code>terraform apply</code>. At this stage, real infrastructure is provisioned on which we then run our desired tests. In this case we check that the FQDN is of a particular form. At the end of the test we call <code>terraform destroy</code> as you can see by the <code>defer</code> statement in the Go code.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TestTerraformBasicExample</span>(<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testing</span>.<span style="color:#a6e22e">T</span>) {
+        <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Parallel</span>()
+
+        <span style="color:#a6e22e">testID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">ToLower</span>(<span style="color:#a6e22e">random</span>.<span style="color:#a6e22e">UniqueId</span>())
+        <span style="color:#a6e22e">hostname</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;test-&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">testID</span>
+
+        <span style="color:#a6e22e">terraformOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">WithDefaultRetryableErrors</span>(<span style="color:#a6e22e">t</span>,
+                <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Options</span>{
+                        <span style="color:#a6e22e">TerraformDir</span>: <span style="color:#e6db74">&#34;../examples/basic&#34;</span>,
+                        <span style="color:#a6e22e">Vars</span>: <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">interface</span>{}{
+                                <span style="color:#e6db74">&#34;hostname&#34;</span>:        <span style="color:#a6e22e">hostname</span>,
+                                <span style="color:#e6db74">&#34;domain&#34;</span>:          <span style="color:#a6e22e">domain</span>,
+                                <span style="color:#e6db74">&#34;resource_suffix&#34;</span>: <span style="color:#e6db74">&#34;-&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hostname</span>,
+                        },
+                        <span style="color:#a6e22e">NoColor</span>: <span style="color:#66d9ef">true</span>,
+                })
+
+        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Destroy</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>)
+
+        <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">InitAndApply</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>)
+
+        <span style="color:#a6e22e">fqdn</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">terraform</span>.<span style="color:#a6e22e">Output</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">terraformOptions</span>, <span style="color:#e6db74">&#34;fqdn&#34;</span>)
+
+        <span style="color:#a6e22e">expectedFQDN</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">hostname</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">domain</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">fqdn</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">expectedFQDN</span> {
+                <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Expected FQDN to be %s, got %s&#34;</span>, <span style="color:#a6e22e">expectedFQDN</span>, <span style="color:#a6e22e">fqdn</span>)
+        }
+}
+</code></pre></div><p>As you can see, tests in Terratest are written in Go. In this example we first set some options, then call <code>terraform init</code> and <code>terraform apply</code>. At this stage, real infrastructure is provisioned on which we then run our desired tests. In this case we check that the FQDN is of a particular form. At the end of the test we call <code>terraform destroy</code> as you can see by the <code>defer</code> statement in the Go code.</p>
 <p>As you saw, this creates actual resources in your environments, so it’s crucial to wait for the cleanup to happen and to be aware of the costs this can result in. The resources are very short-lived but nevertheless, they can be costly. Furthermore, sometimes the cleanup can fail. That’s why it’s important to run the aforementioned driftctl from time to time to check for remnant resources that need to be cleaned up manually. Obviously, it’s also very essential not to run these tests in a productive environment because, even though they shouldn’t, they can interfere with existing resources if not programmed well.</p>
 <p>All in all, these tests help greatly to have a stable infrastructure and be more confident when releasing new versions of your modules, so we think it’s very important to have them and maintain them well.</p>
 <h1 id="immutable-infrastructure">Immutable Infrastructure</h1>
@@ -312,36 +312,36 @@ if (!doNotTrack) {
 <p><a href="https://www.packer.io/">Packer</a> is a tool that greatly simplifies the creation of immutable infrastructure. It allows us to define our VM images just like we do it with a Dockerfile for container images. So we have a configuration file which contains a base image and the steps that should be applied to it. Packer then takes these instructions, creates a new image that contains our application and all of its dependencies and then publishes that image to the infrastructure provider’s image registry. This process allows us to follow all the good practices of shipping images which we are used to from using containers. Like shipping them with all the needed libraries and binaries and not changing them at runtime. But this time we apply them to VM images and treat our VMs kind of like containers in that regard.</p>
 <p>Obviously, this has many advantages. It expedites the startup time of our VMs because we don’t need to install hundreds of tools and packages. It makes our images and applications more portable and testable because we can release the same image to AWS, Google Cloud and also to our local VirtualBox. These processes should also further improve the stability of our environments and VMs because no undocumented changes are allowed, and all steps needed to get to our final images are documented in our Packer file. Let’s see how it works.</p>
 <p>First we would specify a Packer template for the image we want to build. Below you can see an example of an image which will be based <code>ubuntu-xenial-16.04</code> and which has NGINX installed in it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-hcl" data-lang="hcl"><span style="display:flex;"><span><span style="color:#66d9ef">source</span> <span style="color:#e6db74">&#34;amazon-ebs&#34; &#34;ubuntu&#34;</span> {
-</span></span><span style="display:flex;"><span>  ami_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer-linux-aws&#34;</span>
-</span></span><span style="display:flex;"><span>  instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;t2.micro&#34;</span>
-</span></span><span style="display:flex;"><span>  region        <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-west-2&#34;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">source_ami_filter</span> {
-</span></span><span style="display:flex;"><span>    filters <span style="color:#f92672">=</span> {
-</span></span><span style="display:flex;"><span>      name                <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*&#34;</span>
-</span></span><span style="display:flex;"><span>      root-device-type    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebs&#34;</span>
-</span></span><span style="display:flex;"><span>      virtualization-type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hvm&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    most_recent <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>    owners      <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;099720109477&#34;</span>]
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  ssh_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu&#34;</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">build</span> {
-</span></span><span style="display:flex;"><span>  name    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer&#34;</span>
-</span></span><span style="display:flex;"><span>  sources <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;source.amazon-ebs.ubuntu&#34;</span>
-</span></span><span style="display:flex;"><span>  ]
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">provisioner</span> <span style="color:#e6db74">&#34;shell&#34;</span> {
-</span></span><span style="display:flex;"><span>    inline <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;echo Installing NGINX&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;sudo apt update&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;sudo apt install -y nginx&#34;</span>,
-</span></span><span style="display:flex;"><span>    ]
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>If we now run <code>packer build</code> on this template, an Ubuntu VM will be spun up in AWS and NGINX will be installed on it. Packer will then trigger the creation of a snapshot of that VM and create a new image out of that snapshot.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">source</span> <span style="color:#e6db74">&#34;amazon-ebs&#34; &#34;ubuntu&#34;</span> {
+  ami_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer-linux-aws&#34;</span>
+  instance_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;t2.micro&#34;</span>
+  region        <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;us-west-2&#34;</span>
+  <span style="color:#66d9ef">source_ami_filter</span> {
+    filters <span style="color:#f92672">=</span> {
+      name                <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*&#34;</span>
+      root-device-type    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebs&#34;</span>
+      virtualization-type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hvm&#34;</span>
+    }
+    most_recent <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+    owners      <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;099720109477&#34;</span>]
+  }
+  ssh_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ubuntu&#34;</span>
+}
+
+<span style="color:#66d9ef">build</span> {
+  name    <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;learn-packer&#34;</span>
+  sources <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#34;source.amazon-ebs.ubuntu&#34;</span>
+  ]
+  <span style="color:#66d9ef">provisioner</span> <span style="color:#e6db74">&#34;shell&#34;</span> {
+    inline <span style="color:#f92672">=</span> [
+      <span style="color:#e6db74">&#34;echo Installing NGINX&#34;</span>,
+      <span style="color:#e6db74">&#34;sudo apt update&#34;</span>,
+      <span style="color:#e6db74">&#34;sudo apt install -y nginx&#34;</span>,
+    ]
+  }
+}
+</code></pre></div><p>If we now run <code>packer build</code> on this template, an Ubuntu VM will be spun up in AWS and NGINX will be installed on it. Packer will then trigger the creation of a snapshot of that VM and create a new image out of that snapshot.</p>
 <p>This brings us to end of the second part of this GitOps blog series. We hope you enjoyed it, and we also hope that you will also enjoy the third part which will be about GitOps itself. Stay tuned for this exciting final part!</p>
 
 
@@ -393,6 +393,7 @@ if (!doNotTrack) {
 
 	<div class="pagination">
 		<a href="/posts/git-the-important-parts/" class="left arrow">&#8592;</a>
+		<a href="/posts/observability-in-the-cloud/" class="right arrow">&#8594;</a>
 
 		<a href="#" class="top">Top</a>
 	</div>
@@ -404,7 +405,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    window.disqus_config = function () {
+    var disqus_config = function () {
     
     
     
@@ -425,7 +426,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-03-15 13:21:23.510185106 &#43;0100 CET m=&#43;0.060229325">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-22 11:43:15.432850692 &#43;0200 CEST m=&#43;0.075627596">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

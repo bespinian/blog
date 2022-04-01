@@ -6,7 +6,17 @@
     <description>Recent content on bespinian Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 09 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 22 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Observability in the Cloud</title>
+      <link>https://blog.bespinian.io/posts/observability-in-the-cloud/</link>
+      <pubDate>Fri, 22 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bespinian.io/posts/observability-in-the-cloud/</guid>
+      <description>This blog post aims to explain how observability and monitoring should be distinguished, what the problems with &amp;ldquo;traditional&amp;rdquo; monitoring are when we deal with distributed cloud systems and how observability can alleviate these problems. Finally, it roughly outlines how observability should be approached.
+Observability vs. Monitoring For detailed accounts of the difference between monitoring and observability, I recommend Cindy Sridharan&amp;rsquo;s book Distributed Systems Observability and Charity Major&amp;rsquo;s various blog posts on the topic (e.</description>
+    </item>
+    
     <item>
       <title>Infrastructure as Code</title>
       <link>https://blog.bespinian.io/posts/infrastructure-as-code/</link>
