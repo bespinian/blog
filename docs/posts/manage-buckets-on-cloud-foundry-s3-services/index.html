@@ -24,7 +24,7 @@ if (!doNotTrack) {
 		<link rel="stylesheet" href="/css/fonts.css">
 		<link rel="stylesheet" href="/custom.css">
 		
-		<link rel="icon" href="favicon.ico" />
+		<link rel="icon" href="/favicon.ico"/>
 		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -68,23 +68,23 @@ if (!doNotTrack) {
 <p>S3 was originally created by <a href="https://aws.amazon.com/">Amazon Web Services</a>, but by now there are many 3rd party services that are compatible with the S3 API. Some Cloud Foundry providers have S3 compatible services available in their marketplace. If they don&rsquo;t, you can create your own by creating a <a href="https://docs.cloudfoundry.org/devguide/services/user-provided.html">user-provided service</a> and adding the respective S3 credentials (e.g., from AWS).</p>
 <p>This tutorial uses the <a href="https://docs.developer.swisscom.com/service-offerings/dynamic.html">Swisscom Application Cloud S3 Dynamic Storage</a>, but you can also use any other S3 provider.</p>
 <p>To create an S3 service, run the following command</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service dynstrg usage my-storage
-</code></pre></div><p>where <code>my-storage</code> is the name of your service instance.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-service dynstrg usage my-storage
+</span></span></code></pre></div><p>where <code>my-storage</code> is the name of your service instance.</p>
 <p>Then we create a service key so that we can access our service:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service-key my-storage my-key
-</code></pre></div><p>Now you can retrieve the credentials to your S3 service at any time using the command</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf service-key my-storage my-key
-</code></pre></div><p>The credentials from this key will be used in the next steps.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-service-key my-storage my-key
+</span></span></code></pre></div><p>Now you can retrieve the credentials to your S3 service at any time using the command</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf service-key my-storage my-key
+</span></span></code></pre></div><p>The credentials from this key will be used in the next steps.</p>
 <h2 id="create-s3-bucket">Create S3 Bucket</h2>
 <p>Now that we have our S3 service, we need to create a bucket to hold our data. I suggest using the <a href="https://github.com/s3tools/s3cmd">s3cmd</a> CLI tool for that. You can either download it from the <a href="https://github.com/s3tools/s3cmd/releases">releases</a> page or by using <a href="http://brew.sh/">Homebrew</a> if you&rsquo;re on macOS. As soon as you have it installed, configure it using the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd --configure
-</code></pre></div><p>You will be prompted for your credentials. Most of them you can find by retrieving your service key from above or by using the defaults.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ s3cmd --configure
+</span></span></code></pre></div><p>You will be prompted for your credentials. Most of them you can find by retrieving your service key from above or by using the defaults.</p>
 <p>If you are using the Swisscom Dynamic Storage, set the region to <code>nil</code> and note that <code>Secret Key</code> is your <code>sharedSecret</code> and that <code>S3 Endpoint</code> is your <code>accessHost</code>. For <code>DNS-style bucket+hostname:port template for accessing a bucket</code>, you can use <code>%(bucket)s.&lt;your-accessHost&gt;</code> with your respective <code>accessHost</code>.</p>
 <p>Now you should be able to run</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd ls
-</code></pre></div><p>which should return empty if you don&rsquo;t have any buckets or list your existing ones. Now, we can finally create our bucket called &ldquo;my-bucket&rdquo; with the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ s3cmd mb s3://my-bucket
-</code></pre></div><h2 id="s3-manager">S3 Manager</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ s3cmd ls
+</span></span></code></pre></div><p>which should return empty if you don&rsquo;t have any buckets or list your existing ones. Now, we can finally create our bucket called &ldquo;my-bucket&rdquo; with the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ s3cmd mb s3://my-bucket
+</span></span></code></pre></div><h2 id="s3-manager">S3 Manager</h2>
 <p>Alternatively, you can use an open source app I&rsquo;ve been developing called <a href="https://github.com/cloudlena/s3manager">S3 Manager</a>. You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.</p>
 
 
@@ -120,6 +120,15 @@ if (!doNotTrack) {
       </span>
     </a>
     
+    <a class="bespinian-social-nav-link" href="https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on YouTube">
+          <title>bespinian on YouTube</title>
+          <use href="/icons/youtube.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
     <a class="bespinian-social-nav-link" href="/index.xml">
       <span class="bespinian-icon">
         <svg role="img" aria-label="The bespinian blog RSS feed">
@@ -148,7 +157,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -169,7 +178,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-04-22 11:43:15.436444296 &#43;0200 CEST m=&#43;0.079221201">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-27 11:44:59.49149388 &#43;0200 CEST m=&#43;0.162258725">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
