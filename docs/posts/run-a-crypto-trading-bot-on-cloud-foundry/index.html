@@ -24,7 +24,7 @@ if (!doNotTrack) {
 		<link rel="stylesheet" href="/css/fonts.css">
 		<link rel="stylesheet" href="/custom.css">
 		
-		<link rel="icon" href="favicon.ico" />
+		<link rel="icon" href="/favicon.ico"/>
 		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -71,65 +71,65 @@ if (!doNotTrack) {
 <p>First, we need to clone the repo from <a href="https://github.com/carlos8f/zenbot">GitHub</a>. It&rsquo;s advisable to check out the latest tag, so you&rsquo;re not trusting all your money to a possibly unstable <code>master</code> branch.</p>
 <h2 id="create-services">Create Services</h2>
 <p>Zenbot has two dependencies it needs to work. The first one is <a href="https://www.mongodb.com/">MongoDB</a>. In most Cloud Foundry installations, you can get that with a simple command like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-service mongodb small zenbot-db
-</code></pre></div><p>The next dependency is a GDAX API client. Any of the big trading platforms will do, but I&rsquo;m using GDAX to keep things simple. <a href="https://github.com/carlos8f/zenbot#description">Here</a> you can find a list of the supported platforms. To use GDAX, visit their <a href="https://www.gdax.com/">website</a> and create an account. The process is a little tedious because you&rsquo;ll have to provide a photo ID and go through a couple of more verification steps. But, believe me, eventually it&rsquo;s worth it. After you are signed up, choose the product you&rsquo;ll want to trade (e.g., BTC/EUR) in the top left corner and transfer some money to your account (either from a credit card, from a bank account or from an existing <a href="https://www.coinbase.com">Coinbase</a> account).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-service mongodb small zenbot-db
+</span></span></code></pre></div><p>The next dependency is a GDAX API client. Any of the big trading platforms will do, but I&rsquo;m using GDAX to keep things simple. <a href="https://github.com/carlos8f/zenbot#description">Here</a> you can find a list of the supported platforms. To use GDAX, visit their <a href="https://www.gdax.com/">website</a> and create an account. The process is a little tedious because you&rsquo;ll have to provide a photo ID and go through a couple of more verification steps. But, believe me, eventually it&rsquo;s worth it. After you are signed up, choose the product you&rsquo;ll want to trade (e.g., BTC/EUR) in the top left corner and transfer some money to your account (either from a credit card, from a bank account or from an existing <a href="https://www.coinbase.com">Coinbase</a> account).</p>
 <p>After that&rsquo;s done, go to the API settings and create a new set of API keys with the &ldquo;Trade&rdquo; permission. Note down the credentials and create a user provided service for them (be aware that this allows anybody with the respective permissions in Cloud Foundry to see your API credentials):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf create-user-provided-service zenbot-gdax -p <span style="color:#e6db74">&#39;{&#34;key&#34;:&#34;YOUR-API-KEY&#34;,&#34;b64secret&#34;:&#34;YOUR-API-SECRET&#34;,&#34;passphrase&#34;:&#34;YOUR-API-PASSPHRASE&#34;}&#39;</span>
-</code></pre></div><p>In case you are using a different trading platform, create a similar user provided service with their API credentials.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-user-provided-service zenbot-gdax -p <span style="color:#e6db74">&#39;{&#34;key&#34;:&#34;YOUR-API-KEY&#34;,&#34;b64secret&#34;:&#34;YOUR-API-SECRET&#34;,&#34;passphrase&#34;:&#34;YOUR-API-PASSPHRASE&#34;}&#39;</span>
+</span></span></code></pre></div><p>In case you are using a different trading platform, create a similar user provided service with their API credentials.</p>
 <h2 id="configure-the-bot">Configure the Bot</h2>
 <p>Now that we have the services set up, we&rsquo;ll need to tell Zenbot to use them. Copy <code>conf-sample.js</code> to <code>conf.js</code> and add the following lines to automatically read the respective config items from the <code>VCAP_SERVICES</code> environment variable Cloud Foundry exposes:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// Add this part after the existing MongoDB configuration
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>) {
-  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">creds</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>).<span style="color:#a6e22e">mongodb</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">credentials</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">host</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">host</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">port</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">database</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">username</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">username</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">password</span>;
-}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// Add this part after the existing GDAX configuration
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>) {
-  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">creds</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>)[<span style="color:#e6db74">&#34;user-provided&#34;</span>][<span style="color:#ae81ff">0</span>]
-    .<span style="color:#a6e22e">credentials</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">key</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">b64secret</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">b64secret</span>;
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">passphrase</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">passphrase</span>;
-}
-</code></pre></div><p>This will ensure that the config is read automatically from the environment, if the <code>VCAP_SERVICES</code> variable is there.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// Add this part after the existing MongoDB configuration
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">creds</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>).<span style="color:#a6e22e">mongodb</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">credentials</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">host</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">host</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">port</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">database</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">username</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">username</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">mongo</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">password</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// Add this part after the existing GDAX configuration
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">creds</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">VCAP_SERVICES</span>)[<span style="color:#e6db74">&#34;user-provided&#34;</span>][<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">credentials</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">key</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">b64secret</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">b64secret</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">gdax</span>.<span style="color:#a6e22e">passphrase</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">creds</span>.<span style="color:#a6e22e">passphrase</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This will ensure that the config is read automatically from the environment, if the <code>VCAP_SERVICES</code> variable is there.</p>
 <p>Furthermore, we&rsquo;ll make it possible to configure the traded product and the strategy to use through environment variables. For that, change the following lines:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
-<span style="color:#75715e">// name of default trade strategy
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">strategy</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;trend_ema&#34;</span>;
-</code></pre></div><p>to these</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ZENBOT_SELECTOR</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
-<span style="color:#75715e">// name of default trade strategy
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">strategy</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ZENBOT_STRATEGY</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;trend_ema&#34;</span>;
-</code></pre></div><p>This allows us to set the selector (i.e., the product) and the trading strategy the bot should use through environment variables. To get a list of possible values, you can run the following commands in the root folder of the repo:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ./zenbot.sh list-selectors
-$ ./zenbot.sh list-strategies
-</code></pre></div><h2 id="create-manifest">Create manifest</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// name of default trade strategy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">strategy</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;trend_ema&#34;</span>;
+</span></span></code></pre></div><p>to these</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// default selector. only used if omitting [selector] argument from a command.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">selector</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ZENBOT_SELECTOR</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;gdax.BTC-USD&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// name of default trade strategy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">strategy</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ZENBOT_STRATEGY</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;trend_ema&#34;</span>;
+</span></span></code></pre></div><p>This allows us to set the selector (i.e., the product) and the trading strategy the bot should use through environment variables. To get a list of possible values, you can run the following commands in the root folder of the repo:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ./zenbot.sh list-selectors
+</span></span><span style="display:flex;"><span>$ ./zenbot.sh list-strategies
+</span></span></code></pre></div><h2 id="create-manifest">Create manifest</h2>
 <p>The last step before pushing your bot is to create a <code>manifest.yml</code> file to automate the setup of your deployment. It should look as follows:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">applications</span>:
-  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">zenbot</span>
-    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256M</span>
-    <span style="color:#f92672">buildpacks</span>:
-      - <span style="color:#ae81ff">https://github.com/cloudfoundry/nodejs-buildpack.git</span>
-    <span style="color:#f92672">no-route</span>: <span style="color:#66d9ef">true</span>
-    <span style="color:#f92672">health-check-type</span>: <span style="color:#ae81ff">process</span>
-    <span style="color:#f92672">services</span>:
-      - <span style="color:#ae81ff">zenbot-db</span>
-      - <span style="color:#ae81ff">zenbot-gdax</span>
-    <span style="color:#f92672">env</span>:
-      <span style="color:#f92672">ZENBOT_SELECTOR</span>: <span style="color:#e6db74">&#34;gdax.BTC-EUR&#34;</span>
-</code></pre></div><p>Replace the selector with the respective product you want to trade, and add another line if you don&rsquo;t want to use the default trading strategy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">applications</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">zenbot</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256M</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">buildpacks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">https://github.com/cloudfoundry/nodejs-buildpack.git</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">no-route</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">health-check-type</span>: <span style="color:#ae81ff">process</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">zenbot-db</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">zenbot-gdax</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">ZENBOT_SELECTOR</span>: <span style="color:#e6db74">&#34;gdax.BTC-EUR&#34;</span>
+</span></span></code></pre></div><p>Replace the selector with the respective product you want to trade, and add another line if you don&rsquo;t want to use the default trading strategy.</p>
 <h2 id="push">Push</h2>
 <p>Now, all that&rsquo;s left is to run <code>cf push</code> to deploy your bot. After a successful deployment, you can use the following command to get a live log stream to see exactly what your bot is trading:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cf logs zenbot --recent
-</code></pre></div><p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Essentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf logs zenbot --recent
+</span></span></code></pre></div><p>See <a href="https://github.com/carlos8f/zenbot#reading-the-console-output">Reading the Console Output</a> for instructions about how to interpret these logs. Essentially, if the last number is green, you should be happy with the bot and if the second to last number is green, you should be happy in general ;-)</p>
 
 
 		<div
@@ -164,6 +164,15 @@ $ ./zenbot.sh list-strategies
       </span>
     </a>
     
+    <a class="bespinian-social-nav-link" href="https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on YouTube">
+          <title>bespinian on YouTube</title>
+          <use href="/icons/youtube.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
     <a class="bespinian-social-nav-link" href="/index.xml">
       <span class="bespinian-icon">
         <svg role="img" aria-label="The bespinian blog RSS feed">
@@ -192,7 +201,7 @@ $ ./zenbot.sh list-strategies
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -213,7 +222,7 @@ $ ./zenbot.sh list-strategies
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-04-22 11:43:15.48653663 &#43;0200 CEST m=&#43;0.129313530">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-27 11:44:59.534994477 &#43;0200 CEST m=&#43;0.205759322">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

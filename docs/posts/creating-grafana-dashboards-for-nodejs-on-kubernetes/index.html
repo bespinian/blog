@@ -24,7 +24,7 @@ if (!doNotTrack) {
 		<link rel="stylesheet" href="/css/fonts.css">
 		<link rel="stylesheet" href="/custom.css">
 		
-		<link rel="icon" href="favicon.ico" />
+		<link rel="icon" href="/favicon.ico"/>
 		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -81,28 +81,28 @@ if (!doNotTrack) {
 <p>Prometheus uses HTTP polling to scrape metrics. Therefore, your application needs to provide an HTTP endpoint exposing its internal metrics.</p>
 <h3 id="metric-format">Metric Format</h3>
 <p>Prometheus uses a simple text based format as shown below. The <a href="https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-example">Prometheus docs</a> provide more information.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"># HELP http_request_duration_seconds duration histogram of http responses labeled with: status_code, method
-# TYPE http_request_duration_seconds histogram
-http_request_duration_seconds_bucket{le=&#34;0.003&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1204
-http_request_duration_seconds_bucket{le=&#34;0.03&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1214
-http_request_duration_seconds_bucket{le=&#34;0.1&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1215
-http_request_duration_seconds_bucket{le=&#34;0.3&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1215
-http_request_duration_seconds_bucket{le=&#34;1.5&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1230
-http_request_duration_seconds_bucket{le=&#34;10&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1257
-http_request_duration_seconds_bucket{le=&#34;+Inf&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1260
-http_request_duration_seconds_sum{status_code=&#34;200&#34;,method=&#34;GET&#34;} 159.43762229599974
-http_request_duration_seconds_count{status_code=&#34;200&#34;,method=&#34;GET&#34;} 1260
-.
-.
-.
-
-# HELP up 1 = up, 0 = not up
-# TYPE up gauge
-up 1
-</code></pre></div><p>You can see, in this case the endpoint exposes multiple metrics called <code>http_request_duration_seconds_bucket</code> with different values for the <code>le</code> label. These are duplicated for other status codes, but those have been omitted in this example. When Prometheus scrapes the endpoint, it will add additional labels to provide metadata for later queries. Prometheus features built-in service discovery options for adding Kubernetes metadata such as the namespace of the pod, the pod name, and Kubernetes labels assigned to the pod.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span># HELP http_request_duration_seconds duration histogram of http responses labeled with: status_code, method
+</span></span><span style="display:flex;"><span># TYPE http_request_duration_seconds histogram
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;0.003&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1204
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;0.03&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1214
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;0.1&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1215
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;0.3&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1215
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;1.5&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1230
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;10&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1257
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_bucket{le=&#34;+Inf&#34;,status_code=&#34;200&#34;,method=&#34;GET&#34;} 1260
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_sum{status_code=&#34;200&#34;,method=&#34;GET&#34;} 159.43762229599974
+</span></span><span style="display:flex;"><span>http_request_duration_seconds_count{status_code=&#34;200&#34;,method=&#34;GET&#34;} 1260
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># HELP up 1 = up, 0 = not up
+</span></span><span style="display:flex;"><span># TYPE up gauge
+</span></span><span style="display:flex;"><span>up 1
+</span></span></code></pre></div><p>You can see, in this case the endpoint exposes multiple metrics called <code>http_request_duration_seconds_bucket</code> with different values for the <code>le</code> label. These are duplicated for other status codes, but those have been omitted in this example. When Prometheus scrapes the endpoint, it will add additional labels to provide metadata for later queries. Prometheus features built-in service discovery options for adding Kubernetes metadata such as the namespace of the pod, the pod name, and Kubernetes labels assigned to the pod.</p>
 <p>The <code>http_request_duration_seconds_count</code> metric from above may look something like this after scraping:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">http_request_duration_seconds_count{app=&#34;awesome-node&#34;, instance=&#34;10.244.2.130:8080&#34;, job=&#34;kubernetes-pods&#34;, kubernetes_namespace=&#34;awesome-node&#34;, kubernetes_pod_name=&#34;awesome-node-56bf9dfd49-74v5x&#34;, method=&#34;GET&#34;, pod_template_hash=&#34;56bf9dfd49&#34;, status_code=&#34;200&#34;}
-</code></pre></div><h3 id="libraries-for-nodejs">Libraries for Node.js</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>http_request_duration_seconds_count{app=&#34;awesome-node&#34;, instance=&#34;10.244.2.130:8080&#34;, job=&#34;kubernetes-pods&#34;, kubernetes_namespace=&#34;awesome-node&#34;, kubernetes_pod_name=&#34;awesome-node-56bf9dfd49-74v5x&#34;, method=&#34;GET&#34;, pod_template_hash=&#34;56bf9dfd49&#34;, status_code=&#34;200&#34;}
+</span></span></code></pre></div><h3 id="libraries-for-nodejs">Libraries for Node.js</h3>
 <p>There are a number of libraries available for Node.js that export some basic metrics for many Node.js web servers.</p>
 <p>In this example we&rsquo;re going to use the <a href="https://github.com/jochen-schweizer/express-prom-bundle">Express Prometheus Bundle</a>, which also supports Koa, and exposes metrics very suitably for the Prometheus data model and query language.</p>
 <p>The Express Prometheus Bundle automatically exports a number of useful metrics related to request duration and is based on <a href="https://github.com/siimon/prom-client">prom-client</a> which you can use to export additional custom metrics for your application.</p>
@@ -113,8 +113,8 @@ up 1
 <p>Let&rsquo;s start creating some diagrams. In a first panel, you may want to show a graph, plotting requests per second to your application over time such as the one below.</p>
 <p><img src="./requests-per-second.png" alt="Graph showing requests per second over time"></p>
 <p>This Grafana panel shows requests per second hitting all instances of the application over 30 minutes using the following query.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">2m</span>]<span style="color:#f92672">))</span>
-</code></pre></div><p>The query is retrieving a range vector over 2 minutes with data points of the <code>http_request_duration_seconds_count</code> metric with the label <code>app</code> set to <code>awesome-node</code>.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">2m</span>]<span style="color:#f92672">))</span>
+</span></span></code></pre></div><p>The query is retrieving a range vector over 2 minutes with data points of the <code>http_request_duration_seconds_count</code> metric with the label <code>app</code> set to <code>awesome-node</code>.
 In our example Prometheus scrapes the metrics every minute, so with every two minute interval there should be between 1 and 3 data points.</p>
 <p>The <code>rate()</code> function then calculates the average rate per second with respect to the exact intervals between data points.</p>
 <p>This still results in multiple metrics which are different in their <code>satus_code</code> and <code>kubernetes_pod_name</code> labels and can be summed up to give a single number for the whole application.</p>
@@ -132,13 +132,13 @@ In our example Prometheus scrapes the metrics every minute, so with every two mi
 <p>The simplest chart just displays all the buckets of the histogram as individual graphs.</p>
 <p><img src="./request-duration-stacked_all.png" alt="Graph chart showing all request buckets stacked"></p>
 <p>The following query calculates the rate for each bucket and pod and then sums that up by bucket to produce the chart above.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{kubernetes_namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">))</span>
-</code></pre></div><p>A drawback of this chart is, that most of the requests are in the bucket <code>le: 0.003</code> and the graphs representing other buckets all get crammed into a very tiny space.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{kubernetes_namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">))</span>
+</span></span></code></pre></div><p>A drawback of this chart is, that most of the requests are in the bucket <code>le: 0.003</code> and the graphs representing other buckets all get crammed into a very tiny space.</p>
 <p>We can exclude the bucket for the shortest requests and remove them from the sum by turning the buckets around and calculating the request counts that are larger than the <code>le</code> thresholds.</p>
 <p><img src="./request-duration-stacked_reduced.png" alt="Graph chart showing request buckets excluding the fastest bucket"></p>
 <p>Use the query below to produce this chart:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app, le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">ignoring</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#66d9ef">group_right</span> <span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{le<span style="color:#f92672">!=</span>&#34;<span style="color:#e6db74">+Inf</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">))</span>
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app, le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">ignoring</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#66d9ef">group_right</span> <span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{le<span style="color:#f92672">!=</span>&#34;<span style="color:#e6db74">+Inf</span>&#34;}[<span style="color:#e6db74">3m</span>]<span style="color:#f92672">))</span>
+</span></span></code></pre></div><blockquote>
 <h4 id="query-explanation">Query Explanation</h4>
 <p>This query uses <a href="https://prometheus.io/docs/prometheus/latest/querying/operators/#many-to-one-and-one-to-many-vector-matches">one-to-many</a> matching to subtract many metrics (the buckets) from a single metric (the count). In order to support this, we need to tell Prometheus that the right part has the higher cardinality using the <code>group_right</code> modifier.</p>
 <p>Furthermore, by default Prometheus matches metrics with matching label values. However, in this case the <code>le</code> label is only available on the buckets. For the matching operation to succeed, we tell it to ignore the <code>le</code> label, by adding the <code>ignoring (le)</code> modifier.</p>
@@ -149,8 +149,8 @@ In our example Prometheus scrapes the metrics every minute, so with every two mi
 <p>As you can see on this heatmap, the amount of long requests is clearly shown in the upper parts of the heatmap with a more intense color indicating more requests in that bucket.
 Optimally, only the bottom 1-3 rows should be colored at all, with few exceptions.</p>
 <p>The query to produce this heatmap is quite simple:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">label_replace</span><span style="color:#f92672">(</span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#960050;background-color:#1e0010">$__rate_interval</span>]<span style="color:#f92672">))</span>, &#34;<span style="color:#e6db74">le</span>&#34;, &#34;<span style="color:#e6db74">Inf</span>&#34;, &#34;<span style="color:#e6db74">le</span>&#34;, &#34;<span style="color:#e6db74">\\+Inf</span>&#34;<span style="color:#f92672">)</span>
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">label_replace</span><span style="color:#f92672">(</span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>le<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#960050;background-color:#1e0010">$__rate_interval</span>]<span style="color:#f92672">))</span>, &#34;<span style="color:#e6db74">le</span>&#34;, &#34;<span style="color:#e6db74">Inf</span>&#34;, &#34;<span style="color:#e6db74">le</span>&#34;, &#34;<span style="color:#e6db74">\\+Inf</span>&#34;<span style="color:#f92672">)</span>
+</span></span></code></pre></div><blockquote>
 <h4 id="note">Note!</h4>
 <p>Using absolute numbers instead of rates per second can be practical when grouping into larger intervals such as in this use case.</p>
 <p>The <code>label_replace()</code> function is used here to replace the <code>le: +Inf</code> label with <code>le: Inf</code>, because Grafana would use the <code>+Inf</code> label incorrectly.</p>
@@ -171,8 +171,8 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
 <p>Prometheus also allows you to calculate quantiles from histograms using the <a href="https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile">histogram_quantile() function</a>, but this function uses interpolation to calculate the quantiles and therefore is not exact.</p>
 <h2 id="monitoring-your-service-level-objectives">Monitoring Your Service Level Objectives</h2>
 <p>A service level objective is often stated by requiring that a percentage of requests over a certain time period are shorter than a specific threshold, for example &ldquo;99 percent of requests must be served in under 0.3 seconds over any 24-hour period&rdquo;. Usually the time period is measured in days (as in the example), weeks, or months. In our example, the percentage of requests shorter than 0.3 seconds over 24 hours would be called a service level indicator (SLI), and we want to show it on our dashboard using the following query.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#f92672">(</span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;, le<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">0.3</span>&#34;}[<span style="color:#e6db74">1d</span>]<span style="color:#f92672">))</span> <span style="color:#f92672">/</span> <span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">1d</span>]<span style="color:#f92672">)))</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>
-</code></pre></div><p>In this case we are interested in a single number, therefore we want to use a stat panel.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#f92672">(</span><span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_bucket{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;, le<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">0.3</span>&#34;}[<span style="color:#e6db74">1d</span>]<span style="color:#f92672">))</span> <span style="color:#f92672">/</span> <span style="color:#66d9ef">sum</span> <span style="color:#66d9ef">by</span> <span style="color:#f92672">(</span>app<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>http_request_duration_seconds_count{app<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">1d</span>]<span style="color:#f92672">)))</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>
+</span></span></code></pre></div><p>In this case we are interested in a single number, therefore we want to use a stat panel.</p>
 <p><img src="./service-level-objective.png" alt="Single stat panel showing the service level indicator for requests below 0.3 seconds"></p>
 <p>Below the number the stat can also show a graph giving you an indication of whether your SLI is heading up or down, or keeping steady.</p>
 <p>The single stat can be configured to change colors based on certain thresholds in the &ldquo;Thresholds&rdquo; section of the &ldquo;Field&rdquo; tab in Grafana. In this case I configured it to be red, when the SLI is below 99%, yellow, when it&rsquo;s lower than 99.9%, and green only if it&rsquo;s greater than or equal to 99.9%. You can see these thresholds are applied in the screenshot above, where the value 99.76% for our SLI is between 99% and 99.9% and therefore turned yellow.</p>
@@ -184,23 +184,23 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
 <h4 id="note-1">Note!</h4>
 <p>Prometheus supports regex queries for metric labels using the <code>=~</code> operator.</p>
 </blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql">container_memory_working_set_bytes{namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;, pod<span style="color:#f92672">=~</span>&#34;<span style="color:#e6db74">awesome-node-.*</span>&#34;, container<span style="color:#f92672">=</span>&#34;&#34;}
-</code></pre></div><p>Additionally, we only select the metric, where the <code>container</code> label is not present, since this metric is the memory usage of the whole pod, whereas the other metrics focus on the individual containers of a pod.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span>container_memory_working_set_bytes{namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;, pod<span style="color:#f92672">=~</span>&#34;<span style="color:#e6db74">awesome-node-.*</span>&#34;, container<span style="color:#f92672">=</span>&#34;&#34;}
+</span></span></code></pre></div><p>Additionally, we only select the metric, where the <code>container</code> label is not present, since this metric is the memory usage of the whole pod, whereas the other metrics focus on the individual containers of a pod.</p>
 <blockquote>
 <h4 id="note-2">Note!</h4>
 <p>The resets in memory you see here are due to container restarts happening because of a memory leak purposefully built into the Awesome Node application.</p>
 </blockquote>
 <p>To display CPU metrics, we also use a graph chart and query a counter, measuring CPU seconds used. Since this is a counter, it is useful to use the <code>rate()</code> function again to get the increase in CPU as shown in the query below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>container_cpu_user_seconds_total{pod<span style="color:#f92672">=~</span>&#34;<span style="color:#e6db74">notification-api-deployment-.*</span>&#34;, container<span style="color:#f92672">=</span>&#34;&#34;}[<span style="color:#e6db74">2m</span>]<span style="color:#f92672">)*</span><span style="color:#ae81ff">1000</span>
-</code></pre></div><p>This query returns CPU millicores used, since in Kubernetes we frequently use the millicores unit to limit the CPU resources one pod or container can use.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">rate</span><span style="color:#f92672">(</span>container_cpu_user_seconds_total{pod<span style="color:#f92672">=~</span>&#34;<span style="color:#e6db74">notification-api-deployment-.*</span>&#34;, container<span style="color:#f92672">=</span>&#34;&#34;}[<span style="color:#e6db74">2m</span>]<span style="color:#f92672">)*</span><span style="color:#ae81ff">1000</span>
+</span></span></code></pre></div><p>This query returns CPU millicores used, since in Kubernetes we frequently use the millicores unit to limit the CPU resources one pod or container can use.</p>
 <h2 id="container-restarts">Container Restarts</h2>
 <p>In our example, some containers seem to be restarting frequently. If you want to show pods that recently had restarts, use a stat panel and query the <code>kube_pod_container_status_restarts_total</code> metric.</p>
 <p>This metric is exported by the Kube State Metrics component, which monitors the state of Kubernetes objects and provides an endpoint for Prometheus to scrape.</p>
 <p><img src="./container-restarts.png" alt="Stat panel showing which pods have containers with restarts in the last 3 hours"></p>
 <p>This panel will be empty, if no containers had any restarts within the last 3 hours and can be produced using the following query.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-promql" data-lang="promql"><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>kube_pod_container_status_restarts_total{namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3h</span>]<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
-</code></pre></div><h2 id="summary">Summary</h2>
-<p>While Grafana and the Prometheus metric format are themselves relatively easy to understand, creating useful dashboards requires getting familiar with PromQL and Prometheus' data model.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-promql" data-lang="promql"><span style="display:flex;"><span><span style="color:#66d9ef">increase</span><span style="color:#f92672">(</span>kube_pod_container_status_restarts_total{namespace<span style="color:#f92672">=</span>&#34;<span style="color:#e6db74">awesome-node</span>&#34;}[<span style="color:#e6db74">3h</span>]<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><h2 id="summary">Summary</h2>
+<p>While Grafana and the Prometheus metric format are themselves relatively easy to understand, creating useful dashboards requires getting familiar with PromQL and Prometheus&rsquo; data model.</p>
 <p>When designing dashboards, querying Prometheus directly or choosing how to expose metrics in your applications, keep the following in mind:</p>
 <ul>
 <li>Counters provide valuable insight when used in combination with the <code>rate()</code> or <code>increase()</code> functions.</li>
@@ -210,7 +210,7 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
 <h3 id="example-dashboard">Example Dashboard</h3>
 <p>We created an example dashboard with the visualizations created in this example and a few more for you to explore. You can <a href="https://gist.github.com/elessar-ch/42f0eb278aedd27d3b20f4ea490902c7">download</a> it and use Grafana&rsquo;s import function to get started.</p>
 <h3 id="whats-next">What&rsquo;s Next?</h3>
-<p>The natural next step, once your dashboard is up and running, is setting up alerting, so you&rsquo;re catching problems early and even when you are not looking at your dashboard. Check out <a href="https://www.prometheus.io/docs/alerting/latest/alertmanager/">Prometheus' Alertmanager</a> on how to set it up and configure alerts based on your metrics in Prometheus.</p>
+<p>The natural next step, once your dashboard is up and running, is setting up alerting, so you&rsquo;re catching problems early and even when you are not looking at your dashboard. Check out <a href="https://www.prometheus.io/docs/alerting/latest/alertmanager/">Prometheus&rsquo; Alertmanager</a> on how to set it up and configure alerts based on your metrics in Prometheus.</p>
 
 
 		<div
@@ -245,6 +245,15 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
       </span>
     </a>
     
+    <a class="bespinian-social-nav-link" href="https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on YouTube">
+          <title>bespinian on YouTube</title>
+          <use href="/icons/youtube.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
     <a class="bespinian-social-nav-link" href="/index.xml">
       <span class="bespinian-icon">
         <svg role="img" aria-label="The bespinian blog RSS feed">
@@ -273,7 +282,7 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -294,7 +303,7 @@ Optimally, only the bottom 1-3 rows should be colored at all, with few exception
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-04-22 11:43:15.413995911 &#43;0200 CEST m=&#43;0.056772817">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-27 11:44:59.573265114 &#43;0200 CEST m=&#43;0.244029902">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

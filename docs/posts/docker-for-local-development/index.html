@@ -24,7 +24,7 @@ if (!doNotTrack) {
 		<link rel="stylesheet" href="/css/fonts.css">
 		<link rel="stylesheet" href="/custom.css">
 		
-		<link rel="icon" href="favicon.ico" />
+		<link rel="icon" href="/favicon.ico"/>
 		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -68,45 +68,45 @@ if (!doNotTrack) {
 <p>Most backend systems are accessible through HTTP and through a specific port. You can use that to your advantage and have many services, each running in its own Docker container and exposing the respective port to your local host.</p>
 <h2 id="install-docker">Install Docker</h2>
 <p>If you don&rsquo;t have Docker installed yet, I suggest you do so now and come back afterwards. I for one, have really come to like <a href="https://docs.docker.com/docker-for-mac/install/">Docker for Mac</a> which you can also install through <a href="https://brew.sh/">Homebrew</a> by running the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ brew cask install docker
-</code></pre></div><p>Installing Docker on Windows can be done with <a href="https://www.docker.com/docker-windows">Docker for Windows</a>, and installing it on Linux is as easy as it gets: Just use your local package manager.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ brew cask install docker
+</span></span></code></pre></div><p>Installing Docker on Windows can be done with <a href="https://www.docker.com/docker-windows">Docker for Windows</a>, and installing it on Linux is as easy as it gets: Just use your local package manager.</p>
 <h2 id="run-services">Run Services</h2>
 <p>Now let&rsquo;s get to actually running the services. The magic formula here is the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker run -d -p &lt;port&gt;:&lt;port&gt; &lt;service&gt;
-</code></pre></div><p>Replace <code>&lt;port&gt;</code> with the default port of your service and <code>&lt;service&gt;</code> with its name, and you got yourself a running instance. The <code>-d</code> flag specifies, that you want to run the Docker container in <a href="https://docs.docker.com/engine/reference/run/#detached--d">detached mode</a>, which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># MongoDB</span>
-$ docker run -d -p 27017:27017 mongo
-</code></pre></div><p>Easy!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Redis</span>
-$ docker run -d -p 6379:6379 redis:3
-</code></pre></div><p>Here, we also specified the Redis version we want to use. You can find the available versions by searching for the respective image on <a href="https://store.docker.com">Docker Store</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># MySQL</span>
-$ docker run -d -p 3306:3306 -e <span style="color:#e6db74">&#39;MYSQL_ALLOW_EMPTY_PASSWORD=yes&#39;</span> mysql
-</code></pre></div><p>In this case, we are using the <code>-e</code> flag to set an additional environment variable required by the MySQL image.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ docker run -d -p &lt;port&gt;:&lt;port&gt; &lt;service&gt;
+</span></span></code></pre></div><p>Replace <code>&lt;port&gt;</code> with the default port of your service and <code>&lt;service&gt;</code> with its name, and you got yourself a running instance. The <code>-d</code> flag specifies, that you want to run the Docker container in <a href="https://docs.docker.com/engine/reference/run/#detached--d">detached mode</a>, which means that it will continue running in the background even if you close your terminal. Here are a couple of examples to run services with the above command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># MongoDB</span>
+</span></span><span style="display:flex;"><span>$ docker run -d -p 27017:27017 mongo
+</span></span></code></pre></div><p>Easy!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Redis</span>
+</span></span><span style="display:flex;"><span>$ docker run -d -p 6379:6379 redis:3
+</span></span></code></pre></div><p>Here, we also specified the Redis version we want to use. You can find the available versions by searching for the respective image on <a href="https://store.docker.com">Docker Store</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># MySQL</span>
+</span></span><span style="display:flex;"><span>$ docker run -d -p 3306:3306 -e <span style="color:#e6db74">&#39;MYSQL_ALLOW_EMPTY_PASSWORD=yes&#39;</span> mysql
+</span></span></code></pre></div><p>In this case, we are using the <code>-e</code> flag to set an additional environment variable required by the MySQL image.</p>
 <p>I&rsquo;m sure you get the idea after seeing these examples. Bear in mind though that you can apply these commands to almost any service which can run in a container. You can now connect to the containerized services from your application just like they were running on your local machine. This is because the <code>-p</code> flag tells the containers to forward their internal ports to your local ones.</p>
 <p>For example, if you have a MongoDB container running which forwards its port <code>27017</code> to your local port <code>27017</code>, you can easily connect to the database in the container with the <code>mongo</code> shell just like if the DB was running locally.</p>
 <h2 id="docker-shortcuts">Docker Shortcuts</h2>
 <p>While using Docker, I&rsquo;ve discovered a couple of handy shortcut commands which allow cleaning up unused services, so they don&rsquo;t clutter your computer anymore. Another advantage of this is that you can cleanly and easily flush your databases and other persistent services to make sure you&rsquo;re testing a clean state.</p>
 <p>A first important shortcut is that you can always abbreviate any container ID to its first couple of letters (as long as it&rsquo;s the only such entity which has an ID starting with these letters). So instead of using the full ID and typing <code>docker stop 4f263b9aad2d</code>, I could simply type <code>docker stop 4f</code> (as long as this container is the only running one which has an ID starting with &ldquo;4f&rdquo;).</p>
 <p>Some other useful commands are:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Stop all running containers</span>
-$ docker stop <span style="color:#66d9ef">$(</span>docker ps -a -q<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># Remove all stopped containers</span>
-$ docker rm <span style="color:#66d9ef">$(</span>docker ps -a -q<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># Remove all unused images</span>
-$ docker rmi <span style="color:#66d9ef">$(</span>docker images -q<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># Remove all unused volumes</span>
-$ docker volume rm <span style="color:#66d9ef">$(</span>docker volume ls -q<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># Remove all unused networks</span>
-$ docker network rm <span style="color:#66d9ef">$(</span>docker network ls -q<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># Remove everything</span>
-$ docker system prune --all
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Stop all running containers</span>
+</span></span><span style="display:flex;"><span>$ docker stop <span style="color:#66d9ef">$(</span>docker ps -a -q<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove all stopped containers</span>
+</span></span><span style="display:flex;"><span>$ docker rm <span style="color:#66d9ef">$(</span>docker ps -a -q<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove all unused images</span>
+</span></span><span style="display:flex;"><span>$ docker rmi <span style="color:#66d9ef">$(</span>docker images -q<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove all unused volumes</span>
+</span></span><span style="display:flex;"><span>$ docker volume rm <span style="color:#66d9ef">$(</span>docker volume ls -q<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove all unused networks</span>
+</span></span><span style="display:flex;"><span>$ docker network rm <span style="color:#66d9ef">$(</span>docker network ls -q<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove everything</span>
+</span></span><span style="display:flex;"><span>$ docker system prune --all
+</span></span></code></pre></div>
 
 		<div
   class="bespinian-social-nav-container bespinian-social-nav-container--footer"
@@ -140,6 +140,15 @@ $ docker system prune --all
       </span>
     </a>
     
+    <a class="bespinian-social-nav-link" href="https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on YouTube">
+          <title>bespinian on YouTube</title>
+          <use href="/icons/youtube.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
     <a class="bespinian-social-nav-link" href="/index.xml">
       <span class="bespinian-icon">
         <svg role="img" aria-label="The bespinian blog RSS feed">
@@ -168,7 +177,7 @@ $ docker system prune --all
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -189,7 +198,7 @@ $ docker system prune --all
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-04-22 11:43:15.41438955 &#43;0200 CEST m=&#43;0.057166452">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-27 11:44:59.480634489 &#43;0200 CEST m=&#43;0.151399363">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

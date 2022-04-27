@@ -5,7 +5,7 @@ comments: true
 date: 2022-04-22
 ---
 
-This blog post aims to explain how observability and monitoring should be distinguished, what the problems with "traditional" monitoring are when we deal with distributed cloud systems and how observability can alleviate these problems.
+This blog post aims to explain how observability and monitoring should be distinguished, what the problems with "traditional" monitoring are when we deal with distributed cloud systems, and how observability can alleviate these problems.
 Finally, it roughly outlines how observability should be approached.
 
 ## Observability vs. Monitoring
@@ -17,10 +17,10 @@ Here, I summarize the main points of these accounts and draw some conclusions.
 Monitoring is what most of us are used to.
 It encompasses the collection of telemetry (metrics, logs and traces) and its visualization through dashboards and alerting, with metrics being the primary data type used.
 Monitoring is primarily the process of collecting telemetry and acting upon it.
-It deals with the known-unknowns (e.g. we know that we may run out of memory or disk space and we can monitor it, but we do not precisely know when it will happen and which processes cause it to happen).
+It deals with the known-unknowns (e.g. we know that we may run out of memory or disk space, and we can monitor it, but we do not precisely know when it will happen and which processes cause it to happen).
 
 Observability, on the other side, describes a property of a system.
-A system is observable, if you can deduce its internal state (such as the value of its internal variables and position in the callstack), from the outputs you can observe.
+A system is observable, if you can deduce its internal state (such as the value of its internal variables and position in the call stack), from the outputs you can observe.
 These outputs can be specific behaviors exhibited to users, and in practice rely heavily on telemetry which we collect from the system's environment (such as the machine it is running on) or which we deliberately emit from the system.
 A system can be described as "more observable", when we can more accurately describe its internal state, and "fully observable", when we can always describe its internal state with 100% accuracy.
 Making a system observable usually requires using monitoring tools and processes, but it enables us to deal with a larger set of problems, namely, the unkown-unknowns, and to effectively troubleshoot issues that we could not really imagine before they arose.
@@ -32,7 +32,7 @@ So, now that we know the difference between monitoring and observability, how di
 Once something goes wrong, we may use the alerts and dashboards to get an overview over which application, machine, or component is affected.
 Additionally, we head into the logs, to try and figure out where exactly things went wrong.
 If the root cause is a known issue, we can usually apply a known fix.
-But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them and finally we may have to start up the application with a debugger in order to try to reproduce the exact conditions.
+But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them, and finally we may have to start up the application with a debugger in order to try to reproduce the exact conditions.
 We iteratively go back to the logs, to grab more pieces of evidence and approximate the state of the system when the error occurred.
 Since we can use debuggers to investigate the problems, and the possible problem space is usually somewhat limited, we can rely on this telemetry, which is usually highly aggregated.
 
@@ -49,11 +49,11 @@ Additionally, the following practices are being adopted more widely, when we des
 
 These changes lead to a more complex application landscape, which makes debugging increasingly difficult.
 Instead of running one service in a debugger and recreating its state, we may need to start various services and try to reproduce state in each of them.
-Our telemetry may also become less expressive and we may have to ask ourselves additional questions, such as:
+Our telemetry may also become less expressive, and we may have to ask ourselves additional questions, such as:
 
 - has a deployment just happened?
 - what versions are actually deployed?
-- which versions (if multiple are running) show anomalous behaviour
+- which versions (if multiple are running) show anomalous behavior
 - which feature flags were enabled for the requests/tasks that failed?
 
 To ensure that we still get meaningful insights from our telemetry, we need to annotate it with additional information such as build ID, hostname, IP address, enabled feature flags and more.
@@ -63,7 +63,7 @@ At the same time, we still need to make a number of queries to correlate informa
 ## Closing the Observability Gap in Distributed Cloud Systems
 
 Unfortunately, this gap cannot be closed by the simple addition of a new tool or library.
-Instead, there are two primary challenges that should be tackled by site reliability engineers who aim to improve the observability in their systems.
+Instead, there are two primary challenges that should be tackled by site reliability engineers who aim to improve the observability of their systems.
 
 First, each individual service should be instrumented to keep track of its context. Furthermore, each service should emit arbitrarily wide events containing the relevant context when a request/task processing finishes (successfully or with an exception).
 To do this, whenever a workload is processed (e.g. a request enters a system), an event context object should be initialized and prepopulated with all relevant data.

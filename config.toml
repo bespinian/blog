@@ -30,6 +30,11 @@ alt_text = "bespinian on Twitter"
 icon_file = "twitter.svg"
 
 [[params.social]]
+url = "https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists"
+alt_text = "bespinian on YouTube"
+icon_file = "youtube.svg"
+
+[[params.social]]
 url = "/index.xml"
 alt_text = "The bespinian blog RSS feed"
 icon_file = "rss.svg"

@@ -24,7 +24,7 @@ if (!doNotTrack) {
 		<link rel="stylesheet" href="/css/fonts.css">
 		<link rel="stylesheet" href="/custom.css">
 		
-		<link rel="icon" href="favicon.ico" />
+		<link rel="icon" href="/favicon.ico"/>
 		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -68,157 +68,157 @@ if (!doNotTrack) {
 <p>In my example, I&rsquo;ll use a simple to-do service and a component that lists those to-dos.</p>
 <h2 id="import-libraries">Import libraries</h2>
 <p>As a first step, we&rsquo;ll need to add the two libraries <code>socket.io-client</code> and <code>feathers-client</code> to our project. This can easily be done using npm:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save socket.io-client feathers-client
-</code></pre></div><p>The TypeScript typings of <code>feathers-client</code> are already included in the library. However, we need to include the ones for <code>socket.io-client</code> manually:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ npm install --save @types/socket.io-client
-</code></pre></div><h2 id="create-base-api-service">Create base API service</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ npm install --save socket.io-client feathers-client
+</span></span></code></pre></div><p>The TypeScript typings of <code>feathers-client</code> are already included in the library. However, we need to include the ones for <code>socket.io-client</code> manually:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ npm install --save @types/socket.io-client
+</span></span></code></pre></div><h2 id="create-base-api-service">Create base API service</h2>
 <p>Then we create an abstract class to extend upon, which contains the basic properties of a backend service:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/api.service.ts
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiService</span> {
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">_url</span>: <span style="color:#66d9ef">string</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://my-todos-api.com&#34;</span>;
-
-  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">url</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_url</span>;
-  }
-}
-</code></pre></div><h2 id="create-data-model">Create data model</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// src/app/api.service.ts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiService</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">_url</span>: <span style="color:#66d9ef">string</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://my-todos-api.com&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">url</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_url</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="create-data-model">Create data model</h2>
 <p>Next, we create a class to represent our to-do&rsquo;s data model:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.ts
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Todo</span> {
-  <span style="color:#a6e22e">title</span>: <span style="color:#66d9ef">string</span>;
-}
-</code></pre></div><h2 id="create-actual-service">Create actual service</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// src/app/todos/todo.ts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Todo</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">title</span>: <span style="color:#66d9ef">string</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="create-actual-service">Create actual service</h2>
 <p>Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we&rsquo;ve created above. The Feathers service is exposed as an RxJS <code>Obersvable</code> which our components can then subscribe to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// src/app/todos/todo.service.ts
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observable&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observer</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observer&#34;</span>;
-<span style="color:#66d9ef">import</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">io</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;socket.io-client&#34;</span>;
-<span style="color:#66d9ef">import</span> <span style="color:#a6e22e">feathers</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;feathers-client&#34;</span>;
-
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">ApiService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;../api.service&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
-
-<span style="color:#66d9ef">@Injectable</span>()
-<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodoService</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">APIService</span> {
-  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">todos$</span>: <span style="color:#66d9ef">Observable</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todosObserver</span>: <span style="color:#66d9ef">Observer</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">feathersService</span>: <span style="color:#66d9ef">any</span>;
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">dataStore</span><span style="color:#f92672">:</span> {
-    <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[];
-  };
-
-  <span style="color:#66d9ef">constructor</span>() {
-    <span style="color:#66d9ef">super</span>();
-
-    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">io</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">url</span>);
-    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">feathers</span>().<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">feathers</span>.<span style="color:#a6e22e">socketio</span>(<span style="color:#a6e22e">socket</span>));
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">service</span>(<span style="color:#e6db74">&#34;todo&#34;</span>);
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;created&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>));
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;updated&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>));
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;removed&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>));
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos$</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Observable</span>((<span style="color:#a6e22e">observer</span>) <span style="color:#f92672">=&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>));
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">todos</span><span style="color:#f92672">:</span> [] };
-  }
-
-  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">find() {</span>
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">find</span>((<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
-      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
-
-      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
-      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
-    });
-  }
-
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">id</span>: <span style="color:#66d9ef">string</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">number</span> {
-    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">foundIndex</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
-      <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">id</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">id</span>) {
-        <span style="color:#a6e22e">foundIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">i</span>;
-      }
-    }
-
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">foundIndex</span>;
-  }
-
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>: <span style="color:#66d9ef">Todo</span>) {
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">todo</span>);
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
-  }
-
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>: <span style="color:#66d9ef">Todo</span>) {
-    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">todo</span>.<span style="color:#a6e22e">id</span>);
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>[<span style="color:#a6e22e">index</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">todo</span>;
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
-  }
-
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>) {
-    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">todo</span>.<span style="color:#a6e22e">id</span>);
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">index</span>, <span style="color:#ae81ff">1</span>);
-
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
-  }
-}
-</code></pre></div><h2 id="consume-from-component">Consume from component</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// src/app/todos/todo.service.ts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Injectable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observable</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observable&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Observer</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Observer&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">io</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;socket.io-client&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">feathers</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;feathers-client&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">ApiService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;../api.service&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@Injectable</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodoService</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">APIService</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">todos$</span>: <span style="color:#66d9ef">Observable</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todosObserver</span>: <span style="color:#66d9ef">Observer</span>&lt;<span style="color:#f92672">Todo</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt;;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">feathersService</span>: <span style="color:#66d9ef">any</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">dataStore</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[];
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">constructor</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">super</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">io</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">url</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">feathers</span>().<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">feathers</span>.<span style="color:#a6e22e">socketio</span>(<span style="color:#a6e22e">socket</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">service</span>(<span style="color:#e6db74">&#34;todo&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;created&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;updated&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;removed&#34;</span>, (<span style="color:#a6e22e">todo</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos$</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Observable</span>((<span style="color:#a6e22e">observer</span>) <span style="color:#f92672">=&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">todos</span><span style="color:#f92672">:</span> [] };
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">find() {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">feathersService</span>.<span style="color:#a6e22e">find</span>((<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">id</span>: <span style="color:#66d9ef">string</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">number</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">foundIndex</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">id</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">id</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">foundIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">i</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">foundIndex</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onCreated</span>(<span style="color:#a6e22e">todo</span>: <span style="color:#66d9ef">Todo</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">todo</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onUpdated</span>(<span style="color:#a6e22e">todo</span>: <span style="color:#66d9ef">Todo</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">todo</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>[<span style="color:#a6e22e">index</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">todo</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">onRemoved</span>(<span style="color:#a6e22e">todo</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getIndex</span>(<span style="color:#a6e22e">todo</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">index</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todosObserver</span>.<span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">dataStore</span>.<span style="color:#a6e22e">todos</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="consume-from-component">Consume from component</h2>
 <p>Now, our Angular service is ready. To use the <code>Observable</code> it exposes in an Angular component, follow the structure below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// todos/todos.component.ts
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">import</span> {
-  <span style="color:#a6e22e">ChangeDetectorRef</span>,
-  <span style="color:#a6e22e">ChangeDetectionStrategy</span>,
-  <span style="color:#a6e22e">Component</span>,
-  <span style="color:#a6e22e">OnDestroy</span>,
-  <span style="color:#a6e22e">OnInit</span>,
-} <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Subscription</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Subscription&#34;</span>;
-
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">TodoService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo.service&#34;</span>;
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
-
-<span style="color:#66d9ef">@Component</span>({
-  <span style="color:#a6e22e">selector</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;app-todos&#34;</span>,
-  <span style="color:#a6e22e">providers</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">TodoService</span>],
-  <span style="color:#a6e22e">changeDetection</span>: <span style="color:#66d9ef">ChangeDetectionStrategy.OnPush</span>,
-  <span style="color:#a6e22e">templateUrl</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;./todos.component.html&#34;</span>,
-})
-<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodosComponent</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">OnDestroy</span>, <span style="color:#a6e22e">OnInit</span> {
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[] <span style="color:#f92672">=</span> [];
-  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">subscription</span>: <span style="color:#66d9ef">Subscription</span>;
-
-  <span style="color:#66d9ef">constructor</span>(
-    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todoService</span>: <span style="color:#66d9ef">TodoService</span>,
-    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">ref</span>: <span style="color:#66d9ef">ChangeDetectorRef</span>
-  ) {}
-
-  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ngOnInit</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">todos$</span>.<span style="color:#a6e22e">subscribe</span>(
-      (<span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">ref</span>.<span style="color:#a6e22e">markForCheck</span>();
-      },
-      (<span style="color:#a6e22e">err</span>) <span style="color:#f92672">=&gt;</span> {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
-      }
-    );
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">find</span>();
-  }
-
-  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ngOnDestroy() {</span>
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span>.<span style="color:#a6e22e">unsubscribe</span>();
-  }
-}
-</code></pre></div><p>Our component <code>TodosComponent</code> now has a property <code>todos</code> which contains the to-dos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a to-do in the Feathers API is removed or added.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// todos/todos.component.ts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ChangeDetectorRef</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ChangeDetectionStrategy</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Component</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">OnDestroy</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">OnInit</span>,
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;@angular/core&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Subscription</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;rxjs/Subscription&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">TodoService</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo.service&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Todo</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;./todo&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@Component</span>({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">selector</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;app-todos&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">providers</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">TodoService</span>],
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">changeDetection</span>: <span style="color:#66d9ef">ChangeDetectionStrategy.OnPush</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">templateUrl</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;./todos.component.html&#34;</span>,
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TodosComponent</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">OnDestroy</span>, <span style="color:#a6e22e">OnInit</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[] <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">subscription</span>: <span style="color:#66d9ef">Subscription</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">constructor</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">todoService</span>: <span style="color:#66d9ef">TodoService</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">ref</span>: <span style="color:#66d9ef">ChangeDetectorRef</span>
+</span></span><span style="display:flex;"><span>  ) {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ngOnInit</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">todos$</span>.<span style="color:#a6e22e">subscribe</span>(
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">todos</span>: <span style="color:#66d9ef">Todo</span>[]) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todos</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">todos</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">ref</span>.<span style="color:#a6e22e">markForCheck</span>();
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">err</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">todoService</span>.<span style="color:#a6e22e">find</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ngOnDestroy() {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">subscription</span>.<span style="color:#a6e22e">unsubscribe</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Our component <code>TodosComponent</code> now has a property <code>todos</code> which contains the to-dos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a to-do in the Feathers API is removed or added.</p>
 
 
 		<div
@@ -253,6 +253,15 @@ if (!doNotTrack) {
       </span>
     </a>
     
+    <a class="bespinian-social-nav-link" href="https://www.youtube.com/channel/UCBQD1IedufccsRXqC_hypyg/playlists">
+      <span class="bespinian-icon">
+        <svg role="img" aria-label="bespinian on YouTube">
+          <title>bespinian on YouTube</title>
+          <use href="/icons/youtube.svg#glyph"></use>
+        </svg>
+      </span>
+    </a>
+    
     <a class="bespinian-social-nav-link" href="/index.xml">
       <span class="bespinian-icon">
         <svg role="img" aria-label="The bespinian blog RSS feed">
@@ -281,7 +290,7 @@ if (!doNotTrack) {
             <figure class="article-discussion">
               <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -302,7 +311,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-04-22 11:43:15.442299255 &#43;0200 CEST m=&#43;0.085076157">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-04-27 11:44:59.547044983 &#43;0200 CEST m=&#43;0.217809817">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
