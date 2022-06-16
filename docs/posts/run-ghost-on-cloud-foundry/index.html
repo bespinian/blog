@@ -81,7 +81,7 @@ if (!doNotTrack) {
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cf create-user-provided-service mailgun -p <span style="color:#e6db74">&#39;{ &#34;username&#34;: &#34;&lt;your-mailgun-smtp-login&gt;&#34;, &#34;password&#34;: &#34;&lt;your-mailgun-password&gt;&#34; }&#39;</span>
 </span></span></code></pre></div><p>Replace the values in <code>&lt;&gt;</code> with your respective credentials.</p>
 <h2 id="get-the-source-code">Get the Source Code</h2>
-<p>Getting the Ghost source code is quite easy. Just visit their <a href="https://github.com/TryGhost/Ghost/releases">releases</a> page and download the latest one as a ZIP archive. Then unzip it and <code>cd</code> into the respective folder from your terminal.</p>
+<p>Getting the Ghost source code is effortless. Just visit their <a href="https://github.com/TryGhost/Ghost/releases">releases</a> page and download the latest one as a ZIP archive. Then unzip it and <code>cd</code> into the respective folder from your terminal.</p>
 <h2 id="create-entrypoint-script">Create Entrypoint Script</h2>
 <p>Ghost needs to be configured through a configuration file. We&rsquo;ll call ours <code>config.producton.json</code> since it&rsquo;s supposed to be suitable for a production blog. This file tells Ghost where to look for its database, which email server to use, and how it&rsquo;s supposed to run the blog in general.</p>
 <p>In Cloud Foundry, services are configured dynamically, which isn&rsquo;t possible in a simple JSON file. We&rsquo;ll work around this by creating a Bash script to read out the environment and create the config file on the fly. Create a new file called <code>entrypoint-cf.sh</code> in the root folder of your app and paste the following content into it:</p>
@@ -167,13 +167,13 @@ if (!doNotTrack) {
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cf push
 </span></span></code></pre></div><p>Welcome to the fabulous world of Ghost blogging!</p>
 <h2 id="add-disqus-optional">Add Disqus (Optional)</h2>
-<p>Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding <a href="https://disqus.com/">Disqus</a> is a very easy way to do so.</p>
+<p>Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding <a href="https://disqus.com/">Disqus</a> is a straightforward way to do so.</p>
 <p>Simply visit their website, create an account and register your blog as a new site. Then, open <code>content/themes/casper/post.hbs</code> and look for a comment about Disqus in the file. There is a section that you&rsquo;ll need to uncomment and replace the sample URL with the one of your blog. Follow the steps described in the comment there.</p>
 <p>After that, run <code>cf push</code> and that&rsquo;s it. Your blog is now interactive.</p>
 <h2 id="add-object-storage-optional">Add Object Storage (Optional)</h2>
-<p>At some point, you&rsquo;ll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So we&rsquo;ll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.</p>
+<p>At some point, you&rsquo;ll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So, we&rsquo;ll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.</p>
 <p>To do so, follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> to create an S3 service with bucket and name the service instance &ldquo;blog-storage&rdquo;.</p>
-<p>Next, we&rsquo;ll need to bind the app to our newly created service. Add the following line to the <code>services</code> part of our <code>manifest.yml</code>:</p>
+<p>Next, we&rsquo;ll have to bind the app to our newly created service. Add the following line to the <code>services</code> part of our <code>manifest.yml</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#ae81ff">blog-storage</span>
 </span></span></code></pre></div><p>Now we need to install the <a href="https://github.com/colinmeinke/ghost-storage-adapter-s3">ghost-storage-adapter-s3</a> so that Ghost will know how to talk to our S3 service. To do so, run the installation commands from the link above in the folder where you have the Ghost repo. Cloud Foundry will try to install the dependencies for Ghost using <code>yarn</code>. Since the installation commands install the S3 storage adapter with <code>npm</code>, we&rsquo;ll need to change that. This can simply be achieved by removing the <code>yarn.lock</code> file:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ rm yarn.lock
@@ -359,7 +359,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-06-16 09:31:22.621765414 &#43;0200 CEST m=&#43;0.921210170">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-06-16 16:17:10.298339692 &#43;0200 CEST m=&#43;0.171376601">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

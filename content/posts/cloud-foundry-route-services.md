@@ -31,7 +31,7 @@ This tutorial assumes that you have a running app on Cloud Foundry which you can
 
 ### Push Rate Limiter
 
-As a first step, let's create the actual rate limiter. Simply clone [this repo](https://github.com/cloudfoundry-samples/ratelimit-service) which contains a small Go rate limiting app. Then push the app to your space with the following command:
+As a first step, let's create the actual rate limiter. Simply clone [this repo](https://github.com/cloudfoundry-samples/ratelimit-service), which contains a small Go rate-limiting app. Then push the app to your space with the following command:
 
 ```shell
 $ cf push rate-limiter -m 64M
@@ -41,7 +41,7 @@ You may have to specify an alternate hostname using the `--hostname` flag or use
 
 ### Create User-Provided Service
 
-Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as `-r` (don't forget to adjust the hostname of the URL to the one you have chosen for your "rate-limiter" app):
+Next, we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as `-r` (don't forget to adjust the hostname of the URL to the one you have chosen for your "rate-limiter" app):
 
 ```shell
 $ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io

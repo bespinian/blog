@@ -5,9 +5,9 @@ comments: true
 date: 2016-11-30
 ---
 
-[Piwik](https://piwik.org/) is an open source analytics platform based on [PHP](https://secure.php.net/) and [MySQL](https://www.mysql.com/). That makes it a perfect application to be run on Cloud Foundry based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.
+[Piwik](https://piwik.org/) is an open-source analytics platform based on [PHP](https://secure.php.net/) and [MySQL](https://www.mysql.com/). That makes it a perfect application to be run on Cloud Foundry-based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.
 
-In this tutorial, I will use the [Swisscom Application Cloud](https://developer.swisscom.com/) as an example, but any [Cloud Foundry based platform](https://www.cloudfoundry.org/use/cloud-foundry-certified/) will do.
+In this tutorial, I will use the [Swisscom Application Cloud](https://developer.swisscom.com/) as an example, but any [Cloud Foundry-based platform](https://www.cloudfoundry.org/use/cloud-foundry-certified/) will do.
 
 ## Get Piwik
 

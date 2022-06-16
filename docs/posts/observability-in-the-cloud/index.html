@@ -92,7 +92,7 @@ Making a system observable usually requires using monitoring tools and processes
 <p>Once something goes wrong, we may use the alerts and dashboards to get an overview over which application, machine, or component is affected.
 Additionally, we head into the logs, to try and figure out where exactly things went wrong.
 If the root cause is a known issue, we can usually apply a known fix.
-But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them, and finally we may have to start up the application with a debugger in order to try to reproduce the exact conditions.
+But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them, and finally, we may have to start up the application with a debugger to try to reproduce the exact conditions.
 We iteratively go back to the logs, to grab more pieces of evidence and approximate the state of the system when the error occurred.
 Since we can use debuggers to investigate the problems, and the possible problem space is usually somewhat limited, we can rely on this telemetry, which is usually highly aggregated.</p>
 <p>However, this aggregated telemetry does not carry enough information when troubleshooting applications designed for the clouds or refactored from monolithic applications into a microservice architecture.</p>
@@ -109,26 +109,26 @@ Additionally, the following practices are being adopted more widely, when we des
 Instead of running one service in a debugger and recreating its state, we may need to start various services and try to reproduce state in each of them.
 Our telemetry may also become less expressive, and we may have to ask ourselves additional questions, such as:</p>
 <ul>
-<li>has a deployment just happened?</li>
-<li>what versions are actually deployed?</li>
-<li>which versions (if multiple are running) show anomalous behavior</li>
-<li>which feature flags were enabled for the requests/tasks that failed?</li>
+<li>Has a deployment just happened?</li>
+<li>What versions are actually deployed?</li>
+<li>Which versions (if multiple are running) show anomalous behavior?</li>
+<li>Which feature flags were enabled for the requests/tasks that failed?</li>
 </ul>
 <p>To ensure that we still get meaningful insights from our telemetry, we need to annotate it with additional information such as build ID, hostname, IP address, enabled feature flags and more.
 This data enrichment brings about new problems: adding more dimensions to our telemetry data makes the storage and querying systems much slower and/or more expensive.
-At the same time, we still need to make a number of queries to correlate information from multiple source systems (microservices) to slowly piece together enough context to guess what happened.</p>
+At the same time, we still have to make a number of queries to correlate information from multiple source systems (microservices) to slowly piece together enough context to guess what happened.</p>
 <h2 id="closing-the-observability-gap-in-distributed-cloud-systems">Closing the Observability Gap in Distributed Cloud Systems</h2>
 <p>Unfortunately, this gap cannot be closed by the simple addition of a new tool or library.
 Instead, there are two primary challenges that should be tackled by site reliability engineers who aim to improve the observability of their systems.</p>
 <p>First, each individual service should be instrumented to keep track of its context. Furthermore, each service should emit arbitrarily wide events containing the relevant context when a request/task processing finishes (successfully or with an exception).
-To do this, whenever a workload is processed (e.g. a request enters a system), an event context object should be initialized and prepopulated with all relevant data.
+To achieve this, whenever a workload is processed (e.g. a request enters a system), an event context object should be initialized and prepopulated with all relevant data.
 As the workload is being processed, this object should be enriched and whenever another service is called, relevant context should be passed downstream.
 When the request finishes, the whole context event should be passed to the central storage system.
 Many logging libraries support such use cases, but they also need to be implemented correctly in the frameworks used.
 Ensuring, that these events are properly enriched is the responsibility of developers and site reliability engineers.
-The goal should be, that problems can usually be pinpointed by looking at a single event, without having to painstakingly correlate dozens of events or reproduce an issue through incremental trial and error.</p>
-<p>As a second challenge, an event storage and querying system must be put in place, which is able to process these wide events reasonably and which allows querying and searching.
-Storing arbitrarily wide events and querying across all dimensions is crucial in order to avoid limitations to the sort of questions you can ask. However, it is not supported by many monitoring systems, especially since it is usually very resource intensive.
+The goal should be that problems can usually be pinpointed by looking at a single event, without having to painstakingly correlate dozens of events or reproduce an issue through incremental trial and error.</p>
+<p>As a second challenge, an event storage and querying system must be put in place, which can process these wide events reasonably and which allows querying and searching.
+Storing arbitrarily wide events and querying across all dimensions is crucial to avoid limitations to the sort of questions you can ask. However, it is not supported by many monitoring systems, especially since it is usually very resource intensive.
 Some observability / monitoring tools, such as Elasticsearch, already support such use cases.
 These systems may get expensive and require fine-tuning and optimization in their own right to ensure that they perform well while staying cost-effective.</p>
 <h2 id="summary">Summary</h2>
@@ -232,7 +232,7 @@ Monitoring is primarily focused on diagnosing problems that occur in similar way
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-06-16 09:31:22.590434642 &#43;0200 CEST m=&#43;0.889879417">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-06-16 16:17:10.268693043 &#43;0200 CEST m=&#43;0.141729961">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

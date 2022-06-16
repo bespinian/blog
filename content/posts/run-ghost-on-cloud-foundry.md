@@ -25,7 +25,7 @@ Replace the values in `<>` with your respective credentials.
 
 ## Get the Source Code
 
-Getting the Ghost source code is quite easy. Just visit their [releases](https://github.com/TryGhost/Ghost/releases) page and download the latest one as a ZIP archive. Then unzip it and `cd` into the respective folder from your terminal.
+Getting the Ghost source code is effortless. Just visit their [releases](https://github.com/TryGhost/Ghost/releases) page and download the latest one as a ZIP archive. Then unzip it and `cd` into the respective folder from your terminal.
 
 ## Create Entrypoint Script
 
@@ -134,7 +134,7 @@ Welcome to the fabulous world of Ghost blogging!
 
 ## Add Disqus (Optional)
 
-Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding [Disqus](https://disqus.com/) is a very easy way to do so.
+Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding [Disqus](https://disqus.com/) is a straightforward way to do so.
 
 Simply visit their website, create an account and register your blog as a new site. Then, open `content/themes/casper/post.hbs` and look for a comment about Disqus in the file. There is a section that you'll need to uncomment and replace the sample URL with the one of your blog. Follow the steps described in the comment there.
 
@@ -142,11 +142,11 @@ After that, run `cf push` and that's it. Your blog is now interactive.
 
 ## Add Object Storage (Optional)
 
-At some point, you'll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So we'll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.
+At some point, you'll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So, we'll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.
 
 To do so, follow [this tutorial](/manage-buckets-on-cloud-foundry-s3-services/) to create an S3 service with bucket and name the service instance "blog-storage".
 
-Next, we'll need to bind the app to our newly created service. Add the following line to the `services` part of our `manifest.yml`:
+Next, we'll have to bind the app to our newly created service. Add the following line to the `services` part of our `manifest.yml`:
 
 ```yaml
 - blog-storage

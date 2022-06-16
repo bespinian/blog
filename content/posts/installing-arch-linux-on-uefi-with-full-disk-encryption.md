@@ -5,7 +5,7 @@ comments: true
 date: 2021-03-12
 ---
 
-This is a step-by-step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the [Arch Linux wiki's installation guide](https://wiki.archlinux.org/index.php/Installation_guide), so if you're ever stuck, just refer to it and the rest of the awesome Arch wiki.
+This is a step-by-step guide to installing Arch Linux on [UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface) with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the [Arch Linux wiki's installation guide](https://wiki.archlinux.org/index.php/Installation_guide), so if you're ever stuck, just refer to it and the rest of the wonderful Arch wiki.
 
 ## Download ISO
 
@@ -61,7 +61,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Create Swap File (not needed on VMs)
 
-1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress` to create the swap file where the count is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
+1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress` to create the swap file, where the count is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
 1. Run `chmod 600 /mnt/swapfile` to set the right permissions on it
 1. Run `mkswap /mnt/swapfile` to make it an actual swap file
 1. Run `swapon /mnt/swapfile` to turn it on
@@ -112,7 +112,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 1. Run `pacman -S grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
 1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
-1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:cryptroot"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
+1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual-boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:cryptroot"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
 1. Run `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB` to install GRUB for your system
 1. Run `grub-mkconfig -o /boot/grub/grub.cfg` to configure GRUB
 

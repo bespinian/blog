@@ -59,4 +59,4 @@ $ s3cmd mb s3://my-bucket
 
 ## S3 Manager
 
-Alternatively, you can use an open source app I've been developing called [S3 Manager](https://github.com/cloudlena/s3manager). You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.
+Alternatively, you can use an open-source app I've been developing called [S3 Manager](https://github.com/cloudlena/s3manager). You can easily run it locally or deploy it to Cloud Foundry and then set the respective environment variables to manage your S3 buckets and files.

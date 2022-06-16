@@ -37,7 +37,7 @@ By default, the registry stores the pushed Docker images on the local file syste
 
 ## Create Redis Cache
 
-This step is optional. If you omit it though, you'll have to remove all the Redis related stuff from the files described in the steps afterwards.
+This step is optional. If you omit it, though, you'll have to remove all the Redis related stuff from the files described in the steps afterwards.
 
 To improve the performance of our registry, we can add a [Redis](https://redis.io/) cache. First create one in Cloud Foundry:
 
