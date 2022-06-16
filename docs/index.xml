@@ -6,11 +6,11 @@
     <description>Recent content on bespinian Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.bespinian.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GitOps</title>
       <link>https://blog.bespinian.io/posts/gitops/</link>
-      <pubDate>Sun, 29 May 2022 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/gitops/</guid>
       <description>This blog post is the third part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
@@ -64,7 +64,7 @@ This post outlines the necessary steps to approach cost transparency for your Ku
       
       <guid>https://blog.bespinian.io/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/</guid>
       <description>This is a step-by-step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the Arch Linux wiki&amp;rsquo;s installation guide, so if you&amp;rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.
-Download ISO  Download the latest ISO from the Arch Linux website  Create Bootable USB Stick You can skip this step if you just want to run Arch Linux in a VM.</description>
+Download ISO Download the latest ISO from the Arch Linux website Create Bootable USB Stick You can skip this step if you just want to run Arch Linux in a VM.</description>
     </item>
     
     <item>
