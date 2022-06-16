@@ -86,11 +86,11 @@ if (!doNotTrack) {
 <p>You can use any <a href="https://www.cloudfoundry.org/use/cloud-foundry-certified/">Cloud Foundry provider</a> for this tutorial. I am using the <a href="https://developer.swisscom.com">Swisscom Application Cloud</a> as an example.</p>
 <p>This tutorial assumes that you have a running app on Cloud Foundry which you can apply the rate limiter to. Any app that has a route will do. In case you don&rsquo;t have one, you can simply <code>cf push</code> a dummy app like <a href="https://github.com/swisscom/cf-default-app-staticfile">this one</a>.</p>
 <h3 id="push-rate-limiter">Push Rate Limiter</h3>
-<p>As a first step, let&rsquo;s create the actual rate limiter. Simply clone <a href="https://github.com/cloudfoundry-samples/ratelimit-service">this repo</a> which contains a small Go rate limiting app. Then push the app to your space with the following command:</p>
+<p>As a first step, let&rsquo;s create the actual rate limiter. Simply clone <a href="https://github.com/cloudfoundry-samples/ratelimit-service">this repo</a>, which contains a small Go rate-limiting app. Then push the app to your space with the following command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf push rate-limiter -m 64M
 </span></span></code></pre></div><p>You may have to specify an alternate hostname using the <code>--hostname</code> flag or use a random one using the <code>--random-route</code> flag because the default one is taken.</p>
 <h3 id="create-user-provided-service">Create User-Provided Service</h3>
-<p>Next we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as <code>-r</code> (don&rsquo;t forget to adjust the hostname of the URL to the one you have chosen for your &ldquo;rate-limiter&rdquo; app):</p>
+<p>Next, we will create the route service as a user-provided service. This will then forward all requests coming in at any bound routes to the URL specified as <code>-r</code> (don&rsquo;t forget to adjust the hostname of the URL to the one you have chosen for your &ldquo;rate-limiter&rdquo; app):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-user-provided-service rate-limiter-service -r https://rate-limiter.scapp.io
 </span></span></code></pre></div><p>You should always use <code>https</code> for this URL to make the link between the CF router and your route service more secure.</p>
 <h3 id="bind-service-to-route">Bind Service to Route</h3>
@@ -200,7 +200,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-06-16 09:31:22.581933358 &#43;0200 CEST m=&#43;0.881378149">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-06-16 16:17:10.260351446 &#43;0200 CEST m=&#43;0.133388355">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

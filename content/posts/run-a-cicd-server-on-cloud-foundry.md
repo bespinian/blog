@@ -5,16 +5,16 @@ comments: true
 date: 2016-02-16
 ---
 
-Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the `cf push` command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That's where a CI/CD server comes in handy. It tests, builds and deploys your code every time you `git push` to any git repo.
+Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the `cf push` command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That's where a CI/CD server is useful. It tests, builds and deploys your code every time you `git push` to any Git repo.
 
-[Strider](https://github.com/strider-cd/strider) is an open source CI/CD server based on [Node.js](https://nodejs.org) and [MongoDB](https://mongodb.org). It integrates well with git and its hosted solutions (e.g., [GitHub](https://github.com), [Bitbucket](https://bitbucket.org) or [GitLab](https://gitlab.com)) and features a number of plugins to suit almost all your needs. The idea is, to have Strider "watch" your git repos and, on change, go through the following stages:
+[Strider](https://github.com/strider-cd/strider) is an open-source CI/CD server based on [Node.js](https://nodejs.org) and [MongoDB](https://mongodb.org). It integrates well with Git and its hosted solutions (e.g., [GitHub](https://github.com), [Bitbucket](https://bitbucket.org) or [GitLab](https://gitlab.com)) and features a number of plugins to suit almost all your needs. The idea is, to have Strider "watch" your Git repos and, on change, go through the following stages:
 
 1. Set up an environment to test your code
 2. Run your tests
 3. Build/compile your code upon successful tests
 4. Deploy your code upon successful build/compilation
 
-This is ideal to be used with Cloud Foundry since it can ensure a continuous integration and deployment process in a modern and cloud-ready way. Upon pushing new code, you can always be sure that it will be tested and (if on the right branch) deployed to the respective environment. And the best part: It all runs on Cloud Foundry. So you will be deploying from Cloud Foundry to Cloud Foundry.
+This is ideal to be used with Cloud Foundry since it can ensure a continuous integration and deployment process in a modern and cloud-ready way. Upon pushing new code, you can always be sure that it will be tested and (if on the right branch) deployed to the respective environment. And the best part: It all runs on Cloud Foundry. So, you will be deploying from Cloud Foundry to Cloud Foundry.
 
 In case you are not using Cloud Foundry yet, you can sign up at [https://developer.swisscom.com](https://developer.swisscom.com).
 
@@ -50,7 +50,7 @@ if (process.env.VCAP_SERVICES) {
 }
 ```
 
-This will ensure that Strider connects to a Cloud Foundry service called `strider-db`. In our case, this needs to be a MongoDB for Strider to work with. Furthermore, it connects to a Cloud Foundry service called `mailgun` which we will need to create later and which will allow us to send emails from Strider.
+This will ensure that Strider connects to a Cloud Foundry service called `strider-db`. In our case, this needs to be a MongoDB for Strider to work with. Furthermore, it connects to a Cloud Foundry service called `mailgun` which we will have to create later and which will allow us to send emails from Strider.
 
 ### Create MongoDB
 
@@ -105,7 +105,7 @@ It's possible that the route you are trying to use is already taken by another a
 
 ## Create Your Admin User
 
-Now that our app is running in the cloud, we just have one problem left: We cannot access it... With Strider, you usually use its CLI to create a first admin user. Unfortunately, though, it is not easy for us to access said command line interface from within the app container. So we will insert our admin user directly into the database using the Swisscom [Service Connector](http://docs.developer.swisscom.com/service-connector/index.html) plugin. Visit the link and follow the instructions to install it.
+Now that our app is running in the cloud, we just have one problem left: We cannot access it... With Strider, you usually use its CLI to create a first admin user. Unfortunately, though, it is not easy for us to access said command line interface from within the app container. So, we will insert our admin user directly into the database using the Swisscom [Service Connector](http://docs.developer.swisscom.com/service-connector/index.html) plugin. Visit the link and follow the instructions to install it.
 
 To connect to your MongoDB and insert the admin user, we'll need to create a set of credentials to manually connect to the database first. To do so, type
 
@@ -174,7 +174,7 @@ To provide these variables, add them to the settings of the "Environment" plugin
 - `CF_USERNAME` - Your Cloud Foundry username
 - `CF_PASSWORD` - Your Cloud Foundry password
 - `CF_ORG` - The Cloud Foundry organization you want to deploy your app to
-- `CF_SPACE` - The Cloud Foundry space you want to deploy your app to
+- `CF_SPACE` - The Cloud Foundry space you intend to deploy your app to
 
 ## Git Push
 

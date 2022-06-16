@@ -26,15 +26,15 @@ This will allow you to point and click to move the cursor and to scroll through 
 
 **TL;DR: Not recommended**
 
-Again, for users used to other text editors or even word processing software like [LibreOffice Writer](https://www.libreoffice.org/discover/writer/), it may be tempting to use what they know. In these programs, you mostly use the arrow keys for keyboard-based navigation. This is not recommended because... you guessed it: They require the user to move their fingers away from the home row.
+Again, for users used to other text editors or even word-processing software like [LibreOffice Writer](https://www.libreoffice.org/discover/writer/), it may be tempting to use what they know. In these programs, you mostly use the arrow keys for keyboard-based navigation. This is not recommended because... you guessed it: They require the user to move their fingers away from the home row.
 
 The alternative is, as described in the next section, to use the `h`, `j`, `k` and `l` keys on the keyboard which are conveniently placed at the center and where you most likely have your fingers most of the time.
 
 ## Using h,j,k,l
 
-**TL;DR: Use for small navigation. Use in combination with relative line numbers.**
+**TL;DR: Use for small navigation. Use with relative line numbers.**
 
-`h`, `j`, `k` and `l` are the basic movement keys in Vim. They should be used instead of the usual arrow keys on the keyboard to, as discussed above, keep your fingers on the home row as much as possible. It takes a little practice but will pay off in the long run.
+`h`, `j`, `k` and `l` are the basic movement keys in Vim. They should be used instead of the usual arrow keys on the keyboard to, as discussed above, keep your fingers on the home row as much as possible. It takes a little practice but will pay off eventually.
 
 One hugely important thing to do with these keys is to not press them multiple times in sequence, or even hold them down to move several columns or rows. As with many commands in Vim, they can be prefixed with numbers to move multiple times. For example, `12j` can be used rather than pressing the `j` key twelve times which is, obviously, much more efficient (3 vs. 12 keystrokes). However, it is recommendable to only use these keys for small movements and mostly to move lines up or down because there are more efficient ways of moving longer vertical distances or horizontal distances in general.
 
@@ -52,7 +52,7 @@ This will always show the absolute number of the line the cursor is currently on
 
 **TL;DR: Mostly use `f`. Also consider `w`,`b`,`e`,`^` and `$`.**
 
-So far, we've mostly looked at navigating from one line to another. The next step is to navigate within a line. In many cases, the straight forward thing to do is to use `w` or `W` to move to the next word, `b` or `B` to move to the previous word or even `e` or `E` to move directly to the end of the next word. For all of them, the lowercase variant considers a "word" to be what we intuitively see as one using delimiters like `-`, `/` or `.` to separate one word from another. The uppercase variant considers anything a word that is delimited by whitespace. Obviously, any of these commands can be prefixed with a number to jump multiple words in one go (e.g., `7w`). Other useful commands are `^` which moves to the first non-whitespace character of the line and `$` to move to the last character of a line. Considering the following line
+So far, we've mostly looked at navigating from one line to another. The next step is to navigate within a line. Often, the straightforward thing to do is to use `w` or `W` to move to the next word, `b` or `B` to move to the previous word or even `e` or `E` to move directly to the end of the next word. For all of them, the lowercase variant considers a "word" to be what we intuitively see as one using delimiters like `-`, `/` or `.` to separate one word from another. The uppercase variant considers anything a word that is delimited by whitespace. Obviously, any of these commands can be prefixed with a number to jump multiple words in one go (e.g., `7w`). Other useful commands are `^` which moves to the first non-whitespace character of the line and `$` to move to the last character of a line. Considering the following line
 
 ```txt
 abc def-ghi-jkl mno
@@ -80,7 +80,7 @@ Another command worth mentioning at this point is `%` which you can use when a c
 
 The jumplist contains all the points in any buffer you recently jumped to (e.g., with `12j`). It can be accessed with `:jumps`. The commands to jump back and forth in the jumplist are `ctrl+o` and `ctrl+i` respectively. They can be very useful because they act like the "back" and "forward" buttons in a web browser.
 
-The changelist on the other hand contains all the points in the current buffer where you have recently changed something. It can be accessed with the `:changes` command. A very useful command here is `g;` which jumps to the last place where you have changed something (i.e., jumps back in the changelist). `g,` on the other hand takes you back to where you were before (i.e., jumps forward in the changelist). This allows you to easily switch back and forth between a point of reference (e.g., some documentation) and the place where you are currently editing.
+The changelist, on the other hand, contains all the points in the current buffer where you have recently changed something. It can be accessed with the `:changes` command. A very useful command here is `g;` which jumps to the last place where you have changed something (i.e., jumps back in the changelist). `g,`, on the other hand, takes you back to where you were before (i.e., jumps forward in the changelist). This allows you to easily switch back and forth between a point of reference (e.g., some documentation) and the place where you are currently editing.
 
 ## Search
 
@@ -104,7 +104,7 @@ if maparg('<C-L>', 'n') ==# ''
 endif
 ```
 
-`incsearch` will make sure that the search pattern is applied incrementally while typing, instead of only after pressing the enter key. The combination of `ignorecase` and `smartcase` ignores the case of the search term when not using any uppercase letters and doesn't ignore it when using at least one uppercase letter, which is quite convenient and surprisingly intuitive. `hlsearch` highlights any matches for the search term, allowing to easily jump between them using `n` and `N`. The last statement lets you clear the highlighted search results by pressing `ctrl+l` to unclutter your view once done searching and jumping.
+`incsearch` will make sure that the search pattern is applied incrementally while typing, instead of only after pressing the enter key. The combination of `ignorecase` and `smartcase` ignores the case of the search term when not using any uppercase letters and doesn't ignore it when using at least one uppercase letter, which is quite convenient and surprisingly intuitive. `hlsearch` highlights any matches for the search term, allowing to easily jump between them using `n` and `N`. The last statement lets you clear the highlighted search results by pressing `ctrl+l` to unclutter your view, once done searching and jumping.
 
 All in all, search is one of the most powerful tools for intuitive and efficient navigation. It covers the common use case of knowing the word or part of a word to navigate to, but not having your eyes directly pointed there yet. Furthermore, it's simply the fastest way of jumping somewhere in many cases and beats other methods of navigation quite often in that regard.
 
@@ -114,19 +114,19 @@ All in all, search is one of the most powerful tools for intuitive and efficient
 
 In this section, we'll discuss what can be referred to as "clunky movements". They let the user navigate larger distances in the buffer while sacrificing precision. These commands are less useful for exactly that reason. Vim can be a very efficient text editor by letting the user think about what they want to change, jumping precisely there with very few keystrokes, entering insert mode, performing a change with scalpel-like precision and finally exiting insert mode as soon as it's done. The movement commands in this section, however, get the cursor around the document as a whole while it's hard for the user to predict at a glance, which line and column exactly they will land on.
 
-A good example are the `H`, `M` and `L` keys which take the cursor to the top, the middle or the bottom of the current view port respectively. While this is a very big movement with just one keystroke, it's highly likely that they won't exactly get the cursor to the line needed but rather will have to be accompanied by pressing `j` or `k` multiple times, which will result in much more thinking and many more keystrokes than what can be achieved with other methods. Similar are the `{` and `}` keys, which take the cursor to the next paragraph (a block of text delimited by blank lines).
+A good example are the `H`, `M` and `L` keys which take the cursor to the top, the middle or the bottom of the current view port respectively. While this is a large movement with just one keystroke, it's highly likely that they won't exactly get the cursor to the line needed but rather will have to be accompanied by pressing `j` or `k` multiple times, which will result in much more thinking and many more keystrokes than what can be achieved with other methods. Similar are the `{` and `}` keys, which take the cursor to the next paragraph (a block of text delimited by blank lines).
 
-A useful exception to that are the `gg` and `G` commands, which take the cursor to the first or the last line of a buffer respectively. It's easy and effortless to predict where these movements will take you. Especially the `G` command can be quite useful because it allows appending to a file with just two keystrokes (`G` followed by `o`).
+A useful exception to that are the `gg` and `G` commands, which take the cursor to the first or the last line of a buffer, respectively. It's easy and effortless to predict where these movements will take you. Especially the `G` command can be quite useful because it allows appending to a file with just two keystrokes (`G` followed by `o`).
 
 ## Plugins
 
 **TL;DR: Install only the necessary plugins. Check out fzf!**
 
-So far, we've only talked about features that are built into Vim or that can be configured on a vanilla installation. However, there are many useful plugins which can make navigating Vim even more efficient. It is important to carefully pick them though, as any plugin can make Vim slower and/or less stable.
+So far, we've only talked about features that are built into Vim or that can be configured on a vanilla installation. However, there are many useful plugins which can make navigating Vim even more efficient. It is important to carefully pick them, though, as any plugin can make Vim slower and/or less stable.
 
 ### fzf
 
-One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but also between different locations within them. I highly recommend checking it out and add the following lines to your configuration file:
+One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but, also between different locations within them. I highly recommend checking it out and add the following lines to your configuration file:
 
 ```vim
 " Jump to specific file

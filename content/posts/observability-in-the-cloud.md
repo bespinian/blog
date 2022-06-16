@@ -32,7 +32,7 @@ So, now that we know the difference between monitoring and observability, how di
 Once something goes wrong, we may use the alerts and dashboards to get an overview over which application, machine, or component is affected.
 Additionally, we head into the logs, to try and figure out where exactly things went wrong.
 If the root cause is a known issue, we can usually apply a known fix.
-But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them, and finally we may have to start up the application with a debugger in order to try to reproduce the exact conditions.
+But if the root cause is an unknown issue, we often have to dig through extensive logs, manually correlate them, and finally, we may have to start up the application with a debugger to try to reproduce the exact conditions.
 We iteratively go back to the logs, to grab more pieces of evidence and approximate the state of the system when the error occurred.
 Since we can use debuggers to investigate the problems, and the possible problem space is usually somewhat limited, we can rely on this telemetry, which is usually highly aggregated.
 
@@ -51,14 +51,14 @@ These changes lead to a more complex application landscape, which makes debuggin
 Instead of running one service in a debugger and recreating its state, we may need to start various services and try to reproduce state in each of them.
 Our telemetry may also become less expressive, and we may have to ask ourselves additional questions, such as:
 
-- has a deployment just happened?
-- what versions are actually deployed?
-- which versions (if multiple are running) show anomalous behavior
-- which feature flags were enabled for the requests/tasks that failed?
+- Has a deployment just happened?
+- What versions are actually deployed?
+- Which versions (if multiple are running) show anomalous behavior?
+- Which feature flags were enabled for the requests/tasks that failed?
 
 To ensure that we still get meaningful insights from our telemetry, we need to annotate it with additional information such as build ID, hostname, IP address, enabled feature flags and more.
 This data enrichment brings about new problems: adding more dimensions to our telemetry data makes the storage and querying systems much slower and/or more expensive.
-At the same time, we still need to make a number of queries to correlate information from multiple source systems (microservices) to slowly piece together enough context to guess what happened.
+At the same time, we still have to make a number of queries to correlate information from multiple source systems (microservices) to slowly piece together enough context to guess what happened.
 
 ## Closing the Observability Gap in Distributed Cloud Systems
 
@@ -66,15 +66,15 @@ Unfortunately, this gap cannot be closed by the simple addition of a new tool or
 Instead, there are two primary challenges that should be tackled by site reliability engineers who aim to improve the observability of their systems.
 
 First, each individual service should be instrumented to keep track of its context. Furthermore, each service should emit arbitrarily wide events containing the relevant context when a request/task processing finishes (successfully or with an exception).
-To do this, whenever a workload is processed (e.g. a request enters a system), an event context object should be initialized and prepopulated with all relevant data.
+To achieve this, whenever a workload is processed (e.g. a request enters a system), an event context object should be initialized and prepopulated with all relevant data.
 As the workload is being processed, this object should be enriched and whenever another service is called, relevant context should be passed downstream.
 When the request finishes, the whole context event should be passed to the central storage system.
 Many logging libraries support such use cases, but they also need to be implemented correctly in the frameworks used.
 Ensuring, that these events are properly enriched is the responsibility of developers and site reliability engineers.
-The goal should be, that problems can usually be pinpointed by looking at a single event, without having to painstakingly correlate dozens of events or reproduce an issue through incremental trial and error.
+The goal should be that problems can usually be pinpointed by looking at a single event, without having to painstakingly correlate dozens of events or reproduce an issue through incremental trial and error.
 
-As a second challenge, an event storage and querying system must be put in place, which is able to process these wide events reasonably and which allows querying and searching.
-Storing arbitrarily wide events and querying across all dimensions is crucial in order to avoid limitations to the sort of questions you can ask. However, it is not supported by many monitoring systems, especially since it is usually very resource intensive.
+As a second challenge, an event storage and querying system must be put in place, which can process these wide events reasonably and which allows querying and searching.
+Storing arbitrarily wide events and querying across all dimensions is crucial to avoid limitations to the sort of questions you can ask. However, it is not supported by many monitoring systems, especially since it is usually very resource intensive.
 Some observability / monitoring tools, such as Elasticsearch, already support such use cases.
 These systems may get expensive and require fine-tuning and optimization in their own right to ensure that they perform well while staying cost-effective.
 

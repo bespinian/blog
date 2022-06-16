@@ -14,7 +14,7 @@
       
       <guid>https://blog.bespinian.io/posts/gitops/</guid>
       <description>This blog post is the third part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
-In this third part, we will show you how you can combine Git, which we introduced in part 1 with Infrastructure as Code, which we introduced in part 2. The combination of these two worlds will lead us to GitOps where we will show you concepts and technologies which enable you to operate your infrastructure and applications entirely using Git repositories.</description>
+In this third part, we will show you how you can combine Git, which we introduced in part 1 with Infrastructure as Code, which we introduced in part 2. The combination of these two worlds will lead us to GitOps, where we will show you concepts and technologies which enable you to operate your infrastructure and applications entirely using Git repositories.</description>
     </item>
     
     <item>
@@ -34,7 +34,7 @@ Observability vs. Monitoring For detailed accounts of the difference between mon
       
       <guid>https://blog.bespinian.io/posts/infrastructure-as-code/</guid>
       <description>This blog post is the second part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
-In this second part, we will look into a topic that is crucial to any modern cloud-native environment in order to provide stability and parity across environments: Infrastructure as Code. We will delve into some interesting tools in that realm and compare different concepts and configurations around how to deploy and maintain infrastructure in a sane way.</description>
+In this second part, we will look into a topic that is crucial to any modern cloud-native environment to provide stability and parity across environments: Infrastructure as Code. We will delve into some interesting tools in that realm and compare different concepts and configurations around how to deploy and maintain infrastructure in a sane way.</description>
     </item>
     
     <item>
@@ -44,7 +44,7 @@ In this second part, we will look into a topic that is crucial to any modern clo
       
       <guid>https://blog.bespinian.io/posts/git-the-important-parts/</guid>
       <description>This blog post is the first part of a three-part series adapted from a GitOps webinar series which we co-produced together with our friends at VSHN.
-In this first part we will look at Git and what is important when using it in a team. The second part will be about Infrastructure as Code, a handy concept which helps to unify environments and be aware of the exact changes made to different parts of your infrastructure.</description>
+In this first part, we will look at Git and what is important when using it in a team. The second part will be about Infrastructure as Code, a handy concept which helps to unify environments and be aware of the exact changes made to different parts of your infrastructure.</description>
     </item>
     
     <item>
@@ -63,7 +63,7 @@ This post outlines the necessary steps to approach cost transparency for your Ku
       <pubDate>Fri, 12 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/installing-arch-linux-on-uefi-with-full-disk-encryption/</guid>
-      <description>This is a step-by-step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the Arch Linux wiki&amp;rsquo;s installation guide, so if you&amp;rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.
+      <description>This is a step-by-step guide to installing Arch Linux on UEFI with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the Arch Linux wiki&amp;rsquo;s installation guide, so if you&amp;rsquo;re ever stuck, just refer to it and the rest of the wonderful Arch wiki.
 Download ISO Download the latest ISO from the Arch Linux website Create Bootable USB Stick You can skip this step if you just want to run Arch Linux in a VM.</description>
     </item>
     
@@ -102,7 +102,7 @@ Trading, at first, was fun, but I realized pretty quickly that I&amp;rsquo;m not
       <pubDate>Fri, 25 Aug 2017 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/run-wordpress-on-cloud-foundry/</guid>
-      <description>WordPress runs a huge portion of all websites on the internet. It, therefore, seems obvious, to run this software on Cloud Foundry. There&amp;rsquo;s just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container based systems, that doesn&amp;rsquo;t work because the container can be restarted at any time, which would remove all stored files. For that reason, we need to externalize all file storage to a separate service.</description>
+      <description>WordPress runs a huge portion of all websites on the internet. It, therefore, seems obvious, to run this software on Cloud Foundry. There&amp;rsquo;s just one small problem: WordPress uses the file system to store all uploaded media. On Cloud Foundry and other container-based systems, that doesn&amp;rsquo;t work because the container can be restarted at any time, which would remove all stored files. For that reason, we need to externalize all file storage to a separate service.</description>
     </item>
     
     <item>
@@ -158,7 +158,7 @@ S3 was originally created by Amazon Web Services, but by now there are many 3rd 
       <pubDate>Wed, 30 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/run-piwik-on-cloud-foundry/</guid>
-      <description>Piwik is an open source analytics platform based on PHP and MySQL. That makes it a perfect application to be run on Cloud Foundry based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.</description>
+      <description>Piwik is an open-source analytics platform based on PHP and MySQL. That makes it a perfect application to be run on Cloud Foundry-based platforms. So, in case you are tired of sending all your data to Google Analytics but rather want to have your own analytics platform in place, this tutorial is for you. We will see what it takes to run Piwik on Cloud Foundry and what modifications are necessary to integrate it smoothly into our platform.</description>
     </item>
     
     <item>
@@ -167,7 +167,7 @@ S3 was originally created by Amazon Web Services, but by now there are many 3rd 
       <pubDate>Sun, 20 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/configure-front-end-apps-with-environment-variables-on-cloud-foundry/</guid>
-      <description>The 12 factor manifest tells us in point III that apps should retrieve their config from environment variables to strictly separate config from code. &amp;ldquo;Config&amp;rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc.). Cloud Foundry allows us to do that very easily using either the manifest.yml file or the cf set-env command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the Staticfile Buildpack?</description>
+      <description>The 12 factor manifest tells us in point III that apps should retrieve their config from environment variables to strictly separate config from code. &amp;ldquo;Config&amp;rdquo; meaning everything that is likely to vary between deployments (staging, production, developer environments, etc.). Cloud Foundry allows us to do that easily using either the manifest.yml file or the cf set-env command. However, this only works for apps which have a dynamic back end. What if we want to configure a front end app that we have pushed to Cloud Foundry using the Staticfile Buildpack?</description>
     </item>
     
     <item>
@@ -194,8 +194,8 @@ S3 was originally created by Amazon Web Services, but by now there are many 3rd 
       <pubDate>Tue, 16 Feb 2016 00:00:00 +0000</pubDate>
       
       <guid>https://blog.bespinian.io/posts/run-a-cicd-server-on-cloud-foundry/</guid>
-      <description>Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the cf push command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That&amp;rsquo;s where a CI/CD server comes in handy. It tests, builds and deploys your code every time you git push to any git repo.
-Strider is an open source CI/CD server based on Node.</description>
+      <description>Pushing Apps to Cloud Foundry is as easy as it gets, thanks to the cf push command. However, it is still tedious to push your code after every change you make, just to see if it still runs in the cloud. That&amp;rsquo;s where a CI/CD server is useful. It tests, builds and deploys your code every time you git push to any Git repo.
+Strider is an open-source CI/CD server based on Node.</description>
     </item>
     
   </channel>

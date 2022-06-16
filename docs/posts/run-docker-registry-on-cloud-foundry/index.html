@@ -86,7 +86,7 @@ if (!doNotTrack) {
 <h2 id="create-s3-service">Create S3 Service</h2>
 <p>By default, the registry stores the pushed Docker images on the local file system. Since apps should be stateless according to the <a href="https://12factor.net/processes">twelve-factor app manifest</a>, we will change this behavior to use an S3 backend instead. Please follow <a href="/manage-buckets-on-cloud-foundry-s3-services/">this tutorial</a> on my blog to create an S3 service with bucket and name the service &ldquo;registry-storage&rdquo;.</p>
 <h2 id="create-redis-cache">Create Redis Cache</h2>
-<p>This step is optional. If you omit it though, you&rsquo;ll have to remove all the Redis related stuff from the files described in the steps afterwards.</p>
+<p>This step is optional. If you omit it, though, you&rsquo;ll have to remove all the Redis related stuff from the files described in the steps afterwards.</p>
 <p>To improve the performance of our registry, we can add a <a href="https://redis.io/">Redis</a> cache. First create one in Cloud Foundry:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cf create-service redis small registry-cache
 </span></span></code></pre></div><p>Again, this example is using the Swisscom Application Cloud. If you&rsquo;re using a different CF provider, the command might be different.</p>
@@ -285,7 +285,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-06-16 09:31:22.614346482 &#43;0200 CEST m=&#43;0.913791237">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-06-16 16:17:10.29405097 &#43;0200 CEST m=&#43;0.167087888">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

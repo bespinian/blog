@@ -41,7 +41,7 @@ Easy!
 $ docker run -d -p 6379:6379 redis:3
 ```
 
-Here, we also specified the Redis version we want to use. You can find the available versions by searching for the respective image on [Docker Store](https://store.docker.com).
+Here, we also specified the Redis version we intend to use. You can find the available versions by searching for the respective image on [Docker Store](https://store.docker.com).
 
 ```shell
 # MySQL

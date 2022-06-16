@@ -73,7 +73,7 @@ if (!doNotTrack) {
 
 		
 
-		<p>This is a step-by-step guide to installing Arch Linux on <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a> with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux wiki&rsquo;s installation guide</a>, so if you&rsquo;re ever stuck, just refer to it and the rest of the awesome Arch wiki.</p>
+		<p>This is a step-by-step guide to installing Arch Linux on <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a> with full disk encryption. It deliberately contains no unnecessary words or bling. It is heavily based on the <a href="https://wiki.archlinux.org/index.php/Installation_guide">Arch Linux wiki&rsquo;s installation guide</a>, so if you&rsquo;re ever stuck, just refer to it and the rest of the wonderful Arch wiki.</p>
 <h2 id="download-iso">Download ISO</h2>
 <ol>
 <li>Download the latest ISO from the <a href="https://archlinux.org/download/">Arch Linux website</a></li>
@@ -126,7 +126,7 @@ if (!doNotTrack) {
 </ol>
 <h2 id="create-swap-file-not-needed-on-vms">Create Swap File (not needed on VMs)</h2>
 <ol>
-<li>Run <code>dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress</code> to create the swap file where the count is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)</li>
+<li>Run <code>dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress</code> to create the swap file, where the count is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)</li>
 <li>Run <code>chmod 600 /mnt/swapfile</code> to set the right permissions on it</li>
 <li>Run <code>mkswap /mnt/swapfile</code> to make it an actual swap file</li>
 <li>Run <code>swapon /mnt/swapfile</code> to turn it on</li>
@@ -173,7 +173,7 @@ if (!doNotTrack) {
 <ol>
 <li>Run <code>pacman -S grub efibootmgr intel-ucode</code> (or <code>amd-ucode</code> if you have an AMD processor) to install the GRUB package and CPU microcode</li>
 <li>Run <code>blkid -s UUID -o value /dev/nvme0n1p2</code> to get the UUID of the device</li>
-<li>Run <code>nvim /etc/default/grub</code> and set <code>GRUB_TIMEOUT=0</code> to disable GRUB waiting until it chooses your OS (only makes sense if you don&rsquo;t dual boot with another OS), then set <code>GRUB_CMDLINE_LINUX=&quot;cryptdevice=UUID=xxxx:cryptroot&quot;</code> while replacing &ldquo;xxxx&rdquo; with the UUID of the <code>nvme0n1p2</code> device to tell GRUB about our encrypted file system</li>
+<li>Run <code>nvim /etc/default/grub</code> and set <code>GRUB_TIMEOUT=0</code> to disable GRUB waiting until it chooses your OS (only makes sense if you don&rsquo;t dual-boot with another OS), then set <code>GRUB_CMDLINE_LINUX=&quot;cryptdevice=UUID=xxxx:cryptroot&quot;</code> while replacing &ldquo;xxxx&rdquo; with the UUID of the <code>nvme0n1p2</code> device to tell GRUB about our encrypted file system</li>
 <li>Run <code>grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB</code> to install GRUB for your system</li>
 <li>Run <code>grub-mkconfig -o /boot/grub/grub.cfg</code> to configure GRUB</li>
 </ol>
@@ -349,7 +349,7 @@ if (!doNotTrack) {
             </figure>
 			
 			<span>
-			&copy; <time datetime="2022-06-16 09:31:22.605100406 &#43;0200 CEST m=&#43;0.904545171">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-06-16 16:17:10.28151153 &#43;0200 CEST m=&#43;0.154548446">2022</time> bespinian. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
