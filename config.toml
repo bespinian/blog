@@ -2,7 +2,6 @@ title = "bespinian Blog"
 baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
 theme = "tale"
-publishDir = "docs"
 disqusShortname = "berndsgnch"
 googleAnalytics = "UA-132338301-2"
 enableRobotsTXT = true
