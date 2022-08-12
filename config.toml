@@ -11,6 +11,7 @@ enableRobotsTXT = true
   homepage = "https://bespinian.io"
 
 [params]
+description = "The bespinian blog - All about cloud computing, containers, Kubernetes, AWS, Azure and much more"
 css = ["custom.css"]
 
 [[params.social]]
