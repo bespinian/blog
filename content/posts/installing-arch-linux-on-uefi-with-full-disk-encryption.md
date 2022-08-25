@@ -145,7 +145,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ```bash
 # Start window manager
-if [ "$(tty)" = "/dev/tty1" ]; then
+if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
   exec sway
 fi
 ```
