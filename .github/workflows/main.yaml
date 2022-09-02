@@ -24,7 +24,7 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: 0.101.0
+      HUGO_VERSION: 0.102.3
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
