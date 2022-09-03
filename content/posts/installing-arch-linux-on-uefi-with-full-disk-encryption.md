@@ -44,17 +44,17 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Encrypt Root Partition
 
-1. Run `cryptsetup -y -v luksFormat /dev/nvme0n1p2` and then type `YES` and the new encryption password to encrypt the root partition
-1. Run `cryptsetup open /dev/nvme0n1p2 cryptroot` to open the encrypted partition
+1. Run `cryptsetup luksFormat /dev/nvme0n1p2` and then type `YES` and the new encryption password to encrypt the root partition
+1. Run `cryptsetup open /dev/nvme0n1p2 root` to open the encrypted partition
 
 ## Create File Systems
 
 1. Create the boot file system with `mkfs.fat -F32 /dev/nvme0n1p1` (or whatever the partition is called)
-1. Create the root file system with `mkfs.ext4 /dev/mapper/cryptroot`
+1. Create the root file system with `mkfs.ext4 /dev/mapper/root`
 
 ## Mount File Systems
 
-1. Run `mount /dev/mapper/cryptroot /mnt` to mount the root file system
+1. Run `mount /dev/mapper/root /mnt` to mount the root file system
 1. Run `mkdir /mnt/boot` to create the boot directory
 1. Run `mount /dev/nvme0n1p1 /mnt/boot` to mount your boot file system
 1. Run `lsblk` again to verify mounting
@@ -112,7 +112,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 1. Run `pacman -S grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
 1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
-1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual-boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:cryptroot"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
+1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual-boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:root"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
 1. Run `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB` to install GRUB for your system
 1. Run `grub-mkconfig -o /boot/grub/grub.cfg` to configure GRUB
 
@@ -128,8 +128,8 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Connect to Wi-Fi (only needed if there's no Ethernet connection)
 
-1. Run `nmcli d wifi list` to list the available networks
-1. Run `nmcli d wifi connect MY_WIFI password MY_PASSWORD` to connect to one of them
+1. Run `nmcli device wifi list` to list the available networks
+1. Run `nmcli device wifi connect MY_WIFI password MY_PASSWORD` to connect to one of them
 
 ## Add User
 
