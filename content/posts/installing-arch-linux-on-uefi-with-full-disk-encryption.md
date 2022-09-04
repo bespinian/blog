@@ -108,13 +108,11 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 1. Run `nvim /etc/mkinitcpio.conf` and, to the `HOOKS` array, add `keyboard` between `autodetect` and `modconf` and add `encrypt` between `block` and `filesystems`
 1. Run `mkinitcpio -P`
 
-## Install Boot Loader
+## Create Boot Entry
 
-1. Run `pacman -S grub efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the GRUB package and CPU microcode
+1. Run `pacman -S efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the EFI boot manager and CPU microcode
 1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
-1. Run `nvim /etc/default/grub` and set `GRUB_TIMEOUT=0` to disable GRUB waiting until it chooses your OS (only makes sense if you don't dual-boot with another OS), then set `GRUB_CMDLINE_LINUX="cryptdevice=UUID=xxxx:root"` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell GRUB about our encrypted file system
-1. Run `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB` to install GRUB for your system
-1. Run `grub-mkconfig -o /boot/grub/grub.cfg` to configure GRUB
+1. Run `efibootmgr --disk /dev/nvme0n1 --part 1 --create --label "Arch Linux" --loader /vmlinuz-linux --unicode 'cryptdevice=UUID=xxxx:root root=/dev/mapper/root rw initrd=\intel-ucode.img initrd=\initramfs-linux.img' --verbose` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell the boot manager about our encrypted file system
 
 ## Install Network Manager
 
