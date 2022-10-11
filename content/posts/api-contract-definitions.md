@@ -2,8 +2,7 @@
 title: API Contract Definitions
 author: Lena Fuhrimann
 comments: true
-date: 2022-10-03
-draft: true
+date: 2022-10-11
 ---
 
 When running one or multiple services, it is essential that they have reliable [service contracts](https://cloud.google.com/appengine/docs/legacy/standard/java/designing-microservice-api) defining their exposed APIs. Those contracts mostly consist of declarative interface definitions, which strongly define and type the API exposed by the respective service. As such, it is crucial that the code making up the service exactly implements the interface and therefore fulfills its side of the contract. Regressions need to be detected and changes reflected in a well communicated update to the contract. Here, we want to look at different ways of specifying contracts for what is one of the most common protocols for exposing service APIs: **HTTP**.
