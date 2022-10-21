@@ -61,7 +61,8 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 ## Create Swap File (not needed on VMs)
 
-1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=24576 status=progress` to create the swap file, where the count is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
+1. Run `free --mebi` to display the total number of mebibytes of RAM your system has. The number is in the table under `Mem` and `total`. We'll use this number in the next command.
+1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=XXXXX status=progress` to create the swap file, where XXXXX is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
 1. Run `chmod 600 /mnt/swapfile` to set the right permissions on it
 1. Run `mkswap /mnt/swapfile` to make it an actual swap file
 1. Run `swapon /mnt/swapfile` to turn it on
@@ -82,7 +83,7 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 
 1. Run `ln -sf /usr/share/zoneinfo/Europe/Zurich /etc/localtime` (or whatever your timezone is) to set your time zone
 1. Run `hwclock --systohc`
-1. Run `nvim /etc/locale.gen` and uncomment yours (e.g. `en_US.UTF-8 UTF-8`)
+1. Run `nvim /etc/locale.gen` and uncomment the locale you want to use (e.g. `en_US.UTF-8 UTF-8`)
 1. Run `locale-gen` to generate the locales
 1. Run `echo 'LANG=en_US.UTF-8' > /etc/locale.conf`
 
@@ -105,7 +106,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Configure Initramfs
 
-1. Run `nvim /etc/mkinitcpio.conf` and, to the `HOOKS` array, add `keyboard` between `autodetect` and `modconf` and add `encrypt` between `block` and `filesystems`
+1. Run `nvim /etc/mkinitcpio.conf` and, in the `HOOKS` array, move `keyboard` to between `autodetect` and `modconf` and add `encrypt` between `block` and `filesystems`
 1. Run `mkinitcpio -P`
 
 ## Create Boot Entry
@@ -150,7 +151,7 @@ fi
 
 ## Set Up Sound
 
-1. Run `sudo pacman -S pipewire pipewire-pulse` to install Pipewire
+1. Run `sudo pacman -S pipewire pipewire-pulse wireplumber` to install Pipewire
 
 ## Set Up Bluetooth
 
@@ -195,4 +196,4 @@ fi
 ## Install Dotfiles
 
 1. Run `sudo pacman -S git` to install Git
-1. Install [Cloudlena's dotfiles](https://github.com/cloudlena/dotfiles/) or some other ones to customize your installation
+1. Install [CloudLena's dotfiles](https://github.com/cloudlena/dotfiles/) or some other ones to customize your installation
