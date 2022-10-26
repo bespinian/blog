@@ -55,21 +55,20 @@ As soon as you can see the Arch Linux prompt, you are ready for the next step.
 ## Mount File Systems
 
 1. Run `mount /dev/mapper/root /mnt` to mount the root file system
-1. Run `mkdir /mnt/boot` to create the boot directory
-1. Run `mount /dev/nvme0n1p1 /mnt/boot` to mount your boot file system
+1. Run `mount --mkdir /dev/nvme0n1p1 /mnt/boot` to mount your boot file system
 1. Run `lsblk` again to verify mounting
 
 ## Create Swap File (not needed on VMs)
 
 1. Run `free --mebi` to display the total number of mebibytes of RAM your system has. The number is in the table under `Mem` and `total`. We'll use this number in the next command.
-1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=XXXXX status=progress` to create the swap file, where XXXXX is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
+1. Run `dd if=/dev/zero of=/mnt/swapfile bs=1M count=xxxx status=progress` to create the swap file, where "xxxx" is the number of mebibytes you want the swap file to be (usually around 1.5 times the size of your RAM)
 1. Run `chmod 600 /mnt/swapfile` to set the right permissions on it
 1. Run `mkswap /mnt/swapfile` to make it an actual swap file
 1. Run `swapon /mnt/swapfile` to turn it on
 
 ## Install Arch Linux
 
-1. Run `pacstrap /mnt base base-devel linux linux-firmware neovim` to install Arch Linux (`linux-firmware` is not needed on VMs)
+1. Run `pacstrap -K /mnt base base-devel linux linux-firmware neovim` to install Arch Linux (`linux-firmware` is not needed on VMs)
 
 ## Generate File System Table
 
@@ -106,14 +105,15 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Configure Initramfs
 
-1. Run `nvim /etc/mkinitcpio.conf` and, in the `HOOKS` array, move `keyboard` to between `autodetect` and `modconf` and add `encrypt` between `block` and `filesystems`
+1. Run `nvim /etc/mkinitcpio.conf` and, in the `HOOKS` array, move `keyboard` to between `autodetect` and `modconf` and add `encrypt resume` between `block` and `filesystems`
 1. Run `mkinitcpio -P`
 
 ## Create Boot Entry
 
 1. Run `pacman -S efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the EFI boot manager and CPU microcode
 1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
-1. Run `efibootmgr --disk /dev/nvme0n1 --part 1 --create --label "Arch Linux" --loader /vmlinuz-linux --unicode 'cryptdevice=UUID=xxxx:root root=/dev/mapper/root rw initrd=\intel-ucode.img initrd=\initramfs-linux.img' --verbose` while replacing "xxxx" with the UUID of the `nvme0n1p2` device to tell the boot manager about our encrypted file system
+1. Run `filefrag -v /swapfile` to get the offset of the swapfile. It is the first number of "physical_offset" of the line ext "0:".
+1. Run `efibootmgr --disk /dev/nvme0n1 --part 1 --create --label "Arch Linux" --loader /vmlinuz-linux --unicode 'cryptdevice=UUID=xxxx:root root=/dev/mapper/root resume=/dev/mapper/root resume_offset=yyyy rw initrd=\intel-ucode.img initrd=\initramfs-linux.img' --verbose` while replacing "xxxx" with the UUID of the `nvme0n1p2` device and "yyyy" with the offset of the swapfile to tell the boot manager about our encrypted file system
 
 ## Install Network Manager
 
