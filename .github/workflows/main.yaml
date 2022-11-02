@@ -53,7 +53,7 @@ jobs:
       id-token: write
     steps:
       - name: Configure Deployment
-        uses: actions/configure-pages@v1
+        uses: actions/configure-pages@v2
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v1
