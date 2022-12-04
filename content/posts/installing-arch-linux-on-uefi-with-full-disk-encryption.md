@@ -105,7 +105,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 
 ## Configure Initramfs
 
-1. Run `nvim /etc/mkinitcpio.conf` and, in the `HOOKS` array, move `keyboard` to between `autodetect` and `modconf` and add `encrypt resume` between `block` and `filesystems`
+1. Run `nvim /etc/mkinitcpio.conf` and, in the `HOOKS` array, add `encrypt` between `block` and `filesystems` and add `resume` between `filesystems` and `fsck`
 1. Run `mkinitcpio -P`
 
 ## Create Boot Entry
