@@ -111,8 +111,8 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 ## Create Boot Entry
 
 1. Run `pacman -S efibootmgr intel-ucode` (or `amd-ucode` if you have an AMD processor) to install the EFI boot manager and CPU microcode
+1. Run `filefrag -v /swapfile | less` to get the offset of the swapfile. It is the first number of "physical_offset" of the line ext "0:". Write the number down.
 1. Run `blkid -s UUID -o value /dev/nvme0n1p2` to get the UUID of the device
-1. Run `filefrag -v /swapfile` to get the offset of the swapfile. It is the first number of "physical_offset" of the line ext "0:".
 1. Run `efibootmgr --disk /dev/nvme0n1 --part 1 --create --label "Arch Linux" --loader /vmlinuz-linux --unicode 'cryptdevice=UUID=xxxx:root root=/dev/mapper/root resume=/dev/mapper/root resume_offset=yyyy rw initrd=\intel-ucode.img initrd=\initramfs-linux.img' --verbose` while replacing "xxxx" with the UUID of the `nvme0n1p2` device and "yyyy" with the offset of the swapfile to tell the boot manager about our encrypted file system
 
 ## Install Network Manager
@@ -128,7 +128,7 @@ for the last line: change `arch` to whatever hostname you picked in the last ste
 ## Connect to Wi-Fi (only needed if there's no Ethernet connection)
 
 1. Run `nmcli device wifi list` to list the available networks
-1. Run `nmcli device wifi connect MY_WIFI password MY_PASSWORD` to connect to one of them
+1. Run `nmcli device wifi connect MY_WIFI --ask` to connect to one of them
 
 ## Add User
 
@@ -174,10 +174,9 @@ fi
 
 ## Improve Power Management (only makes sense on laptops)
 
-1. Run `sudo pacman -S tlp tlp-rdw` to install TLP
-1. Run `sudo systemctl enable tlp.service --now` to run power optimizations automatically
-1. Run `sudo systemctl enable NetworkManager-dispatcher.service --now` to prevent conflicts
-1. Run `sudo tlp-stat` and follow any recommendations there
+1. Run `sudo pacman -S thermald auto-cpufreq` to install the power management tools
+1. Run `sudo systemctl enable thermald.service --now` to run thermal optimizations automatically
+1. Run `sudo systemctl enable auto-cpufreq.service --now` to run performance optimizations automatically
 
 ## Enable Scheduled fstrim (only makes sense for SSDs)
 
