@@ -24,7 +24,7 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: 0.108.0
+      HUGO_VERSION: 0.111.3
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -53,7 +53,7 @@ jobs:
       id-token: write
     steps:
       - name: Configure Deployment
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v3
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
