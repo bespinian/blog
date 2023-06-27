@@ -2,6 +2,10 @@
 
 The bespinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://gohugo.io).
 
+## Initialize the Project
+
+1. Run `git submodule init`
+
 ## Run Locally for Development
 
 1. Run `hugo server -w`
