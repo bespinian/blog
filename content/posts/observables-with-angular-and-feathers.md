@@ -168,7 +168,7 @@ export class TodosComponent implements OnDestroy, OnInit {
 
   constructor(
     private todoService: TodoService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
   ) {}
 
   public ngOnInit(): void {
@@ -179,7 +179,7 @@ export class TodosComponent implements OnDestroy, OnInit {
       },
       (err) => {
         console.error(err);
-      }
+      },
     );
     this.todoService.find();
   }
