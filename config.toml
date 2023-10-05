@@ -3,7 +3,6 @@ baseURL = "https://blog.bespinian.io/"
 languageCode = "en-us"
 theme = "tale"
 disqusShortname = "berndsgnch"
-googleAnalytics = "G-CQC3K0KBY5"
 enableRobotsTXT = true
 
 [author]
