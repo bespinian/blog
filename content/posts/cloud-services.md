@@ -1,25 +1,25 @@
 ---
-title: Cloud Services
+title: Kurt's Cloud Journey
 author: Philippe Hässig
 comments: true
-date: 2023-10-01
+date: 2023-11-03
 ---
 
-In this post, we would like to give you an overview over the key services every cloud infrastructure provider is offering.
+In this post, we would like to give you an overview of the key services every cloud infrastructure provider offers.
 
 <!--more-->
 
 ## Prologue
 
-This story is about Kurt. Kurt is in charge of running the ticket shop for a local theater group. It has the following features:
+This story is about Kurt. Kurt is in charge of running the online ticket shop for a local theater group. The shop lets you do the following:
 
-- lists upcoming events with some pictures as a teaser.
-- allows visitors to buy tickets.
-- sends a PDF with the ticket by email.
+- List upcoming events with some pictures as a teaser.
+- Allow visitors to buy tickets.
+- Get a ticket as a PDF file by email.
 
 Because Kurt already knows one or two things about "the cloud", he's set up a small virtual machine at his favorite hyperscale cloud provider and deployed the app. Most of the time, the application is idling. It only serves a couple of requests per day.
 
-## Chapter 1: The Black Whole of Storage
+## Chapter 1: The Black Hole of Storage
 
 While Kurt is getting a well-deserved rest on a Greek island, he receives a call from the theater group's president. She tried to publish some new events in the shop. After entering the second event, the shop started throwing weird errors and is now unresponsive.
 
@@ -45,13 +45,13 @@ Usually, they have compatible products for Postgres, MySQL/MariaDB, MongoDB and 
 
 ## Chapter 3: Scale without limits
 
-While Kurt is on a diving trip in the Caribbean, the president of the theater group calls him again. They ran a social media campaign for their new play. One post went viral on TikTok, and now the shop is very slow or even unresponsive. Kurt knew something like this was coming, so he took his laptop out of his dry suite and started to investigate.
+While Kurt is on a diving trip in the Caribbean, the president of the theater group calls him again. They ran a social media campaign for their new play. One post went viral on TikTok, and now the shop is very slow or even unresponsive. Kurt knew something like this was coming, so he took his laptop out of his dry suit and started to investigate.
 
 The virtual machine is totally unresponsive, and the provider's metrics show a very high CPU load. He assigns a larger CPU type to the machine and restarts it. The shop is now responsive again, but still a bit slow. Kurt lets it be for the moment and starts to think about how this scenario can be avoided in the future. Back in the hotel, he starts packing the application into a container and configures the cloud provider's **serverless container runtime**. Now the application automatically scales up when there's more demand. And even better, it automatically scales down to zero during the night, when nobody wants to buy theater tickets, which allows the theater group to save some money for other things.
 
 Serverless container runtimes and similar services let you use exactly as many resources as your applications need. This allows you not only to scale automatically, but it can also save you a lot of money if done right.
 
-Another advantage is that you don't have to manage a server anymore. Most of the time, you just throw some code at it, and the service knows what it needs to do.
+Another advantage is that you don't have to manage a server anymore. Most of the time, you just throw some code at it, and the service knows what it needs to do. It even restarts failed services for you, no matter where in the world you are.
 
 ## Chapter 4: Queuing
 
@@ -66,5 +66,7 @@ Using message queues, you can vastly improve the performance and resource usage 
 This was a really high-level overview of some of the advantages a modern cloud provider can offer. We learned about some of the major services all cloud providers offer in one way or another: virtual machines, object storage, managed databases, serverless runtimes and message queues.
 
 Of course, they offer much, much more services, and they add new ones almost daily.
+
+The major advantages that all services have in common are availability, scalability, adaptability, and security. These are all important points, which usually take quite some effort when you run them yourself.
 
 And a last word: Don't be like Kurt. Enjoy your time off without distractions.
