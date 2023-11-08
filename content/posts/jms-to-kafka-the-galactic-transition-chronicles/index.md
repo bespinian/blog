@@ -13,7 +13,7 @@ Their ingenuity turned the tide against the monolithic communication frameworks 
 ## The Legacy of JMS
 In the galaxy of data and messages, the first system, JMS (Jedi Messaging Service), had long governed interstellar communications.
 Reliable and steadfast, much like the protocol droid C-3PO, JMS had served diligently, ensuring messages traversed the vast expanses of network architectures.
-Yet, as the galaxy's data needs expanded exponentially, JMS's limitations became more evident, reminiscent of an ancient protocol struggling in a rapidly evolving galaxy.
+Yet, as the galaxy's data needs to be expanded exponentially, JMS's limitations became more evident, reminiscent of an ancient protocol struggling in a rapidly evolving galaxy.
 
 ## The Rise of Kafka
 Enter Kafka, a nimble and agile system, quickly rising as a new hope within the Rebellion.
@@ -21,7 +21,7 @@ Far more than a mere messenger, capable of storing, streaming, and processing da
 It promised a new era in data management, but transitioning from the age-old JMS to this groundbreaking technology was laden with potential challenges and conflicts.
 
 ## The Offloading Strategy
-Our journey was riddled with challenges including message disorder and system failures.
+Our journey was riddled with challenges, including message disorder and system failures.
 But armed with a strategic plan, the right technological arsenal, and a touch of the Force, we embarked on our mission to harmoniously blend the old and the new.
 
 ## Apache Kafka
@@ -56,7 +56,7 @@ However, JMS's reliance on Java can be a significant constraint in such heteroge
 
 ## What Sets Kafka Apart?
 Apache Kafka is a distributed streaming platform.
-What makes kafka different from other messaging systems?
+What makes Kafka different from other messaging systems?
 
 ### Multiple Producers
 Apache Kafka is designed to handle multiple producers, thus facilitating data aggregation from various frontend systems.
@@ -78,7 +78,7 @@ This capacity allows for continuous operation of the system, even during expansi
 
 ### High Performance
 Apache Kafka is characterized by high performance under heavy load. It supports scaling out of producers, consumers,
-and brokers to handle large message streams while maintaining subsecond message latency.
+and brokers to handle large message streams while preserving subsecond message latency.
 
 ### Platform Features
 The Apache Kafka project includes APIs and libraries for stream processing and data migration.
@@ -99,7 +99,7 @@ Each host running Kafka Connect is referred to as a 'worker'.
 
 This dual deployment strategy offers Kafka Connect the versatility to accommodate a wide range of workloads.
 
-It can easily manage anything from a single data pipeline with a small number of events to a network of dozens of workers handling millions of events per second.
+It can easily manage anything from a single data pipeline with a few events to a network of dozens of workers handling millions of events per second.
 
 The dynamic nature of Kafka Connect allows you to add or subtract workers from the cluster during runtime, tailoring capacity to match demand.
 
