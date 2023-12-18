@@ -126,7 +126,7 @@ So far, we've only talked about features that are built into Vim or that can be 
 
 ### fzf
 
-One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but, also between different locations within them. I highly recommend checking it out and add the following lines to your configuration file:
+One of the most useful plugins is [fzf](https://github.com/junegunn/fzf.vim) which is a great one to have in general. It offers many helpful commands like `:BLines` for searching the current buffer with intelligent fuzzy matching or `:Rg` for even searching the whole project for specific patterns which, in contrast to the other methods we've looked at so far, lets the user navigate between files. fzf is a tool that can be used for jumping between files and buffers but also, between different locations within them. I highly recommend checking it out and adding the following lines to your configuration file:
 
 ```vim
 " Jump to specific file
