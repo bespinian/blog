@@ -66,6 +66,20 @@
     U+FEFF, U+FFFD;
 }
 
+:root:not(.light) {
+  --default-color: #f0f0f0;
+  --background-color: #000;
+  --default-shade: #ffffff;
+  --default-tint: #555;
+  --grey-1: #606060;
+  --grey-2: #404040;
+  --grey-3: #202020;
+  --grey-4: #181818;
+  --white: #fff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --code-filter: contrast(0.4) brightness(0.9);
+}
+
 h1,
 h2,
 h3,
