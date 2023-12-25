@@ -74,10 +74,11 @@
   --grey-1: #606060;
   --grey-2: #404040;
   --grey-3: #202020;
-  --grey-4: #181818;
+  --grey-4: #6e768166;
   --white: #fff;
-  --blue: #3273dc --shadow-color: rgba(0, 0, 0, 0.2);
-  --code-color: #3273dc;
+  --blue: #3273dc;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --code-color: #f0f0f0;
   --code-filter: contrast(0.4) brightness(0.9);
 }
 
