@@ -76,8 +76,14 @@
   --grey-3: #202020;
   --grey-4: #181818;
   --white: #fff;
-  --shadow-color: rgba(0, 0, 0, 0.2);
+  --blue: #3273dc --shadow-color: rgba(0, 0, 0, 0.2);
+  --code-color: #3273dc;
   --code-filter: contrast(0.4) brightness(0.9);
+}
+
+a {
+  color: #3273dc;
+  text-decoration: none;
 }
 
 h1,
