@@ -79,7 +79,7 @@
   --blue: #3273dc;
   --shadow-color: rgba(0, 0, 0, 0.2);
   --code-color: #f0f0f0;
-  --code-filter: contrast(0.4) brightness(0.9);
+  --code-filter: contrast(1) brightness(1);
 }
 
 a {
@@ -97,8 +97,9 @@ h6,
   font-family: Lato, "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
   font-weight: 700;
 }
+
 .highlight {
-  background-color: #272822;
+  background: #0d1117;
 }
 
 .bespinian-social-nav-container {
