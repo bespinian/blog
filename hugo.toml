@@ -37,3 +37,7 @@ icon_file = "youtube.svg"
 url = "/index.xml"
 alt_text = "The bespinian blog RSS feed"
 icon_file = "rss.svg"
+
+[markup]
+    [markup.highlight]
+        style = "github-dark"
