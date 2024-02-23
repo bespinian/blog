@@ -11,7 +11,7 @@ date: 2024-02-22
 
 When you begin your journey with Terraform, it's common practice to start small, focusing on creating and managing resources within a single AWS region.
 
-This approach allows you to get an initial understanding of Terraform, it's syntax, the plan => apply loop,  state management, and in general grasp the fundamentals of infrastructure as code (IaC).
+This approach allows you to get an initial understanding of Terraform, it's syntax, the plan => apply loop, state management, and in general grasp the fundamentals of infrastructure as code (IaC).
 
 As the complexity and the requirements on your infrastructure grow, you will begin to notice that multi-region deployment in AWS is essential for various reasons.
 
