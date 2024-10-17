@@ -6,7 +6,7 @@ date: 2024-10-08
 ---
 
 Creating a cohesive, motivated, and high-performing team is crucial for long-term 
-organizational success. While individual talents matter, how teams collaborate, 
+organizational success. While individual talents matter, how team members collaborate, 
 communicate, and motivate each other determines whether they excel or struggle. 
 This article draws insights from four influential books - *The 5 Dysfunctions of a 
 Team* by Patrick Lencioni, *Drive* by Daniel Pink, *The Culture Code* by Daniel 
