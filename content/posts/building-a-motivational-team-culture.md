@@ -1,5 +1,5 @@
 ---
-title: Building a Motivational Team Culture: Strategies for Success
+title: "Building a Motivational Team Culture: Strategies for Success"
 author: Matthias Osswald
 comments: true
 date: 2024-10-08
