@@ -7,11 +7,8 @@ enableRobotsTXT = true
 
 [params]
 description = "The bespinian blog - All about cloud computing, containers, Kubernetes, AWS, Azure and much more"
+author = { name = "bespinian", homepage = "https://bespinian.io" }
 css = ["custom.css"]
-
-[[params.author]]
-name = "bespinian"
-homepage = "https://bespinian.io"
 
 [[params.social]]
 url = "https://bespinian.io/"
