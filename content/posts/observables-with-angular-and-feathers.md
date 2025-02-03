@@ -5,19 +5,28 @@ comments: true
 date: 2016-03-14
 ---
 
-[Feathers](http://feathersjs.com) is a modern API framework for Node.js. It exposes its backend services as a REST API or as a WebSocket API. To consume the exposed WebSockets from an Angular app, it makes sense to create Angular services to abstract the respective Feathers services in a way that makes it easy for our Angular components to consume them. This tutorial is assuming that you are using the [Angular CLI](https://github.com/angular/angular-cli) for your app.
+[Feathers](http://feathersjs.com) is a modern API framework for Node.js. It
+exposes its backend services as a REST API or as a WebSocket API. To consume the
+exposed WebSockets from an Angular app, it makes sense to create Angular
+services to abstract the respective Feathers services in a way that makes it
+easy for our Angular components to consume them. This tutorial is assuming that
+you are using the [Angular CLI](https://github.com/angular/angular-cli) for your
+app.
 
-In my example, I'll use a simple to-do service and a component that lists those to-dos.
+In my example, I'll use a simple to-do service and a component that lists those
+to-dos.
 
 ## Import libraries
 
-As a first step, we'll need to add the two libraries `socket.io-client` and `feathers-client` to our project. This can easily be done using npm:
+As a first step, we'll need to add the two libraries `socket.io-client` and
+`feathers-client` to our project. This can easily be done using npm:
 
 ```shell
 $ npm install --save socket.io-client feathers-client
 ```
 
-The TypeScript typings of `feathers-client` are already included in the library. However, we need to include the ones for `socket.io-client` manually:
+The TypeScript typings of `feathers-client` are already included in the library.
+However, we need to include the ones for `socket.io-client` manually:
 
 ```shell
 $ npm install --save @types/socket.io-client
@@ -25,7 +34,8 @@ $ npm install --save @types/socket.io-client
 
 ## Create base API service
 
-Then we create an abstract class to extend upon, which contains the basic properties of a backend service:
+Then we create an abstract class to extend upon, which contains the basic
+properties of a backend service:
 
 ```typescript
 // src/app/api.service.ts
@@ -53,7 +63,10 @@ export class Todo {
 
 ## Create actual service
 
-Then we create the actual service which connects to the Feathers backend and exposes it as a service in Angular. It inherits from the base service we've created above. The Feathers service is exposed as an RxJS `Obersvable` which our components can then subscribe to:
+Then we create the actual service which connects to the Feathers backend and
+exposes it as a service in Angular. It inherits from the base service we've
+created above. The Feathers service is exposed as an RxJS `Obersvable` which our
+components can then subscribe to:
 
 ```typescript
 // src/app/todos/todo.service.ts
@@ -139,7 +152,8 @@ export class TodoService extends APIService {
 
 ## Consume from component
 
-Now, our Angular service is ready. To use the `Observable` it exposes in an Angular component, follow the structure below:
+Now, our Angular service is ready. To use the `Observable` it exposes in an
+Angular component, follow the structure below:
 
 ```typescript
 // todos/todos.component.ts
@@ -190,4 +204,7 @@ export class TodosComponent implements OnDestroy, OnInit {
 }
 ```
 
-Our component `TodosComponent` now has a property `todos` which contains the to-dos it gets from the respective Feathers service and which can be used in the app. It live-updates the UI every time a to-do in the Feathers API is removed or added.
+Our component `TodosComponent` now has a property `todos` which contains the
+to-dos it gets from the respective Feathers service and which can be used in the
+app. It live-updates the UI every time a to-do in the Feathers API is removed or
+added.

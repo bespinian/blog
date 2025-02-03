@@ -6,9 +6,9 @@ date: 2023-12-29
 ---
 
 Since it's near the end of 2023, I am sure everyone is quite busy with family
-and other festive obligations. I am going to keep this one short and introduce you
-to one Vim feature that, if you don't use it already, will have you excited to
-get back to your beloved editor in 2024.
+and other festive obligations. I am going to keep this one short and introduce
+you to one Vim feature that, if you don't use it already, will have you excited
+to get back to your beloved editor in 2024.
 
 <!--more-->
 
@@ -19,23 +19,24 @@ get back to your beloved editor in 2024.
 If you are anything like me, then Vim is so deeply ingrained in you that you
 find yourself accidentally typing `:w` or its friends in all sorts of text
 inputs. Vim motions have taken over your brain to the point that you find it
-difficult to type in “traditional” text inputs. Perhaps your Vim addiction is
-so bad that you have Vi mode configured everywhere you can.
+difficult to type in “traditional” text inputs. Perhaps your Vim addiction is so
+bad that you have Vi mode configured everywhere you can.
 
 You feel like a well-oiled machine, navigating your browser, your file system,
-and even editing commands in your shell using Vim motions. However, when you
-hit `:` to enter your beloved Vim's
+and even editing commands in your shell using Vim motions. However, when you hit
+`:` to enter your beloved Vim's
 [Command-line-mode](https://neovim.io/doc/user/cmdline.html) and want to follow
 up with something more than `w` or `q`, something feels off. You make a typo or
 forget a flag, and there it is. Your fingers seek awkwardly for the arrow keys,
-you're reaching for your backspace, and every time you inadvertently hit
-escape, it's game over.
+you're reaching for your backspace, and every time you inadvertently hit escape,
+it's game over.
 
 ## Command-line Window
 
-The so-called, [Command-line-window](https://neovim.io/doc/user/cmdline.html#cmdline-window) (`:h
-command-line-window`) is one of the less talked-about Vim features, and one that
-I personally discovered sometime ago by pure chance.
+The so-called,
+[Command-line-window](https://neovim.io/doc/user/cmdline.html#cmdline-window)
+(`:h command-line-window`) is one of the less talked-about Vim features, and one
+that I personally discovered sometime ago by pure chance.
 
 It is a special window in Vim that allows you to edit text for `command-line`
 operations in the same way you edit text normally in Vim. This allows you to
@@ -57,9 +58,9 @@ The command-line-window can be accessed in several ways:
 
 ## In Action
 
-Here are some interesting ways you can integrate `command-line-window` into
-your Vim workflow. Keep in mind that these are toy examples intended to seed ideas
-as to how you may use `command-line-window` in more complex circumstances.
+Here are some interesting ways you can integrate `command-line-window` into your
+Vim workflow. Keep in mind that these are toy examples intended to seed ideas as
+to how you may use `command-line-window` in more complex circumstances.
 
 ### Command History
 
@@ -89,10 +90,9 @@ renames and also use Vim motions to pick a new name for the variable._
 
 ### Netrw
 
-![Command-line window Netrw](./cmd-window-netrw.gif)
-_`Command-line-window` is activated using `CTRL+f` after the rename command on
-a directory inside `netrw` is issued. The file can now be conveniently renamed
-using Vim motions._
+![Command-line window Netrw](./cmd-window-netrw.gif) _`Command-line-window` is
+activated using `CTRL+f` after the rename command on a directory inside `netrw`
+is issued. The file can now be conveniently renamed using Vim motions._
 
 ## Happy Vim-ing in 2024
 
@@ -100,14 +100,15 @@ The potential use cases for `command-line-window` go well beyond these simple
 examples. Nonetheless, I hope this was a useful introduction to a feature that
 bridges a gap that was always missing (and, frankly, irritating) for me in Vim.
 
-This post is dedicated to the late Bram Moolenaar, who passed away in August 2023. Bram was the creator and
+This post is dedicated to the late Bram Moolenaar, who passed away in
+August 2023. Bram was the creator and
 [BDFL](https://en.wikipedia.org/wiki/Benevolent_dictator_for_life) of Vim. Vim
 is licensed as [“charityware”](https://en.wikipedia.org/wiki/Careware) and as
 conveyed by the call to “Help poor children in Uganda!” in Vim's welcome
-message, Bram encouraged users to donate to the [ICCF
-Holland](https://www.iccf-holland.org/) charity he founded. If your end-of-year
-bonus has you feeling generous, I encourage you to spread the wealth to those
-who are less fortunate than people like us, people who spend an obnoxious
-amount of time obsessing over text editors.
+message, Bram encouraged users to donate to the
+[ICCF Holland](https://www.iccf-holland.org/) charity he founded. If your
+end-of-year bonus has you feeling generous, I encourage you to spread the wealth
+to those who are less fortunate than people like us, people who spend an
+obnoxious amount of time obsessing over text editors.
 
 Happy new year!

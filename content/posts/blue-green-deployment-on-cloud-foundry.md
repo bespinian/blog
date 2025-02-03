@@ -5,11 +5,25 @@ comments: true
 date: 2016-12-12
 ---
 
-Imagine you have one of your apps in production and want to `cf push` an update to it. If you do so, your app will experience a short downtime because CF needs to stop your old application and then power up the new one. During this short period of time, your users will be receiving `404`s when trying to access your application. Now, what if the new version of your app has an error in it and doesn't even start on Cloud Foundry? Your users will face an even longer downtime until you have found and fixed the bug.
+Imagine you have one of your apps in production and want to `cf push` an update
+to it. If you do so, your app will experience a short downtime because CF needs
+to stop your old application and then power up the new one. During this short
+period of time, your users will be receiving `404`s when trying to access your
+application. Now, what if the new version of your app has an error in it and
+doesn't even start on Cloud Foundry? Your users will face an even longer
+downtime until you have found and fixed the bug.
 
-To prevent these inconveniences for your users, Cloud Foundry allows you to do a so called "Blue-Green Deployment". I won't go into the depths of this concept because you can read all about it in the [Cloud Foundry documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html). Generally, it allows you to have two instances of your application running simultaneously, while one is the old version and one is already the new version. Your users are then being load balanced between the two apps and, as soon as the new version is running correctly, the old one is shut down.
+To prevent these inconveniences for your users, Cloud Foundry allows you to do a
+so called "Blue-Green Deployment". I won't go into the depths of this concept
+because you can read all about it in the
+[Cloud Foundry documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html).
+Generally, it allows you to have two instances of your application running
+simultaneously, while one is the old version and one is already the new version.
+Your users are then being load balanced between the two apps and, as soon as the
+new version is running correctly, the old one is shut down.
 
-Cloud Foundry doesn't provide this functionality out of the box. That's why I wrote a simple shell script to do this blue-green deployment for you.
+Cloud Foundry doesn't provide this functionality out of the box. That's why I
+wrote a simple shell script to do this blue-green deployment for you.
 
 ```bash
 #!/usr/bin/env bash
@@ -93,16 +107,23 @@ cf delete -f -r "${app_name}"
 cf rename "${temp_app_name}" "${app_name}"
 ```
 
-The script tries to guess some variables from your `manifest.yml` file, but you'll still need to set some environment variables for a successful deployment:
+The script tries to guess some variables from your `manifest.yml` file, but
+you'll still need to set some environment variables for a successful deployment:
 
-- `CF_API`: The API endpoint of the CF instance you intend to use (e.g., `https://api.lyra-836.appcloud.swisscom.com`)
-- `CF_SHARED_DOMAIN`: The shared domain you want to use for temporary routes used to smoke test your app
+- `CF_API`: The API endpoint of the CF instance you intend to use (e.g.,
+  `https://api.lyra-836.appcloud.swisscom.com`)
+- `CF_SHARED_DOMAIN`: The shared domain you want to use for temporary routes
+  used to smoke test your app
 - `CF_USERNAME`: Your Cloud Foundry username
 - `CF_PASSWORD`: Your Cloud Foundry password
 - `CF_ORG`: The Cloud Foundry org you wish to deploy to
 - `CF_SPACE`: The Cloud Foundry space you intend to deploy to
 
-As soon as you've set all of these variables, you can simply execute the script, and it will do a verbose blue-green deployment for you. The script will deploy the new version of your app and check for it to get healthy. You can change the `expected_response` parameter to something else, like `401` if your app doesn't return a `200` status code without authentication.
+As soon as you've set all of these variables, you can simply execute the script,
+and it will do a verbose blue-green deployment for you. The script will deploy
+the new version of your app and check for it to get healthy. You can change the
+`expected_response` parameter to something else, like `401` if your app doesn't
+return a `200` status code without authentication.
 
 ## Caveats
 
@@ -111,9 +132,13 @@ As soon as you've set all of these variables, you can simply execute the script,
 
 ## Further reading
 
-There are two plugins for the Cloud Foundry CLI that also automate certain steps of blue-green deployment:
+There are two plugins for the Cloud Foundry CLI that also automate certain steps
+of blue-green deployment:
 
 - [Autopilot](https://github.com/contraband/autopilot)
 - [BlueGreenDeploy](https://github.com/bluemixgaragelondon/cf-blue-green-deploy)
 
-My script is there to show you what happens behind the curtains and to be used by CI/CD systems or if you need more fine-grained control over what is happening during the deployment. Personally, I really like the BlueGreenDeploy plugin. It's easy to use and does the job.
+My script is there to show you what happens behind the curtains and to be used
+by CI/CD systems or if you need more fine-grained control over what is happening
+during the deployment. Personally, I really like the BlueGreenDeploy plugin.
+It's easy to use and does the job.
