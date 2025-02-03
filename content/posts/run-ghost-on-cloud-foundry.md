@@ -5,17 +5,27 @@ comments: true
 date: 2017-07-27
 ---
 
-This blog runs on [Ghost](https://github.com/TryGhost/Ghost). It's a pretty light weight blogging platform based on [Node.js](https://nodejs.org/). Let's look into how it can be run on Cloud Foundry.
+This blog runs on [Ghost](https://github.com/TryGhost/Ghost). It's a pretty
+light weight blogging platform based on [Node.js](https://nodejs.org/). Let's
+look into how it can be run on Cloud Foundry.
 
 ## Create Services
 
-To run Ghost, we'll need two services: a database and an email server. First, let's create the database. I'm using the [Swisscom Application Cloud](https://developer.swisscom.com/) here, but you can use any Cloud Foundry provider. We'll create a small MariaDB service which works like MySQL and therefore can be used by Ghost. Execute the following command to create it:
+To run Ghost, we'll need two services: a database and an email server. First,
+let's create the database. I'm using the
+[Swisscom Application Cloud](https://developer.swisscom.com/) here, but you can
+use any Cloud Foundry provider. We'll create a small MariaDB service which works
+like MySQL and therefore can be used by Ghost. Execute the following command to
+create it:
 
 ```bash
 $ cf create-service mariadbent usage blog-db
 ```
 
-Now, we can create our email service. The easiest way is to use [Mailgun](https://www.mailgun.com/). Just create an account on their site for free and put the credentials into a user provided service in Cloud Foundry to link the two:
+Now, we can create our email service. The easiest way is to use
+[Mailgun](https://www.mailgun.com/). Just create an account on their site for
+free and put the credentials into a user provided service in Cloud Foundry to
+link the two:
 
 ```bash
 $ cf create-user-provided-service mailgun -p '{ "username": "<your-mailgun-smtp-login>", "password": "<your-mailgun-password>" }'
@@ -25,13 +35,23 @@ Replace the values in `<>` with your respective credentials.
 
 ## Get the Source Code
 
-Getting the Ghost source code is effortless. Just visit their [releases](https://github.com/TryGhost/Ghost/releases) page and download the latest one as a ZIP archive. Then unzip it and `cd` into the respective folder from your terminal.
+Getting the Ghost source code is effortless. Just visit their
+[releases](https://github.com/TryGhost/Ghost/releases) page and download the
+latest one as a ZIP archive. Then unzip it and `cd` into the respective folder
+from your terminal.
 
 ## Create Entrypoint Script
 
-Ghost needs to be configured through a configuration file. We'll call ours `config.producton.json` since it's supposed to be suitable for a production blog. This file tells Ghost where to look for its database, which email server to use, and how it's supposed to run the blog in general.
+Ghost needs to be configured through a configuration file. We'll call ours
+`config.producton.json` since it's supposed to be suitable for a production
+blog. This file tells Ghost where to look for its database, which email server
+to use, and how it's supposed to run the blog in general.
 
-In Cloud Foundry, services are configured dynamically, which isn't possible in a simple JSON file. We'll work around this by creating a Bash script to read out the environment and create the config file on the fly. Create a new file called `entrypoint-cf.sh` in the root folder of your app and paste the following content into it:
+In Cloud Foundry, services are configured dynamically, which isn't possible in a
+simple JSON file. We'll work around this by creating a Bash script to read out
+the environment and create the config file on the fly. Create a new file called
+`entrypoint-cf.sh` in the root folder of your app and paste the following
+content into it:
 
 ```bash
 #!/bin/bash
@@ -104,9 +124,17 @@ Then, make the script executable by running the following command:
 $ chmod +x entrypoint-cf.sh
 ```
 
-This script gets all the necessary environment variables and uses `jq` (which comes pre-installed in the Node.js Buildpack) to create a config JSON string, which is then written into a `config.production.json` file. The script then executes a database migration (if necessary) and starts the app itself.
+This script gets all the necessary environment variables and uses `jq` (which
+comes pre-installed in the Node.js Buildpack) to create a config JSON string,
+which is then written into a `config.production.json` file. The script then
+executes a database migration (if necessary) and starts the app itself.
 
-Now, all we'll need to do is tell Cloud Foundry to run this script to start the app instead of calling `npm start` directly (which is the default for Node.js apps). We can do this in the `manifest.yml` file, which is where Cloud Foundry gets its instructions of how to run an app. Create a new file called `manifest.yml` in the root directory of the app and paste the following content in there:
+Now, all we'll need to do is tell Cloud Foundry to run this script to start the
+app instead of calling `npm start` directly (which is the default for Node.js
+apps). We can do this in the `manifest.yml` file, which is where Cloud Foundry
+gets its instructions of how to run an app. Create a new file called
+`manifest.yml` in the root directory of the app and paste the following content
+in there:
 
 ```yaml
 applications:
@@ -122,9 +150,14 @@ applications:
       NODE_ENV: production
 ```
 
-This tells CF to use the correct buildpack and to initiate the app with our entrypoint script. It also sets the `NODE_ENV` environment variable to `production` which optimizes Node.js and Ghost to run with better performance. Furthermore, it tells Cloud Foundry to bind the two services we've created above to our blog app.
+This tells CF to use the correct buildpack and to initiate the app with our
+entrypoint script. It also sets the `NODE_ENV` environment variable to
+`production` which optimizes Node.js and Ghost to run with better performance.
+Furthermore, it tells Cloud Foundry to bind the two services we've created above
+to our blog app.
 
-The configuration for our app is done. All that's left to do is run the following command to get our blog running in the cloud:
+The configuration for our app is done. All that's left to do is run the
+following command to get our blog running in the cloud:
 
 ```bash
 $ cf push
@@ -134,31 +167,52 @@ Welcome to the fabulous world of Ghost blogging!
 
 ## Add Disqus (Optional)
 
-Allowing your readers to comment on your blog posts is a great way to make your blog more interactive. Adding [Disqus](https://disqus.com/) is a straightforward way to do so.
+Allowing your readers to comment on your blog posts is a great way to make your
+blog more interactive. Adding [Disqus](https://disqus.com/) is a straightforward
+way to do so.
 
-Simply visit their website, create an account and register your blog as a new site. Then, open `content/themes/casper/post.hbs` and look for a comment about Disqus in the file. There is a section that you'll need to uncomment and replace the sample URL with the one of your blog. Follow the steps described in the comment there.
+Simply visit their website, create an account and register your blog as a new
+site. Then, open `content/themes/casper/post.hbs` and look for a comment about
+Disqus in the file. There is a section that you'll need to uncomment and replace
+the sample URL with the one of your blog. Follow the steps described in the
+comment there.
 
 After that, run `cf push` and that's it. Your blog is now interactive.
 
 ## Add Object Storage (Optional)
 
-At some point, you'll want to upload images and other assets to be accessible from your blog (e.g. for blog post header pictures). If you do that now, the images will be lost whenever the app has to restart. So, we'll need to save these images onto an S3 storage. The following paragraphs show how that can be done on the Swisscom Application Cloud as an example.
+At some point, you'll want to upload images and other assets to be accessible
+from your blog (e.g. for blog post header pictures). If you do that now, the
+images will be lost whenever the app has to restart. So, we'll need to save
+these images onto an S3 storage. The following paragraphs show how that can be
+done on the Swisscom Application Cloud as an example.
 
-To do so, follow [this tutorial](/manage-buckets-on-cloud-foundry-s3-services/) to create an S3 service with bucket and name the service instance "blog-storage".
+To do so, follow [this tutorial](/manage-buckets-on-cloud-foundry-s3-services/)
+to create an S3 service with bucket and name the service instance
+"blog-storage".
 
-Next, we'll have to bind the app to our newly created service. Add the following line to the `services` part of our `manifest.yml`:
+Next, we'll have to bind the app to our newly created service. Add the following
+line to the `services` part of our `manifest.yml`:
 
 ```yaml
 - blog-storage
 ```
 
-Now we need to install the [ghost-storage-adapter-s3](https://github.com/colinmeinke/ghost-storage-adapter-s3) so that Ghost will know how to talk to our S3 service. To do so, run the installation commands from the link above in the folder where you have the Ghost repo. Cloud Foundry will try to install the dependencies for Ghost using `yarn`. Since the installation commands install the S3 storage adapter with `npm`, we'll need to change that. This can simply be achieved by removing the `yarn.lock` file:
+Now we need to install the
+[ghost-storage-adapter-s3](https://github.com/colinmeinke/ghost-storage-adapter-s3)
+so that Ghost will know how to talk to our S3 service. To do so, run the
+installation commands from the link above in the folder where you have the Ghost
+repo. Cloud Foundry will try to install the dependencies for Ghost using `yarn`.
+Since the installation commands install the S3 storage adapter with `npm`, we'll
+need to change that. This can simply be achieved by removing the `yarn.lock`
+file:
 
 ```bash
 $ rm yarn.lock
 ```
 
-Next, we'll need to adjust our `entrypoint-cf.sh` script to include the S3 service. Add the following lines where the services variables are read:
+Next, we'll need to adjust our `entrypoint-cf.sh` script to include the S3
+service. Add the following lines where the services variables are read:
 
 ```bash
 # Storage service
@@ -173,7 +227,8 @@ s3_access_key_id="$(echo "${s3_credentials}" | jq -r '.accessKey // ""')"
 s3_secret_access_key="$(echo "${s3_credentials}" | jq -r '.sharedSecret // ""')"
 ```
 
-Then add the following part to the JSON config template at the bottom of the file:
+Then add the following part to the JSON config template at the bottom of the
+file:
 
 ```bash
     storage: {
@@ -196,13 +251,17 @@ All that's left to do is to push our app again:
 $ cf push
 ```
 
-And that's it! All the images you upload now through the Ghost admin console will be stored in your S3 service.
+And that's it! All the images you upload now through the Ghost admin console
+will be stored in your S3 service.
 
 ## Add Syntax Highlighting (Optional)
 
-highlight.js allows you to get neat syntax highlighting for the code snippets you include in your blog posts (see example above). It supports many programming languages and different themes.
+highlight.js allows you to get neat syntax highlighting for the code snippets
+you include in your blog posts (see example above). It supports many programming
+languages and different themes.
 
-To get it into your blog, simply add the following snippets to the "Code injection" section of your Ghost settings:
+To get it into your blog, simply add the following snippets to the "Code
+injection" section of your Ghost settings:
 
 Blog Header:
 
@@ -271,6 +330,10 @@ Blog Footer:
 </script>
 ```
 
-If you want to use a different theme (the one above is called `androidstudio`), you'll have to copy the minified CSS from your theme into the `<style>` tags of the header and then add `!important` to all the colors, so they don't get overwritten by Ghost's theme.
+If you want to use a different theme (the one above is called `androidstudio`),
+you'll have to copy the minified CSS from your theme into the `<style>` tags of
+the header and then add `!important` to all the colors, so they don't get
+overwritten by Ghost's theme.
 
-This will load and initialize highlight.js. Hit "Save" to update your blog and enjoy colorful syntax highlighting!
+This will load and initialize highlight.js. Hit "Save" to update your blog and
+enjoy colorful syntax highlighting!

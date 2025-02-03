@@ -1,6 +1,7 @@
 # bespinian Blog
 
-The bespinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://gohugo.io).
+The bespinian blog at <https://blog.bespinian.io>. Created with
+[Hugo](https://gohugo.io).
 
 ## Initialize the Project
 
@@ -22,4 +23,5 @@ The bespinian blog at <https://blog.bespinian.io>. Created with [Hugo](https://g
 
 ### Post doesn't Show Up
 
-If your post doesn't show up, ensure the date you have set in the front matter is in the past.
+If your post doesn't show up, ensure the date you have set in the front matter
+is in the past.

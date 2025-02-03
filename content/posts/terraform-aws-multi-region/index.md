@@ -1,31 +1,47 @@
 ---
-title: "Utilizing Terraform and Terraform Cloud Modules for Multi-Region AWS Deployment"
+title:
+  "Utilizing Terraform and Terraform Cloud Modules for Multi-Region AWS
+  Deployment"
 author: Denis Kovachevich
 comments: true
 date: 2024-02-22
 ---
 
-> The code for this example can be found on [bespinian's GitHub](https://github.com/bespinian/terraform-aws-multi-region)
+> The code for this example can be found on
+> [bespinian's GitHub](https://github.com/bespinian/terraform-aws-multi-region)
 
 ## Introduction
 
-When you begin your journey with Terraform, it's common practice to start small, focusing on creating and managing resources within a single AWS region.
+When you begin your journey with Terraform, it's common practice to start small,
+focusing on creating and managing resources within a single AWS region.
 
-This approach allows you to get an initial understanding of Terraform, it's syntax, the plan => apply loop, state management, and in general grasp the fundamentals of infrastructure as code (IaC).
+This approach allows you to get an initial understanding of Terraform, it's
+syntax, the plan => apply loop, state management, and in general grasp the
+fundamentals of infrastructure as code (IaC).
 
-As the complexity and the requirements on your infrastructure grow, you will begin to notice that multi-region deployment in AWS is essential for various reasons.
+As the complexity and the requirements on your infrastructure grow, you will
+begin to notice that multi-region deployment in AWS is essential for various
+reasons.
 
-These include improved application availability, reduced latency for global users, robust disaster recovery strategies, and many other use-cases.
+These include improved application availability, reduced latency for global
+users, robust disaster recovery strategies, and many other use-cases.
 
-However, replicating your infrastructure across multiple regions introduces extra complexity.
+However, replicating your infrastructure across multiple regions introduces
+extra complexity.
 
-Without the right tools and practices, you might find yourself duplicating effort, managing extensive configurations, and navigating the challenges of keeping your infrastructure consistent across regions.
+Without the right tools and practices, you might find yourself duplicating
+effort, managing extensive configurations, and navigating the challenges of
+keeping your infrastructure consistent across regions.
 
-This is where Terraform, combined with strategic planning and organization, can significantly simplify the process.
+This is where Terraform, combined with strategic planning and organization, can
+significantly simplify the process.
 
-In the following tutorial I would like to lead you through a possible way of setting up your configuration using Terraform Cloud workspaces, which can help you avoid the pitfalls of multi-region deployment, while reaping the benefits.
+In the following tutorial I would like to lead you through a possible way of
+setting up your configuration using Terraform Cloud workspaces, which can help
+you avoid the pitfalls of multi-region deployment, while reaping the benefits.
 
-This is not the only way of doing it, but one that has worked very well for me and I hope will be interesting for anyone faced with this challenge.
+This is not the only way of doing it, but one that has worked very well for me
+and I hope will be interesting for anyone faced with this challenge.
 
 ## Prerequisites
 
@@ -34,7 +50,9 @@ This is not the only way of doing it, but one that has worked very well for me a
 
 ## Creating Your Terraform Cloud Workspace
 
-Creating a Terraform Cloud workspace is a step toward structuring and managing your infrastructure projects in a more organized, secure, and collaborative manner.
+Creating a Terraform Cloud workspace is a step toward structuring and managing
+your infrastructure projects in a more organized, secure, and collaborative
+manner.
 
 For our setup, we will create a new CLI-Driven Workspace:
 
@@ -42,7 +60,8 @@ For our setup, we will create a new CLI-Driven Workspace:
 
 ## AWS Generating Access Keys
 
-If we want to connect our terraform cloud workspace with AWS we would need to create Access and Secret Keys for that follow the following steps:
+If we want to connect our terraform cloud workspace with AWS we would need to
+create Access and Secret Keys for that follow the following steps:
 
 ### 1. IAM -> Users -> Create user
 
@@ -60,7 +79,8 @@ If we want to connect our terraform cloud workspace with AWS we would need to cr
 
 #### 3.3 select the `CLI` option and `Create access key`
 
-In the next chapter, we will add `Access key` and `Secret access key` into the terraform cloud workspace.
+In the next chapter, we will add `Access key` and `Secret access key` into the
+terraform cloud workspace.
 
 ## Integrating Terraform Cloud with AWS
 
@@ -76,10 +96,10 @@ In the terraform cloud newly created dev workspace add new Variables
 
 ## Deploy resource to single region with Terraform
 
-We will start with deployment to single region, and then we will refactor our code to support multi region deployment.
+We will start with deployment to single region, and then we will refactor our
+code to support multi region deployment.
 
-- Login to terraform cloud via the terraform CLI
-  `terraform login`
+- Login to terraform cloud via the terraform CLI `terraform login`
 
 - Create `backend.tf` with the terraform cloud and aws provider
 
@@ -120,7 +140,8 @@ Terraform Cloud has been successfully initialized!
 
 ### Create our first resource
 
-In this example we will create the SNS resource in the default `us-east-1` region, the one which we have defined in the `backend.tf`
+In this example we will create the SNS resource in the default `us-east-1`
+region, the one which we have defined in the `backend.tf`
 
 - Create main.tf file in the same working directory
 
@@ -171,7 +192,8 @@ Terraform will perform the following actions:
 
 - Move `main.tf` into this directory
 
-- Create a new file `variables.tf` to have configurable topic name and topic display name
+- Create a new file `variables.tf` to have configurable topic name and topic
+  display name
 
 ```shell
 variable "topic_name" {
@@ -183,7 +205,9 @@ variable "topic_display_name" {
 }
 ```
 
-- Adjust the `main.tf` file to incorporate the variable designated for the SNS topic's name, ensuring the SNS topic resource now references this variable for its naming convention
+- Adjust the `main.tf` file to incorporate the variable designated for the SNS
+  topic's name, ensuring the SNS topic resource now references this variable for
+  its naming convention
 
 ```shell
 resource "aws_sns_topic" "sns_example" {
@@ -192,9 +216,12 @@ resource "aws_sns_topic" "sns_example" {
 }
 ```
 
-- To establish consistency and manage dependencies in our Terraform project, we will create a `versions.tf` file
+- To establish consistency and manage dependencies in our Terraform project, we
+  will create a `versions.tf` file
 
-- This file will outline the required providers, including their respective versions, to ensure compatibility and stable functionality within our infrastructure configurations
+- This file will outline the required providers, including their respective
+  versions, to ensure compatibility and stable functionality within our
+  infrastructure configurations
 
 ```shell
 terraform {
@@ -209,7 +236,9 @@ terraform {
 
 ### Refactoring the Root Project Directory
 
-- Create `providers.tf`, within this new file, we will introduce an additional AWS region configuration, utilizing an alias, to facilitate the differentiation of providers on the basis of their aliases
+- Create `providers.tf`, within this new file, we will introduce an additional
+  AWS region configuration, utilizing an alias, to facilitate the
+  differentiation of providers on the basis of their aliases
 
 ```shell
 provider "aws" {
@@ -223,7 +252,8 @@ provider "aws" {
 }
 ```
 
-- Now, let's create a module for each region within the `main.tf` file at the root of our project directory
+- Now, let's create a module for each region within the `main.tf` file at the
+  root of our project directory
 
 ```shell
 module "us-east-1" {
@@ -248,6 +278,9 @@ Multi-region folder structure
 
 This approach will create an SNS topic in each region.
 
-This is one strategy for implementing multi-region infrastructure deployment by utilizing multiple providers.
+This is one strategy for implementing multi-region infrastructure deployment by
+utilizing multiple providers.
 
-Keep an eye out for our upcoming blog posts, where we will explore how to achieve nearly identical outcomes by using multiple Terraform Cloud workspaces and will talk about when you might want to use the one approach or the other.
+Keep an eye out for our upcoming blog posts, where we will explore how to
+achieve nearly identical outcomes by using multiple Terraform Cloud workspaces
+and will talk about when you might want to use the one approach or the other.

@@ -7,100 +7,134 @@ date: 2023-11-05
 
 ## A Long Time Ago in an IT Galaxy Far, Far Away…
 
-In an era marked by a seismic shift in technology, a team of Jedi developers, once guardians of legacy system strongholds, orchestrated a pivotal uprising.
-Their ingenuity turned the tide against the monolithic communication frameworks that had long dominated the galaxy's data streams.
+In an era marked by a seismic shift in technology, a team of Jedi developers,
+once guardians of legacy system strongholds, orchestrated a pivotal uprising.
+Their ingenuity turned the tide against the monolithic communication frameworks
+that had long dominated the galaxy's data streams.
 
 ## The Legacy of JMS
 
-In the galaxy of data and messages, the first system, JMS (Jedi Messaging Service), had long governed interstellar communications.
-Reliable and steadfast, much like the protocol droid C-3PO, JMS had served diligently, ensuring messages traversed the vast expanses of network architectures.
-Yet, as the galaxy's data needs to be expanded exponentially, JMS's limitations became more evident, reminiscent of an ancient protocol struggling in a rapidly evolving galaxy.
+In the galaxy of data and messages, the first system, JMS (Jedi Messaging
+Service), had long governed interstellar communications. Reliable and steadfast,
+much like the protocol droid C-3PO, JMS had served diligently, ensuring messages
+traversed the vast expanses of network architectures. Yet, as the galaxy's data
+needs to be expanded exponentially, JMS's limitations became more evident,
+reminiscent of an ancient protocol struggling in a rapidly evolving galaxy.
 
 ## The Rise of Kafka
 
-Enter Kafka, a nimble and agile system, quickly rising as a new hope within the Rebellion.
-Far more than a mere messenger, capable of storing, streaming, and processing data in unprecedented ways.
-It promised a new era in data management, but transitioning from the age-old JMS to this groundbreaking technology was laden with potential challenges and conflicts.
+Enter Kafka, a nimble and agile system, quickly rising as a new hope within the
+Rebellion. Far more than a mere messenger, capable of storing, streaming, and
+processing data in unprecedented ways. It promised a new era in data management,
+but transitioning from the age-old JMS to this groundbreaking technology was
+laden with potential challenges and conflicts.
 
 ## The Offloading Strategy
 
-Our journey was riddled with challenges, including message disorder and system failures.
-But armed with a strategic plan, the right technological arsenal, and a touch of the Force, we embarked on our mission to harmoniously blend the old and the new.
+Our journey was riddled with challenges, including message disorder and system
+failures. But armed with a strategic plan, the right technological arsenal, and
+a touch of the Force, we embarked on our mission to harmoniously blend the old
+and the new.
 
 ## Apache Kafka
 
-Kafka's robust architecture and superior handling of real-time data make it an ideal choice for businesses seeking to improve their data processing systems.
+Kafka's robust architecture and superior handling of real-time data make it an
+ideal choice for businesses seeking to improve their data processing systems.
 
-But how do we transition from using JMS to Kafka without causing disruption to existing systems? The answer lies in using Kafka Connect.
+But how do we transition from using JMS to Kafka without causing disruption to
+existing systems? The answer lies in using Kafka Connect.
 
-In this post, we will explore the process of offloading messages from JMS queues to Kafka using Kafka Connect.
+In this post, we will explore the process of offloading messages from JMS queues
+to Kafka using Kafka Connect.
 
 We'll start with an overview of JMS and Kafka, and the need for offloading.
 
-Then we'll dive into a step-by-step guide on how to accomplish the offloading process.
+Then we'll dive into a step-by-step guide on how to accomplish the offloading
+process.
 
-Whether you're a seasoned software architect or a beginner in the field, this article aims to provide you with practical knowledge to facilitate your JMS to Kafka offloading journey.
+Whether you're a seasoned software architect or a beginner in the field, this
+article aims to provide you with practical knowledge to facilitate your JMS to
+Kafka offloading journey.
 
-Join us as we delve into the world of Kafka, demystify the offloading process, and help you harness the power of real-time data for your business.
+Join us as we delve into the world of Kafka, demystify the offloading process,
+and help you harness the power of real-time data for your business.
 
 ## Understanding JMS and Its Limitations
 
-JMS, short for Java Message Service, is a specification that operates within the Java Virtual Machine (JVM).
+JMS, short for Java Message Service, is a specification that operates within the
+Java Virtual Machine (JVM).
 
-Although it's a Java-centric service, languages such as Kotlin and Scala can interact with it due to their compatibility with Java.
+Although it's a Java-centric service, languages such as Kotlin and Scala can
+interact with it due to their compatibility with Java.
 
-JMS allows Java components to create, read, send and receive messages and will leverage the communication between different components in a distributed application to make it
-loosely coupled, asynchronous and reliable.
+JMS allows Java components to create, read, send and receive messages and will
+leverage the communication between different components in a distributed
+application to make it loosely coupled, asynchronous and reliable.
 
-In the modern software landscape, especially in complex, multi-tiered applications employing microservices, a diverse array of programming languages and frameworks are often utilized.
+In the modern software landscape, especially in complex, multi-tiered
+applications employing microservices, a diverse array of programming languages
+and frameworks are often utilized.
 
-This diversity allows different components of the application to utilize the strengths of different languages and frameworks.
+This diversity allows different components of the application to utilize the
+strengths of different languages and frameworks.
 
-However, JMS's reliance on Java can be a significant constraint in such heterogeneous environments, limiting its interoperability across different parts of the system that are not Java-based.
+However, JMS's reliance on Java can be a significant constraint in such
+heterogeneous environments, limiting its interoperability across different parts
+of the system that are not Java-based.
 
 ## What Sets Kafka Apart?
 
-Apache Kafka is a distributed streaming platform.
-What makes Kafka different from other messaging systems?
+Apache Kafka is a distributed streaming platform. What makes Kafka different
+from other messaging systems?
 
 ### Multiple Producers
 
-Apache Kafka is designed to handle multiple producers, thus facilitating data aggregation from various frontend systems.
-This capacity simplifies the data stream, making it more manageable, particularly when working with multiple microservices.
+Apache Kafka is designed to handle multiple producers, thus facilitating data
+aggregation from various frontend systems. This capacity simplifies the data
+stream, making it more manageable, particularly when working with multiple
+microservices.
 
 ### Multiple Consumers
 
-Kafka supports multiple consumers to read the same stream of messages without interference.
-Unlike many other systems where a consumed message is no longer available,
-Kafka allows multiple consumers to share and process a given message just once, if they operate as part of a group.
+Kafka supports multiple consumers to read the same stream of messages without
+interference. Unlike many other systems where a consumed message is no longer
+available, Kafka allows multiple consumers to share and process a given message
+just once, if they operate as part of a group.
 
 ### Disk-Based Retention
 
-Apache Kafka provides durable message retention, which means messages are written to disk based on customizable retention rules.
-This attribute permits non-real-time operation of consumers, safeguards data during traffic spikes or slow processing,
-and allows for maintenance of consumers without the risk of data loss.
+Apache Kafka provides durable message retention, which means messages are
+written to disk based on customizable retention rules. This attribute permits
+non-real-time operation of consumers, safeguards data during traffic spikes or
+slow processing, and allows for maintenance of consumers without the risk of
+data loss.
 
 ### Scalability
 
-Kafka offers flexible scalability, permitting users to start with a single broker and expand to larger clusters as needed.
-This capacity allows for continuous operation of the system, even during expansions or the failure of an individual broker.
+Kafka offers flexible scalability, permitting users to start with a single
+broker and expand to larger clusters as needed. This capacity allows for
+continuous operation of the system, even during expansions or the failure of an
+individual broker.
 
 ### High Performance
 
-Apache Kafka is characterized by high performance under heavy load. It supports scaling out of producers, consumers,
-and brokers to handle large message streams while preserving subsecond message latency.
+Apache Kafka is characterized by high performance under heavy load. It supports
+scaling out of producers, consumers, and brokers to handle large message streams
+while preserving subsecond message latency.
 
 ### Platform Features
 
-The Apache Kafka project includes APIs and libraries for stream processing and data migration.
-Kafka Connect aids in moving data from a source system to Kafka or vice versa, while Kafka Streams offers a library
-for developing scalable, fault-tolerant stream processing applications.
+The Apache Kafka project includes APIs and libraries for stream processing and
+data migration. Kafka Connect aids in moving data from a source system to Kafka
+or vice versa, while Kafka Streams offers a library for developing scalable,
+fault-tolerant stream processing applications.
 
 ## The Flexibility and Resilience of Kafka Connect
 
 ### Deployment Options and Scalability of Kafka Connect
 
-Kafka Connect, as a client-side application, provides two different deployment methods:
+Kafka Connect, as a client-side application, provides two different deployment
+methods:
 
 - individual, standalone application on a single host or
 - as a distributed system spanning multiple hosts.
@@ -109,53 +143,70 @@ Each host running Kafka Connect is referred to as a 'worker'.
 
 ### Handling Varied Workloads
 
-This dual deployment strategy offers Kafka Connect the versatility to accommodate a wide range of workloads.
+This dual deployment strategy offers Kafka Connect the versatility to
+accommodate a wide range of workloads.
 
-It can easily manage anything from a single data pipeline with a few events to a network of dozens of workers handling millions of events per second.
+It can easily manage anything from a single data pipeline with a few events to a
+network of dozens of workers handling millions of events per second.
 
-The dynamic nature of Kafka Connect allows you to add or subtract workers from the cluster during runtime, tailoring capacity to match demand.
+The dynamic nature of Kafka Connect allows you to add or subtract workers from
+the cluster during runtime, tailoring capacity to match demand.
 
 ### Kafka Connect in a Cluster Setup
 
-When Kafka Connect is deployed as a distributed cluster, each worker collaborates, taking on a portion of the workload.
+When Kafka Connect is deployed as a distributed cluster, each worker
+collaborates, taking on a portion of the workload.
 
-This distributed approach enhances the reliability and resilience of Kafka Connect.
+This distributed approach enhances the reliability and resilience of Kafka
+Connect.
 
-If one worker fails, the remaining workers can instantly redistribute and manage the disrupted workload, minimizing downtime and maintaining productivity.
+If one worker fails, the remaining workers can instantly redistribute and manage
+the disrupted workload, minimizing downtime and maintaining productivity.
 
 ## Other components used in this example
 
 ### [karapace](https://www.karapace.io/)
 
-Karapace is a free and Open Source tool that provides an API-compatible alternative to the Confluent Schema Registry for use with Apache Kafka.
-When working with Kafka, especially when leveraging Avro serialized data, the schema registry becomes an essential component.
-The schema registry stores Avro Schemas for Kafka producers and consumers and ensures that written and read data is always compatible with the schema.
+Karapace is a free and Open Source tool that provides an API-compatible
+alternative to the Confluent Schema Registry for use with Apache Kafka. When
+working with Kafka, especially when leveraging Avro serialized data, the schema
+registry becomes an essential component. The schema registry stores Avro Schemas
+for Kafka producers and consumers and ensures that written and read data is
+always compatible with the schema.
 
 ### [redpanda console](https://redpanda.com/redpanda-console-kafka-ui)
 
-Redpanda Console gives you a simple, interactive approach for gaining visibility into your topics, masking data,
-managing consumer groups, and exploring real-time data with time-travel debugging.
+Redpanda Console gives you a simple, interactive approach for gaining visibility
+into your topics, masking data, managing consumer groups, and exploring
+real-time data with time-travel debugging.
 
 ### [activemq](https://activemq.apache.org/)
 
-Apache ActiveMQ is an open-source message broker written in Java. It is known for its robustness, flexibility, and broad feature set.
-ActiveMQ is a fully JMS (Java Message Service) compliant messaging system and supports many cross-language clients and protocols.
+Apache ActiveMQ is an open-source message broker written in Java. It is known
+for its robustness, flexibility, and broad feature set. ActiveMQ is a fully JMS
+(Java Message Service) compliant messaging system and supports many
+cross-language clients and protocols.
 
 ### [JMS Source Connector](https://docs.lenses.io/5.3/connectors/sources/jmssourceconnector/)
 
-A Kafka Connect JMS source connector to subscribe to messages on JMS queues and topics and write them to a Kafka topic.  
-It's using the KCQL (Kafka Connect Query Languages) is a SQL like syntax allowing a streamlined configuration of a Kafka Connect Sink/Source.
+A Kafka Connect JMS source connector to subscribe to messages on JMS queues and
+topics and write them to a Kafka topic.  
+It's using the KCQL (Kafka Connect Query Languages) is a SQL like syntax
+allowing a streamlined configuration of a Kafka Connect Sink/Source.
 
 ## Offloading from JMS to Kafka: A Star Wars Saga
 
 ### Establishing Kafka: The Starlight Jedi Stronghold
 
-The first phase of our mission involved establishing Kafka as the Rebellion's Starlight Station.
-Utilizing the KRaft consensus protocol, we aimed to create a beacon free from the constraints of the old ZooKeeper system, signifying a new approach to managing metadata.
+The first phase of our mission involved establishing Kafka as the Rebellion's
+Starlight Station. Utilizing the KRaft consensus protocol, we aimed to create a
+beacon free from the constraints of the old ZooKeeper system, signifying a new
+approach to managing metadata.
 
 - Use the Force (of Docker Compose)
 
-We'll utilize the power of Docker Compose to construct our Kafka Starlight Station:
+We'll utilize the power of Docker Compose to construct our Kafka Starlight
+Station:
 
 ```yaml
 kafka:
@@ -183,11 +234,13 @@ kafka:
     CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
 ```
 
-This configuration allows our Kafka Starlight Station to operate autonomously, without the support of the old guardian, ZooKeeper.
+This configuration allows our Kafka Starlight Station to operate autonomously,
+without the support of the old guardian, ZooKeeper.
 
 ### Mastering the Kafka Starlight Station with the Redpanda Command Center
 
-The Redpanda Console emerges as the Rebellion's advanced command center, pivotal for controlling the Kafka Starlight Station.
+The Redpanda Console emerges as the Rebellion's advanced command center, pivotal
+for controlling the Kafka Starlight Station.
 
 ```yaml
 redpanda-console:
@@ -217,22 +270,27 @@ docker compose up -d
 
 #### Mission Control:
 
-Navigate to the [Redpanda Command Center](http://localhost:8080).
-Here, you'll be greeted by the Redpanda Console.
+Navigate to the [Redpanda Command Center](http://localhost:8080). Here, you'll
+be greeted by the Redpanda Console.
 
-It's time to define our intel reports.
-Initiate a new Kafka topic: `alliance_intel_reports` This topic will serve as a repository for vital intelligence reports,
-gathering crucial information that will aid the Rebel Alliance in making informed decisions and planning strategic operations across the galaxy.
+It's time to define our intel reports. Initiate a new Kafka topic:
+`alliance_intel_reports` This topic will serve as a repository for vital
+intelligence reports, gathering crucial information that will aid the Rebel
+Alliance in making informed decisions and planning strategic operations across
+the galaxy.
 
 ![Redpanda create topic](create-topic.png)
 
 ### The Karapace Schema Registry
 
-the Karapace Registry supports the storage of schemas, serving as a pivotal hub for the serialization and deserialization of messages within the Kafka ecosystem.
+the Karapace Registry supports the storage of schemas, serving as a pivotal hub
+for the serialization and deserialization of messages within the Kafka
+ecosystem.
 
 #### Setting up the Karapace Registry
 
-To integrate this critical component into our Kafka Starlight Station, we configure the Karapace Registry as follows:
+To integrate this critical component into our Kafka Starlight Station, we
+configure the Karapace Registry as follows:
 
 ```yaml
 karapace-registry:
@@ -264,7 +322,8 @@ karapace-registry:
 docker compose up -d karapace-registry
 ```
 
-Update the Redpanda Console’s configuration to connect with the Karapace Registry:
+Update the Redpanda Console’s configuration to connect with the Karapace
+Registry:
 
 ```text
   redpanda-console:
@@ -278,17 +337,22 @@ Update the Redpanda Console’s configuration to connect with the Karapace Regis
     ... [remaining configuration]
 ```
 
-For the changes to take effect in the Redpanda Console, initiate a rebuild sequence:
+For the changes to take effect in the Redpanda Console, initiate a rebuild
+sequence:
 
 ```shell
 docker compose up -d --build redpanda-console
 ```
 
-The Redpanda Command Center's interfaces illuminate, echoing the station's readiness to synchronize with the advanced functionalities of the Karapace Schema Registry.
+The Redpanda Command Center's interfaces illuminate, echoing the station's
+readiness to synchronize with the advanced functionalities of the Karapace
+Schema Registry.
 
 ### Ancient ActiveMQ - The Galactic Message Relay Station
 
-Within the realm of the Rebel Alliance's data strategies, alongside the Kafka Starlight Station, stands ActiveMQ, an ancient and sophisticated message relay system.
+Within the realm of the Rebel Alliance's data strategies, alongside the Kafka
+Starlight Station, stands ActiveMQ, an ancient and sophisticated message relay
+system.
 
 #### Setting up the ActiveMQ Relay Station
 
@@ -310,10 +374,11 @@ docker compose up -d activemq
 
 ### Configuring the `alliance_intel_reports` Transmission Queue
 
-ActiveMQ's control panel is a portal to an array of message relay functionalities:
+ActiveMQ's control panel is a portal to an array of message relay
+functionalities:
 
-1. Accessing the Control Panel:
-   Navigate to [ActiveMQ's Galactic Interface](http://localhost:8161).
+1. Accessing the Control Panel: Navigate to
+   [ActiveMQ's Galactic Interface](http://localhost:8161).
    - Username: `admin`
    - Password: `admin`
 2. Configuring the Relay Queue:
@@ -348,15 +413,18 @@ ActiveMQ's control panel is a portal to an array of message relay functionalitie
 
 ### The Galactic Integration - Kafka Connect: The Master Yoda's Gift
 
-Within the interstellar communications network, Kafka Connect stands as a nexus point, transitioning various data realms.
+Within the interstellar communications network, Kafka Connect stands as a nexus
+point, transitioning various data realms.
 
-Our integration is based on an open-source connector from [Lenses.io](https://docs.lenses.io/5.0/integrations/connectors/stream-reactor/sources/jmssourceconnector/)
-and the foundational base image for Kafka Connect from [Confluent](https://docs.confluent.io/platform/current/connect/index.html).
+Our integration is based on an open-source connector from
+[Lenses.io](https://docs.lenses.io/5.0/integrations/connectors/stream-reactor/sources/jmssourceconnector/)
+and the foundational base image for Kafka Connect from
+[Confluent](https://docs.confluent.io/platform/current/connect/index.html).
 
 #### Installing the JMS Source Connector from Lenses.io
 
-The symbiosis of the JMS source connector with the Confluent's Kafka Connect is an odyssey in itself.
-Here's the sacred script that forges their alliance:
+The symbiosis of the JMS source connector with the Confluent's Kafka Connect is
+an odyssey in itself. Here's the sacred script that forges their alliance:
 
 ```dockerfile
 FROM confluentinc/cp-kafka-connect:7.5.1
@@ -442,7 +510,8 @@ Update RedPanda console
     ... [remaining configuration]
 ```
 
-For the changes to take effect in the Redpanda Console, initiate a rebuild sequence:
+For the changes to take effect in the Redpanda Console, initiate a rebuild
+sequence:
 
 ```shell
 docker compose up -d --build redpanda-console
@@ -450,13 +519,15 @@ docker compose up -d --build redpanda-console
 
 #### Accessing the Kafka Connect Container
 
-To initiate our mission-critical operation, we must access the Kafka Connect container:
+To initiate our mission-critical operation, we must access the Kafka Connect
+container:
 
 ```shell
 docker exec -it kafka-connect bash
 ```
 
-This command teleports us into the command center of Kafka Connect, where we will orchestrate the creation of the connector.
+This command teleports us into the command center of Kafka Connect, where we
+will orchestrate the creation of the connector.
 
 #### Crafting the Intergalactic Connector
 
@@ -483,7 +554,9 @@ curl --location 'http://localhost:8083/connectors' \
 }'
 ```
 
-This incantation sets up a JMS source connector, tasked with a crucial mission: to offload messages from the JMS alliance_intel_reports queue to the alliance_intel_reports topic.
+This incantation sets up a JMS source connector, tasked with a crucial mission:
+to offload messages from the JMS alliance_intel_reports queue to the
+alliance_intel_reports topic.
 
 #### Connector is now visible in the Redpanda console
 
@@ -491,27 +564,35 @@ This incantation sets up a JMS source connector, tasked with a crucial mission: 
 
 #### Witnessing the Offloading Miracle
 
-With the connector operational, we observe the first messages being offloaded from JMS to Kafka, marking a new era in intergalactic communication.
+With the connector operational, we observe the first messages being offloaded
+from JMS to Kafka, marking a new era in intergalactic communication.
 
 ![Offloaded message](offloaded-message.png)
 
-This pivotal moment in our narrative illustrates the seamless merging of two powerful communication realms.
+This pivotal moment in our narrative illustrates the seamless merging of two
+powerful communication realms.
 
 ## Archives of Wisdom
 
-The complete codex of our journey, detailing every maneuver and strategy employed in this grand mission, can be accessed in the [Galactic Code Repository](https://github.com/bespinian/jms-to-kafka-offloading).
+The complete codex of our journey, detailing every maneuver and strategy
+employed in this grand mission, can be accessed in the
+[Galactic Code Repository](https://github.com/bespinian/jms-to-kafka-offloading).
 
 ## Holocron Archives
 
 - [Kafka: The Definitive Guide](https://www.oreilly.com/library/view/kafka-the-definitive/9781491936153/)  
-  By Gwen Shapira, Todd Palino, Rajini Sivaram, Krit Petty
+  By
+  Gwen Shapira, Todd Palino, Rajini Sivaram, Krit Petty
 - [Kafka Connect](https://www.oreilly.com/library/view/kafka-connect/9781098126520/)  
-  By Mickael Maison, Kate Stanley
-- [Kafka Connect - Udemy](https://www.udemy.com/course/kafka-connect/)
-  By Stephane Maarek
+  By
+  Mickael Maison, Kate Stanley
+- [Kafka Connect - Udemy](https://www.udemy.com/course/kafka-connect/) By
+  Stephane Maarek
 
 ## Epilogue
 
-Thus, a new chapter in our galactic saga has been written. The once-distant worlds of JMS and Kafka are now united,
-ensuring that the flow of information across the cosmos is more seamless and efficient than ever before.
-The galaxy watches in awe as these two mighty forces come together, forging a new destiny in the annals of data streaming.
+Thus, a new chapter in our galactic saga has been written. The once-distant
+worlds of JMS and Kafka are now united, ensuring that the flow of information
+across the cosmos is more seamless and efficient than ever before. The galaxy
+watches in awe as these two mighty forces come together, forging a new destiny
+in the annals of data streaming.
