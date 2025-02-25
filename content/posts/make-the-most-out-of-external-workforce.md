@@ -1,8 +1,9 @@
-+++
+---
 title: Hired External Engineers? Here’s How to Make The Most of Them
 author: Philippe Haessig
+comments: true
 date: 2025-02-20
-+++
+---
 
 So, you hired external engineers to help with your project — but now you realize
 they didn’t provide as much value as expected. This can of course have many
@@ -38,7 +39,7 @@ Newcomers will have many questions, so provide clear channels for communication:
 Make sure everyone knows who to contact for specific topics to avoid unnecessary
 delays.
 
-## Provide Clear Expectations, Tasks and Priorities
+## Provide Clear Expectations, Tasks, and Priorities
 
 Having skilled consultants is pointless if they don’t know what to do. Ensure
 they understand their tasks and priorities.

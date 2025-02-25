@@ -1,7 +1,7 @@
 ---
 title:
-  "Utilizing Terraform and Terraform Cloud Modules for Multi-Region AWS
-  Deployment"
+  Utilizing Terraform and Terraform Cloud Modules for Multi-Region AWS
+  Deployment
 author: Denis Kovachevich
 comments: true
 date: 2024-02-22

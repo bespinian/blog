@@ -1,7 +1,8 @@
 ---
-title:
-  "Share network and organization info with AWS landing zone member accounts"
-date: 2024-07-04T08:27:12+02:00
+title: Share network and organization info with AWS landing zone member accounts
+author: Philippe Haessig
+comments: true
+date: 2024-07-04
 ---
 
 In an AWS landing zone setup, you typically have several infrastructure
