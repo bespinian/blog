@@ -10,11 +10,13 @@ categories: ["Engineering", "Cloud Native"]
 
 ## Introduction
 
-At bespinian and Xovis, we recently faced the challenge of migrating a
-Kubernetes-based HashiCorp Vault instance from one Azure Kubernetes Service
-(AKS) cluster to another. The goal was to consolidate infrastructure and reduce
-the number of AKS clusters that required maintenance. The outcome of a somewhat arduous journey is a Bash script that has enabled us to test the migration repeatedly and then perform the migration with a outage of less than 2 minutes.
-
+At [Xovis](https://xovis.com) and bespinian, we recently faced the challenge of
+migrating a Kubernetes-based HashiCorp Vault instance from one Azure Kubernetes
+Service (AKS) cluster to another. The goal was to consolidate infrastructure and
+reduce the number of AKS clusters that required maintenance. The outcome of a
+somewhat arduous journey is a Bash script that has enabled us to test the
+migration repeatedly and then perform the migration with a outage of less than 2
+minutes.
 
 This blog post walks through our approach and presents the migration steps in 14
 structured chapters. Each chapter includes excerpts from the automation script,
@@ -49,8 +51,8 @@ Before initiating the migration:
 1. **Provision the new Vault cluster**: Set up a fresh Vault instance on the
    target AKS cluster with the same configuration as the existing one.
 2. **Configure networking and authentication**: Ensure that the new instance has
-   the necessary access permissions and that external clients will be able to connect
-   post-migration.
+   the necessary access permissions and that external clients will be able to
+   connect post-migration.
 3. **Test the migration in a staging environment**: Migrate a test Vault
    instance within between two non-production clusters to verify the process.
 
@@ -307,7 +309,13 @@ as the old one.
 
 ### 6. Configure the new Vault cluster to use the old unseal key
 
-The restored state must be unsealed with the unseal key stored in the KeyVault associated with the _old_ Vault instance. We now need to unseal the state but store a new unseal key in the KeyVault associated with the _new_ Vault instance. This step modifies the config map by replacing the coordinates to the _new_ instance unseal key with those of the _old_ instance unseal key and restarts the pods to apply the change. After the restart, the pods should unseal the state automatically since they have access to the original unseal key.
+The restored state must be unsealed with the unseal key stored in the KeyVault
+associated with the _old_ Vault instance. We now need to unseal the state but
+store a new unseal key in the KeyVault associated with the _new_ Vault instance.
+This step modifies the config map by replacing the coordinates to the _new_
+instance unseal key with those of the _old_ instance unseal key and restarts the
+pods to apply the change. After the restart, the pods should unseal the state
+automatically since they have access to the original unseal key.
 
 - Patch the configuration of the new Vault cluster with the credentials of the
   old Azure Key Vault
@@ -340,8 +348,10 @@ The restored state must be unsealed with the unseal key stored in the KeyVault a
 
 ### 7. Prepare the unseal key migration on the new Vault instance
 
-To enable unseal key migration, the new Vault cluster needs to know about both unseal key coordinates when the configuration is loaded the next time (after unsealing the state) — keeping the old seal block active but
-disabled, and adding a new one that points to the new Azure Key Vault.
+To enable unseal key migration, the new Vault cluster needs to know about both
+unseal key coordinates when the configuration is loaded the next time (after
+unsealing the state) — keeping the old seal block active but disabled, and
+adding a new one that points to the new Azure Key Vault.
 
 - Update the Vault configuration:
 
@@ -403,7 +413,8 @@ follower pod and run the migration steps.
 
 Once all follower pods have been migrated, the leader must step down so it can
 restart and apply the new seal configuration.\
-Note that we use the migration token of the _old_ Vault instance here, since that is the token stored in the restored snapshot.
+Note that we use the migration token of the _old_ Vault instance here, since
+that is the token stored in the restored snapshot.
 
 - Step down the leader pod
 
@@ -481,8 +492,8 @@ EOF
 
 ### 13. Modify the ingress of the old Vault to forward connections via proxy
 
-With the proxy service in place, we recreate the ingress for the old Vault instance but configured to forward all
-requests to the proxy.
+With the proxy service in place, we recreate the ingress for the old Vault
+instance but configured to forward all requests to the proxy.
 
 - Edit the old ingress and update
 
@@ -506,7 +517,8 @@ requests to the proxy.
   ```
 
   This allows existing clients to continue using the old Vault domain without
-  any modifications, as long as the configuration on the old cluster forwards requests.
+  any modifications, as long as the configuration on the old cluster forwards
+  requests.
 
 ### 14. Test the reachability of the old Vault domain
 
