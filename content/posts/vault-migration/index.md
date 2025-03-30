@@ -340,8 +340,7 @@ The restored state must be unsealed with the unseal key stored in the KeyVault a
 
 ### 7. Prepare the unseal key migration on the new Vault instance
 
-To enable unseal key migration, we first need to configure the new Vault cluster
-to support dual seal configuration — keeping the old seal block active but
+To enable unseal key migration, the new Vault cluster needs to know about both unseal key coordinates when the configuration is loaded the next time (after unsealing the state) — keeping the old seal block active but
 disabled, and adding a new one that points to the new Azure Key Vault.
 
 - Update the Vault configuration:
