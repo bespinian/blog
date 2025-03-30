@@ -285,7 +285,7 @@ With the snapshot from the old instance in hand, we restore it to the new Vault
 instance. This effectively brings the new Vault cluster to the same data state
 as the old one.
 
-- Upload the snapshot the leader pod
+- Upload the snapshot the to leader pod
 
   ```bash
   kubectl cp "${BACKUPS_DIR}/${OLD_VAULT_SNAPSHOT_FILENAME}" \
