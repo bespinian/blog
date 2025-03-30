@@ -484,7 +484,7 @@ EOF
 
 ### 13. Modify the ingress of the old Vault to forward connections via proxy
 
-With the proxy service in place, we modify the existing ingress to forward all
+With the proxy service in place, we recreate the ingress for the old Vault instance but configured to forward all
 requests to the proxy.
 
 - Edit the old ingress and update
