@@ -52,7 +52,7 @@ Before initiating the migration:
    the necessary access permissions and that external clients will be able to connect
    post-migration.
 3. **Test the migration in a staging environment**: Migrate a test Vault
-   instance within a lower environment to verify the process.
+   instance within between two non-production clusters to verify the process.
 
 ## Migration Process
 
