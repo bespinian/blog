@@ -405,7 +405,8 @@ follower pod and run the migration steps.
 ### 9. Step down leader pod
 
 Once all follower pods have been migrated, the leader must step down so it can
-restart and apply the new seal configuration.
+restart and apply the new seal configuration.\
+Note that we use the migration token of the _old_ Vault instance here, since that is the token stored in the restored snapshot.
 
 - Step down the leader pod
 
