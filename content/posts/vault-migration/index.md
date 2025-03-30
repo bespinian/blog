@@ -30,7 +30,7 @@ we needed to manage. Our primary goals were:
 
 - Minimal downtime to avoid disruptions to dependent services.
 - Data integrity with a verifiable transition from the old to the new instance.
-- Seamless DNS switchover to ensure applications continued to function without
+- Seamless switchover to ensure applications continued to function without
   configuration changes.
 - A rollback strategy in case of unforeseen issues.
 
