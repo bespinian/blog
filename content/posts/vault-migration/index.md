@@ -307,9 +307,7 @@ as the old one.
 
 ### 6. Configure the new Vault cluster to use the old unseal key
 
-To allow the restored Vault data to function properly, we need to configure the
-new instance to use the same unseal key as the old Vault. This step modifies the
-config map and restarts the pods to apply the change.
+The restored state must be unsealed with the unseal key stored in the KeyVault associated with the _old_ Vault instance. We now need to unseal the state but store a new unseal key in the KeyVault associated with the _new_ Vault instance. This step modifies the config map by replacing the coordinates to the _new_ instance unseal key with those of the _old_ instance unseal key and restarts the pods to apply the change. After the restart, the pods should unseal the state automatically since they have access to the original unseal key.
 
 - Patch the configuration of the new Vault cluster with the credentials of the
   old Azure Key Vault
