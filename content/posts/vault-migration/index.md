@@ -178,10 +178,6 @@ operations, which aren't granted to the existing policies.
   path "sys/storage/raft/snapshot-force" {
    capabilities = [ "create", "read", "update", "list" ]
   }
-  # Policy allowing to seal a vault
-  path "sys/seal" {
-   capabilities = ["update", "sudo"]
-  }
   ```
 
 - Detect the index of the leader pod in each Vault instance
