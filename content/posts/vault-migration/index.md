@@ -161,7 +161,7 @@ permissions, and preparing the user for the maintenance window.
 To perform the snapshot and restore operations securely, we create short-lived
 Vault tokens with limited permissions. These tokens allow access to specific
 endpoints like snapshot creation, restoration, sealing, and leadership
-operations.
+operations, which aren't granted to the existing policies.
 
 - Write policies for authorizing the migration operations
 
