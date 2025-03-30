@@ -513,7 +513,8 @@ requests to the proxy.
 ### 14. Test the reachability of the old Vault domain
 
 Finally, we test that both the old and new Vault domains point to the same
-instance and that authentication works as expected.
+instance and that authentication works as expected.\
+Note again the use of the _old_ Vault token for both tests.
 
 ```bash
   export VAULT_ADDR="${OLD_VAULT_URL}"
