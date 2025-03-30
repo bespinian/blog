@@ -13,9 +13,7 @@ categories: ["Engineering", "Cloud Native"]
 At bespinian and Xovis, we recently faced the challenge of migrating a
 Kubernetes-based HashiCorp Vault instance from one Azure Kubernetes Service
 (AKS) cluster to another. The goal was to consolidate infrastructure and reduce
-the number of AKS clusters that required maintenance. To achieve this seamlessly
-and reliably, we implemented the entire migration process as an automated Bash
-script.
+the number of AKS clusters that required maintenance. The outcome of a somewhat arduous journey is a Bash script that has enabled us to test the migration repeatedly and then perform the migration with a outage of less than 2 minutes.
 
 By leveraging Vault’s Raft storage and high availability (HA) capabilities, we
 scripted the migration end-to-end — from snapshot creation to restoring the
