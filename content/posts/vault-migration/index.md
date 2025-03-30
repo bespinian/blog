@@ -15,11 +15,6 @@ Kubernetes-based HashiCorp Vault instance from one Azure Kubernetes Service
 (AKS) cluster to another. The goal was to consolidate infrastructure and reduce
 the number of AKS clusters that required maintenance. The outcome of a somewhat arduous journey is a Bash script that has enabled us to test the migration repeatedly and then perform the migration with a outage of less than 2 minutes.
 
-By leveraging Vault’s Raft storage and high availability (HA) capabilities, we
-scripted the migration end-to-end — from snapshot creation to restoring the
-state, migrating unseal keys, and forwarding DNS traffic to the new instance.
-This automation allowed us to minimize human error, enforce a repeatable
-process, and ensure minimal downtime.
 
 This blog post walks through our approach and presents the migration steps in 14
 structured chapters. Each chapter includes excerpts from the automation script,
