@@ -411,8 +411,8 @@ Note that we use the migration token of the _old_ Vault instance here, since tha
 - Step down the leader pod
 
   ```bash
-  kubectl exec -it vault-0 -- vault login "${OLD_VAULT_MIGRATION_TOKEN}"
-  kubectl exec -it vault-0 -- vault operator step-down
+  kubectl exec -it "vault-${leader-index}" -- vault login "${OLD_VAULT_MIGRATION_TOKEN}"
+  kubectl exec -it "vault-${leader-index}" -- vault operator step-down
   ```
 
 ### 10. Remove old seal block from the config
