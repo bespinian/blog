@@ -49,7 +49,7 @@ Before initiating the migration:
 1. **Provision the new Vault cluster**: Set up a fresh Vault instance on the
    target AKS cluster with the same configuration as the existing one.
 2. **Configure networking and authentication**: Ensure that the new instance has
-   the necessary access permissions and that external clients can connect
+   the necessary access permissions and that external clients will be able to connect
    post-migration.
 3. **Test the migration in a staging environment**: Migrate a test Vault
    instance within a lower environment to verify the process.
