@@ -265,7 +265,7 @@ disable the old Vault to avoid unintended behavior.
   ed "${OLD_VAULT_STATEFULSET_FILENAME}" <<EOF
   /args:/
   +1,/-config=/c
-          - sleep 999999
+          - sleep infinity
   .
   w
   q
