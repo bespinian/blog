@@ -512,7 +512,7 @@ requests to the proxy.
   ```
 
   This allows existing clients to continue using the old Vault domain without
-  any modifications.
+  any modifications, as long as the configuration on the old cluster forwards requests.
 
 ### 14. Test the reachability of the old Vault domain
 
